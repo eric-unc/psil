@@ -2,19 +2,20 @@
 program = { SOI ~ expr_list ~ EOI }
 expr_list = { expr+ }
 expr = { atom | special_form | invocation }
-atom = { number | boolean | string | name }
+atom = { number | boolean | string | void | name }
 special_form = { if_form | define }
 invocation = { "(" ~ expr_list ~ ")" }
 
 // Special forms
 // These are separate from invocation because they need to use normal-order evaluation rather than applicative-order evaluation.
-if_form = { "(if" ~ expr ~ expr ~ expr ~ ")" } // cannot use the name `if` because
+if_form = { "(if" ~ expr ~ expr ~ expr ~ ")" } // (cannot use reserved keyword as name)
 define = { "(define" ~ name ~ expr ~ ")" }
 
 // Atoms
 number = @{ ("+" | "-")? ~ ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+)? }
 boolean = { "true" | "false" }
 string = { "\"" ~ char+ ~ "\"" }
+void = { "void" }
 name = { char+ } // this is intentionally quite inclusive
 
 char = { '!'..'~' }
