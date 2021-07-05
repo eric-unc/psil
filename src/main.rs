@@ -6,6 +6,14 @@ use pest::Parser;
 use std::{env, fs};
 use std::io::{self, Write};
 
+mod ast;
+
+mod eval;
+use eval::{eval, eval_with_env, Environment};
+
+mod parser;
+use parser::parse;
+
 #[derive(Parser)]
 #[grammar = "grammar.pest"]
 pub struct RispPestParser;
@@ -24,7 +32,10 @@ fn load_and_interpret(file_name: &String) {
 	let script = fs::read_to_string(file_name);
 
 	match script {
-		Ok(s) => { eval(RispPestParser::parse(Rule::program, &s).unwrap()); }
+		Ok(s) => {
+			let parse_tree = RispPestParser::parse(Rule::program, &s).unwrap();
+			eval(parse(parse_tree));
+		}
 		Err(e) => { panic!("{:?}", e)}
 	}
 }
@@ -48,7 +59,7 @@ fn repl() {
 
 		match parse_tree {
 			Ok(tree) => {
-				eval_with_env(tree, &env);
+				eval_with_env(parse(tree), &env);
 			},
 			Err(e) => {
 				println!("{}", e)

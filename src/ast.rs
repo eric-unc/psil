@@ -2,26 +2,34 @@ pub struct Program {
 	expr_list: ExpressionList
 }
 
-type ExpressionList = Vec<Expression>;
+pub type ExpressionList = Vec<Expression>;
 
-// TODO: this would be better as like an abstract class or something.
-union Expression {
-	atom: Atom,
-	special_form: SpecialForm,
-	invocation: Invocation
+pub enum Expression {
+	Atom(Atom),
+	SpecialForm(SpecialForm),
+	Invocation(Invocation)
 }
 
-enum Atom {
+pub enum Atom {
 	Number(f64),
 	Boolean(bool),
 	String(String),
 	Void,
+	Lambda {
+		params: Params,
+		expr: Expression
+	},
 	Name(String)
 }
 
-union SpecialForm {
-	if_form: If,
-	define: Define
+pub struct Params {
+	names: Vec<Name>
+}
+
+pub enum SpecialForm {
+	If(If),
+	Define(Define),
+	Do(Do)
 }
 
 pub struct If {
@@ -31,21 +39,15 @@ pub struct If {
 }
 
 pub struct Define {
-	name: Atom,
+	name: Name,
 	value: Expression
 }
 
-pub struct Invocation {
+pub struct Do {
 	expr_list: ExpressionList
 }
 
-impl Invocation {
-	pub fn get_proc(&self) -> Expression {
-		self.exprs[0]
-	}
-
-	// the 1st arg has arg_num `1`
-	pub fn get_arg(&self, arg_num: i32) -> Expression {
-		self.exprs[arg_num]
-	}
+pub struct Invocation {
+	proc: Name,
+	expr_list: ExpressionList
 }

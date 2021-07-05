@@ -1,15 +1,22 @@
+use crate::ast::{Atom};
+
 pub enum Value {
 	Number(f64),
 	Boolean(bool),
 	String(String),
 	Void,
-	Procedure(Procedure)
+	Procedure(Procedure),
+	Error(String)
 }
 
-union Procedure {
-	native: NativeProcedure,
-	pure: Expression
+pub type ValueList = Vec<Value>;
+
+pub enum Procedure {
+	Native(NativeProcedure),
+	Pure(Atom::Lambda)
 }
+
+pub type NativeProcedure = fn(ValueList) -> Value;
 
 impl PartialEq for Value {
 	fn eq(&self, other: &Self) -> bool {
@@ -26,18 +33,18 @@ impl PartialEq for Value {
 				}
 			String(s) =>
 				match other {
-					String(o) => o::eq(s),
+					String(o) => s.eq(o),
 					_ => false
 				}
-			Void=>
+			Void(_) =>
 				match other {
-					Void => true,
+					Void(_) => true,
 					_ => false
 				}
 			Procedure(p) =>
 				match other {
 					Procedure(o) => p == o,
-					_ => flae
+					_ => false
 				}
 		}
 	}
@@ -47,8 +54,8 @@ impl PartialEq for Value {
 	}
 }
 
-type Scope = HashMap<String, LimpValue>;
-type Bindings = Vec<Scope>;
+pub type Scope = HashMap<String, LimpValue>;
+pub type Bindings = Vec<Scope>;
 
 pub struct Environment {
 	bindings: Bindings
@@ -72,7 +79,7 @@ impl Environment {
 	pub fn add_binding(&mut self, name: String, val: Value){
 		let len = self.bindings.len();
 
-		self.bindings[len-1].insert(name, val);
+		self.bindings[len - 1].insert(name, val);
 	}
 
 	pub fn get_binding(&mut self, name: String) -> Value {

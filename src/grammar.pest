@@ -1,21 +1,24 @@
 // Core
-program = { SOI ~ expr_list ~ EOI }
+program = { SOI ~ expr_list? ~ EOI }
 expr_list = { expr+ }
 expr = { atom | special_form | invocation }
-atom = { number | boolean | string | void | name }
+atom = { number | boolean | string | void | lambda | name }
 special_form = { if_form | define }
-invocation = { "(" ~ expr_list ~ ")" }
+invocation = { "(" ~ name ~ expr_list? ~ ")" }
 
 // Special forms
 // These are separate from invocation because they need to use normal-order evaluation rather than applicative-order evaluation.
-if_form = { "(if" ~ expr ~ expr ~ expr ~ ")" } // (cannot use reserved keyword as name)
-define = { "(define" ~ name ~ expr ~ ")" }
+if_form = { "(if " ~ expr ~ expr ~ expr ~ ")" } // cannot use reserved keyword as name
+define = { "(define " ~ name ~ expr ~ ")" }
+do_form = { "(do " ~ expr_list? ~ ")" }
 
 // Atoms
 number = @{ ("+" | "-")? ~ ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+)? }
 boolean = { "true" | "false" }
 string = { "\"" ~ char+ ~ "\"" }
 void = { "void" }
+lambda = { "{"  ~ params? ~ expr ~ "}" }
+params = { "|" ~ name+ ~ "|"}
 name = { char+ } // this is intentionally quite inclusive
 
 char = { '!'..'~' }
