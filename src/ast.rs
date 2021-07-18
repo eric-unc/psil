@@ -1,3 +1,4 @@
+// Main
 pub struct Program {
 	expr_list: ExpressionList
 }
@@ -22,15 +23,18 @@ pub enum Atom {
 	Name(String)
 }
 
-pub struct Params {
-	names: Vec<Name>
-}
-
 pub enum SpecialForm {
 	If(If),
 	Define(Define),
 	Do(Do)
 }
+
+pub struct Invocation {
+	proc: Name,
+	expr_list: ExpressionList
+}
+
+// Special forms
 
 pub struct If {
 	cond: Expression,
@@ -47,7 +51,11 @@ pub struct Do {
 	expr_list: ExpressionList
 }
 
-pub struct Invocation {
-	proc: Name,
-	expr_list: ExpressionList
+// Support
+pub struct Params {
+	names: Vec<Name>
 }
+
+pub type Name = String;
+
+

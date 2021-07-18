@@ -6,12 +6,14 @@ use pest::Parser;
 use std::{env, fs};
 use std::io::{self, Write};
 
-mod ast;
+pub mod ast;
 
-mod eval;
+pub mod eval;
 use eval::{eval, eval_with_env, Environment};
 
-mod parser;
+pub mod native;
+
+pub mod parser;
 use parser::parse;
 
 #[derive(Parser)]
@@ -41,7 +43,7 @@ fn load_and_interpret(file_name: &String) {
 }
 
 fn repl() {
-	let env = Environment::new();
+	let mut env = Environment::new();
 
 	loop {
 		print!(">>> ");
@@ -59,7 +61,7 @@ fn repl() {
 
 		match parse_tree {
 			Ok(tree) => {
-				eval_with_env(parse(tree), &env);
+				eval_with_env(parse(tree), &mut env);
 			},
 			Err(e) => {
 				println!("{}", e)

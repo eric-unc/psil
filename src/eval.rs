@@ -1,4 +1,6 @@
-use crate::ast::{Atom};
+use std::collections::HashMap;
+
+use crate::ast::*;
 
 pub enum Value {
 	Number(f64),
@@ -8,6 +10,8 @@ pub enum Value {
 	Procedure(Procedure),
 	Error(String)
 }
+
+use Value::{Number, Boolean, String, Void, Procedure, Error};
 
 pub type ValueList = Vec<Value>;
 
@@ -36,16 +40,12 @@ impl PartialEq for Value {
 					String(o) => s.eq(o),
 					_ => false
 				}
-			Void(_) =>
-				match other {
-					Void(_) => true,
-					_ => false
-				}
 			Procedure(p) =>
 				match other {
 					Procedure(o) => p == o,
 					_ => false
 				}
+			_ => false
 		}
 	}
 
@@ -111,7 +111,7 @@ fn eval_program(program: Program, env: &mut Environment) {
 
 // expr_list ::= expr+
 fn eval_expr_list(expr_list: ExpressionList, env: &mut Environment) -> Vec<Value> {
-
+	// TODO
 }
 
 
