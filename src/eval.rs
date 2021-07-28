@@ -1,28 +1,31 @@
 use std::collections::HashMap;
+use std::string::String;
 
 use crate::ast::*;
 
-pub enum Value {
+#[derive(Clone, Debug)]
+pub enum Val {
 	Number(f64),
 	Boolean(bool),
 	String(String),
 	Void,
-	Procedure(Procedure),
+	Procedure(ProcedureType),
 	Error(String)
 }
 
-use Value::{Number, Boolean, String, Void, Procedure, Error};
+use Val::{Number, Boolean, String as StringValue, Void, Procedure as ProcedureValue, Error};
 
-pub type ValueList = Vec<Value>;
+pub type ValList = Vec<Val>;
 
-pub enum Procedure {
+#[derive(Clone, Debug)]
+pub enum ProcedureType {
 	Native(NativeProcedure),
-	Pure(Atom::Lambda)
+	Pure(LambdaAst)
 }
 
-pub type NativeProcedure = fn(ValueList) -> Value;
+pub type NativeProcedure = fn(ValList) -> Val;
 
-impl PartialEq for Value {
+impl PartialEq for Val {
 	fn eq(&self, other: &Self) -> bool {
 		match self {
 			Number(n) =>
@@ -35,14 +38,9 @@ impl PartialEq for Value {
 					Boolean(o) => *b == *o,
 					_ => false
 				}
-			String(s) =>
+			StringValue(s) =>
 				match other {
-					String(o) => s.eq(o),
-					_ => false
-				}
-			Procedure(p) =>
-				match other {
-					Procedure(o) => p == o,
+					StringValue(o) => s.eq(o),
 					_ => false
 				}
 			_ => false
@@ -54,7 +52,7 @@ impl PartialEq for Value {
 	}
 }
 
-pub type Scope = HashMap<String, LimpValue>;
+pub type Scope = HashMap<String, Val>;
 pub type Bindings = Vec<Scope>;
 
 pub struct Environment {
@@ -76,13 +74,19 @@ impl Environment {
 		self.bindings.pop();
 	}
 
-	pub fn add_binding(&mut self, name: String, val: Value){
+	pub fn add_binding(&mut self, name: String, val: Val){
 		let len = self.bindings.len();
 
 		self.bindings[len - 1].insert(name, val);
 	}
 
-	pub fn get_binding(&mut self, name: String) -> Value {
+	pub fn add_proc(&mut self, name: String, val: NativeProcedure){
+		let len = self.bindings.len();
+
+		self.bindings[len - 1].insert(name, Val::Procedure(ProcedureType::Native(val)));
+	}
+
+	pub fn get_binding(&mut self, name: String) -> Val {
 		let len = self.bindings.len();
 
 		for i in len..0 {
@@ -96,22 +100,22 @@ impl Environment {
 	}
 }
 
-pub fn eval(program: Program) {
+pub fn eval(program: ProgramAst) {
 	eval_with_env(program, &mut Environment::new());
 }
 
-pub fn eval_with_env(program: Program, env: &mut Environment) {
+pub fn eval_with_env(program: ProgramAst, env: &mut Environment) {
 	eval_program(program, env);
 }
 
 // program ::= expr+
-fn eval_program(program: Program, env: &mut Environment) {
-	eval_expr_list(expr_list, env);
+fn eval_program(program: ProgramAst, env: &mut Environment) {
+	eval_expr_list(program.expr_list, env);
 }
 
 // expr_list ::= expr+
-fn eval_expr_list(expr_list: ExpressionList, env: &mut Environment) -> Vec<Value> {
-	// TODO
+fn eval_expr_list(expr_list: ExprListAst, env: &mut Environment) -> Vec<Val> {
+	vec![]
 }
 
 

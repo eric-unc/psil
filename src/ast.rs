@@ -1,61 +1,74 @@
+use std::boxed::Box;
+
 // Main
-pub struct Program {
-	expr_list: ExpressionList
+#[derive(Clone, Debug)]
+pub struct ProgramAst {
+	pub expr_list: ExprListAst
 }
 
-pub type ExpressionList = Vec<Expression>;
+pub type ExprListAst = Vec<ExprAst>;
 
-pub enum Expression {
-	Atom(Atom),
-	SpecialForm(SpecialForm),
-	Invocation(Invocation)
+#[derive(Clone, Debug)]
+pub enum ExprAst {
+	Atom(Box<AtomAst>),
+	SpecialForm(Box<SpecialFormAst>),
+	Invocation(InvocationAst)
 }
 
-pub enum Atom {
+#[derive(Clone, Debug)]
+pub enum AtomAst {
 	Number(f64),
 	Boolean(bool),
 	String(String),
 	Void,
-	Lambda {
-		params: Params,
-		expr: Expression
-	},
+	Lambda(LambdaAst),
 	Name(String)
 }
 
-pub enum SpecialForm {
-	If(If),
-	Define(Define),
-	Do(Do)
+#[derive(Clone, Debug)]
+pub struct LambdaAst {
+	pub params: ParamsAst,
+	pub expr: ExprAst
 }
 
-pub struct Invocation {
-	proc: Name,
-	expr_list: ExpressionList
+#[derive(Clone, Debug)]
+pub enum SpecialFormAst {
+	If(IfAst),
+	Define(DefineAst),
+	Do(DoAst)
+}
+
+#[derive(Clone, Debug)]
+pub struct InvocationAst {
+	pub proc: NameAst,
+	pub expr_list: ExprListAst
 }
 
 // Special forms
-
-pub struct If {
-	cond: Expression,
-	if_true: Expression,
-	if_false: Expression
+#[derive(Clone, Debug)]
+pub struct IfAst {
+	pub cond: ExprAst,
+	pub if_true: ExprAst,
+	pub if_false: ExprAst
 }
 
-pub struct Define {
-	name: Name,
-	value: Expression
+#[derive(Clone, Debug)]
+pub struct DefineAst {
+	pub name: NameAst,
+	pub value: ExprAst
 }
 
-pub struct Do {
-	expr_list: ExpressionList
+#[derive(Clone, Debug)]
+pub struct DoAst {
+	pub expr_list: ExprListAst
 }
 
 // Support
-pub struct Params {
-	names: Vec<Name>
+#[derive(Clone, Debug)]
+pub struct ParamsAst {
+	pub names: Vec<NameAst>
 }
 
-pub type Name = String;
+pub type NameAst = String;
 
 

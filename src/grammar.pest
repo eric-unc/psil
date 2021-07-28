@@ -14,11 +14,13 @@ do_form = { "(do " ~ expr_list? ~ ")" }
 
 // Atoms
 number = @{ ("+" | "-")? ~ ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+)? }
-boolean = { "true" | "false" }
+boolean = @{ "true" | "false" }
 string = { "\"" ~ char+ ~ "\"" }
-void = { "void" }
+void = @{ "void" }
 lambda = { "{"  ~ params? ~ expr ~ "}" }
 params = { "|" ~ name+ ~ "|"}
-name = { char+ } // this is intentionally quite inclusive
+name = @{ char+ } // this is intentionally quite inclusive
 
-char = { '!'..'~' }
+char = { "!" | '#'..'&' | '*'..'Z' }
+
+WHITESPACE = _{ " " | "\t" | "\n" | "\r" | "\r\n" }
