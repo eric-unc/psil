@@ -15,12 +15,14 @@ do_form = { "(do " ~ expr_list? ~ ")" }
 // Atoms
 number = @{ ("+" | "-")? ~ ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+)? }
 boolean = @{ "true" | "false" }
-string = { "\"" ~ char+ ~ "\"" }
+string = ${ "\"" ~ string_inner ~ "\"" }
 void = @{ "void" }
 lambda = { "{"  ~ params? ~ expr ~ "}" }
 params = { "|" ~ name+ ~ "|"}
 name = @{ char+ } // this is intentionally quite inclusive
 
-char = { "!" | '#'..'&' | '*'..'Z' }
+char = { "!" | '#'..'&' | '*'..'Z' | '^'..'_' | 'a'..'z' }
+string_inner = @{ string_char* }
+string_char = { !("\"" | "\\") ~ ANY }
 
 WHITESPACE = _{ " " | "\t" | "\n" | "\r" | "\r\n" }
