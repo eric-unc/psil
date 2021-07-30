@@ -7,6 +7,7 @@ pub fn parse(tree: Pairs<Rule>) -> ProgramAst {
 	parse_program(tree)
 }
 
+// program ::= expr_list?
 pub fn parse_program(tree: Pairs<Rule>) -> ProgramAst {
 	let mut list = vec![];
 
@@ -27,7 +28,10 @@ pub fn parse_program(tree: Pairs<Rule>) -> ProgramAst {
 	ProgramAst { expr_list: list }
 }
 
+// expr_list ::= expr+
 pub fn parse_expr_list(tree: Pair<Rule>) -> ExprListAst {
+
+	println!();
 	println!("{}", tree);
 
 	vec![]
