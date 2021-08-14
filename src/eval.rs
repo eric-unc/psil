@@ -36,8 +36,8 @@ impl PartialEq for Val {
 				Boolean(o) => *b == *o,
 				_ => false,
 			},
-			StringValue(s) => match other {
-				StringValue(o) => s.eq(o),
+			StringVal(s) => match other {
+				StringVal(o) => s.eq(o),
 				_ => false,
 			},
 			_ => false,
