@@ -13,7 +13,7 @@ pub enum Val {
 	Error(String),
 }
 
-use Val::{Boolean, Error, Number, Procedure as ProcedureValue, String as StringValue, Void};
+use Val::{Boolean, Error, Number, Procedure as ProcedureVal, String as StringVal, Void};
 
 pub type ValList = Vec<Val>;
 

@@ -18,7 +18,7 @@ use parser::parse;
 
 #[derive(Parser)]
 #[grammar = "grammar.pest"]
-pub struct RispPestParser;
+pub struct PsilPestParser;
 
 fn main() {
 	let args: Vec<String> = env::args().collect();
@@ -35,7 +35,7 @@ fn load_and_interpret(file_name: &String) {
 
 	match script {
 		Ok(s) => {
-			let parse_tree = RispPestParser::parse(Rule::program, &s).unwrap();
+			let parse_tree = PsilPestParser::parse(Rule::program, &s).unwrap();
 			eval(parse(parse_tree));
 		}
 		Err(e) => {
@@ -59,7 +59,7 @@ fn repl() {
 			continue;
 		}
 
-		let parse_tree = RispPestParser::parse(Rule::program, &line);
+		let parse_tree = PsilPestParser::parse(Rule::program, &line);
 
 		match parse_tree {
 			Ok(tree) => {

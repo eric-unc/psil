@@ -1,5 +1,5 @@
 [package]
-name = "risp"
+name = "psil"
 authors = [ "Eric Schenider" ]
 version = "0.0.0"
 edition = "2018"
