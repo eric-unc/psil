@@ -105,12 +105,58 @@ pub fn eval_with_env(program: ProgramAst, env: &mut Environment) {
 	eval_program(program, env);
 }
 
-// program ::= expr+
+// program ::= expr_list?
 fn eval_program(program: ProgramAst, env: &mut Environment) {
 	eval_expr_list(program.expr_list, env);
 }
 
 // expr_list ::= expr+
 fn eval_expr_list(expr_list: ExprListAst, env: &mut Environment) -> Vec<Val> {
-	vec![]
+	let mut ret = Vec::new();
+
+	for expr in expr_list {
+		ret.push(eval_expr(expr, env));
+	}
+
+	ret
+}
+
+// expr ::= atom | special_form | invocation
+fn eval_expr(expr: ExprAst, env: &mut Environment) -> Val {
+	match expr {
+		ExprAst::Atom(a) => eval_atom(*a, env),
+		ExprAst::SpecialForm(s) => eval_special_form(*s, env),
+		ExprAst::Invocation(i) => eval_invocation(i, env)
+	}
+}
+
+// atom ::= number | boolean | string | void | lambda | name
+fn eval_atom(atom: AtomAst, env: &mut Environment) -> Val {
+	match atom {
+		AtomAst::Number(n) => Val::Number(n),
+		AtomAst::Boolean(b) => Val::Boolean(b),
+		AtomAst::String(s) => Val::String(s),
+		AtomAst::Void => Val::Void,
+		AtomAst::Lambda(l) => Val::Procedure(ProcedureType::Pure(l)),
+		AtomAst::Name(n) => env.get_binding(n)
+	}
+}
+
+// special_form ::= if | define | do
+fn eval_special_form(special_form: SpecialFormAst, env: &mut Environment) -> Val {
+	match special_form {
+		SpecialFormAst::If(i) => eval_if(i, env),
+		SpecialFormAst::Define(d) => eval_define(d, env),
+		SpecialFormAst::Do(d) => eval_do(d, env)
+	}
+}
+
+// invocation ::= ( name expr_list? )
+fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Val {
+	let proc = env.get_binding(invocation.proc);
+
+	match proc {
+		Val::Procedure(_) => {}
+		_ => Error(" is not a procedure!".parse().unwrap())
+	}
 }

@@ -31,12 +31,6 @@ pub fn parse_program(tree: Pairs<Rule>) -> ProgramAst {
 
 // expr_list ::= expr+
 fn parse_expr_list(exprs_tree: Pair<Rule>) -> ExprListAst {
-
-	//println!("Parsing expr list");
-	//println!("{}", tree);
-
-	//vec![]
-
 	let mut ret = Vec::new();
 
 	for expr in exprs_tree.into_inner() {
@@ -93,18 +87,6 @@ fn parse_special_form(special_form_tree: Pair<Rule>) -> SpecialFormAst {
 
 // invocation ::= ( name expr_list? )
 fn parse_invocation(invocation_tree: Pair<Rule>) -> InvocationAst {
-	/*let name: NameAst = match invocation_tree.into_inner().next().unwrap() {
-		Rule::name(n) => n,
-		_ => unreachable!()
-	};
-
-	let expr_list: ExprListAst = match invocation_tree.into_inner().next().unwrap() {
-		Rule::expr_list => parse_expr_list(inner_pair),
-		_ => unreachable!()
-	};
-
-	InvocationAst { proc: name, expr_list }*/
-
 	let mut iter = invocation_tree.into_inner();
 
 	let proc = iter.next().unwrap().to_string();
@@ -142,11 +124,6 @@ fn parse_do(do_tree: Pair<Rule>) -> DoAst {
 }
 
 fn parse_number(float_tree: Pair<Rule>) -> f64 {
-	/*return match float_tree.as_span().as_str().parse::<f64>() {
-		Ok(value) => { value }
-		Err(err) => { ErrorValue(err.to_string()) }
-	}*/
-
 	float_tree.as_span().as_str().parse::<f64>().unwrap()
 }
 
