@@ -3,14 +3,14 @@ program = { SOI ~ expr_list? ~ EOI }
 expr_list = { expr+ }
 expr = { atom | special_form | invocation }
 atom = { number | boolean | string | void | lambda | name }
-special_form = { if_form | define }
+special_form = { if_form | define | do_form }
 invocation = { "(" ~ name ~ expr_list? ~ ")" }
 
 // Special forms
-// These are separate from invocation because they need to use normal-order evaluation rather than applicative-order evaluation.
-if_form = { "(" ~ "if " ~ expr ~ expr ~ expr ~ ")" } // cannot use reserved keyword as name
-define = { "(" ~ "define " ~ name ~ expr ~ ")" }
-do_form = { "(" ~ "do " ~ expr_list? ~ ")" }
+// These are separate from invocation because they do not use applicative-order evaluation.
+if_form = { "(" ~ "if" ~ WHITESPACE ~ expr ~ expr ~ expr ~ ")" } // cannot use reserved keyword as pest name
+define = { "(" ~ "define" ~ WHITESPACE ~ name ~ expr ~ ")" }
+do_form = { "(" ~ "do" ~ WHITESPACE ~ expr_list? ~ ")" }
 
 // Atoms
 number = @{ ("+" | "-")? ~ ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+)? }
