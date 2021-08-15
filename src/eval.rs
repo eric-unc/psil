@@ -14,6 +14,8 @@ pub enum Val {
 }
 
 use Val::{Boolean, Error, Number, Procedure as ProcedureVal, String as StringVal, Void};
+use std::ops::Deref;
+use crate::native::add_native_library;
 
 pub type ValList = Vec<Val>;
 
@@ -58,9 +60,11 @@ pub struct Environment {
 
 impl Environment {
 	pub fn new() -> Self {
-		Self {
-			bindings: vec![Scope::new()],
-		}
+		let mut ret = Self { bindings: vec![Scope::new()], };
+
+		add_native_library(&mut ret);
+
+		ret
 	}
 
 	pub fn add_scope(&mut self) {
@@ -93,7 +97,15 @@ impl Environment {
 			}
 		}
 
-		panic!("Binding does not exist!")
+		println!("Current env: ");
+
+		for s in &self.bindings {
+			for (str, val) in s {
+				println!("{}", str);
+			}
+		}
+
+		panic!("Binding {} does not exist!", name)
 	}
 }
 
@@ -156,7 +168,69 @@ fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Val {
 	let proc = env.get_binding(invocation.proc);
 
 	match proc {
-		Val::Procedure(_) => {}
+		Val::Procedure(p) => {
+			//invocation.expr_list.iter().map(|expr| eval_expr(*expr, env)));
+			let mut rands = Vec::new();
+
+			for expr in invocation.expr_list {
+				rands.push(eval_expr(expr, env));
+			}
+
+			match p {
+				ProcedureType::Native(n) => { n(rands) }
+				ProcedureType::Pure(p) => {
+					if p.params.names.len() > rands.len() {
+						panic!("Not enough parameters!");
+					}
+
+					env.add_scope();
+
+					for i in 0..p.params.names.len() {
+						env.add_binding(p.params.names[i].clone(), rands[i].clone())
+					}
+
+					let ret = eval_expr(p.expr, env);
+
+					env.close_scope();
+
+					ret
+				}
+			}
+		},
 		_ => Error(" is not a procedure!".parse().unwrap())
 	}
 }
+
+// if ::= ( if expr expr expr )
+fn eval_if(if_form: IfAst, env: &mut Environment) -> Val {
+	let cond = eval_expr(if_form.cond, env);
+
+	match cond {
+		Boolean(b) => {
+			if b {
+				eval_expr(if_form.if_true, env)
+			} else {
+				eval_expr(if_form.if_false, env)
+			}
+		}
+		Error(e) => Error(e),
+		_ => Error(String::from("Expected boolean as condition!"))
+	}
+}
+
+// define ::= ( define name expr )
+fn eval_define(define: DefineAst, env: &mut Environment) -> Val {
+	let val = eval_expr(define.value, env);
+	env.add_binding(define.name, val);
+
+	Void
+}
+// do ::= ( do expr_list? )
+fn eval_do(do_ast: DoAst, env: &mut Environment) -> Val {
+	for expr in do_ast.expr_list {
+		eval_expr(expr, env);
+	}
+
+	Void
+}
+

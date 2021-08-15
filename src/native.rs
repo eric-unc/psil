@@ -1,13 +1,13 @@
 use crate::eval::{Environment, ProcedureType, Val, ValList};
 
-pub fn add_native_library(mut env: Environment) {
+pub fn add_native_library(env: &mut Environment) {
 	// Math
 	env.add_proc(String::from("+"), add);
 	env.add_proc(String::from("-"), sub);
 
 	// System
 	env.add_proc(String::from("exit"), exit);
-	env.add_proc(String::from("exit"), put);
+	env.add_proc(String::from("put"), put);
 }
 
 // Macros

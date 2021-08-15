@@ -89,7 +89,8 @@ fn parse_special_form(special_form_tree: Pair<Rule>) -> SpecialFormAst {
 fn parse_invocation(invocation_tree: Pair<Rule>) -> InvocationAst {
 	let mut iter = invocation_tree.into_inner();
 
-	let proc = iter.next().unwrap().to_string();
+	//let proc = iter.next().unwrap().to_string();
+	let proc = iter.next().unwrap().as_str().to_string();
 	let expr_list = parse_expr_list(iter.next().unwrap());
 
 	InvocationAst { proc, expr_list }
