@@ -16,7 +16,7 @@ Psil's command line interface has two modes: REPL and file loading:
 ## Language
 Psil is a Lisp-like programming languages, with some twists.
 
-Psil has two major constructions. The first is the "atom", which is a singular unit of value (such as an integer, or a name). The second is the "invocation," which is the activation of a procedure (must be a name type) and a series of values. The procedure being activated is called the "rator" (operator), and the values being passed are called the "rands" (operands).
+Psil has two major constructions. The first is the "atom", which is a singular unit of value (such as an integer, or a name). The second is the "invocation," which is the activation of a procedure (must be a name type), and a series of values. The activated procedure is the "rator" (operator), and the passed values are the "rands" (operands). The rands are always resolved before the effect of the rator applies, except in the case of "special forms." Invocations will always return a value, even if that value is the void value.
 
 ### Example
 ```lisp
@@ -29,21 +29,30 @@ Psil has two major constructions. The first is the "atom", which is a singular u
 1
 ```
 
-### Built-in procedures
-| Name | Description
+### Types
+| Type | Description
 | :------ | :------
-| `+` | Adds all rands given. Requires at least two rands (number).
-| `-` | Subtracts the first rand from the remaining rands. Requires at least two rands (number).
-| `print` | Prints (on new lines) each rand. Requires at least one rand (number/boolean).
-| `exit` | Exits the program with a 0 status. With an optional rand, exits with that status (number).
+| number | Numbers are float-point values, such as `3`, `-55`, `0.55`.
+| boolean | Booleans are truth values, which can either be `true` or `false`.
+| string | Strings are a series of characters, like `"Ahhh!"` or `"545"`.
+| procedure | A procedure is a block that returns an atom with optional arguments. See `procs.lisp` in the `samples` directory for examples. Procedures can be invoked easily if defined.
+| error | Errors come up when something goes wrong.
+
+### Built-in procedures
+| Name | Rands | Returns | Description
+| :------ | :------ | :------ | :------
+| `+` | number{2,} | number | Adds all rands given.
+| `-` | number{2,} | number | Subtracts the first rand from the remaining rands.
+| `print` | any{1,} | void | Prints (on new lines) each rand. Requires at least one rand (number/boolean).
+| `exit` | number? | void | Exits the program with a 0 status. With an optional rand, it will exit with that status code.
 
 ### Special forms
 Special forms are something like procedures.
-| Name | Description
-| :------ | :------
-| `if` | Returns one expression if the given condition is true, the other if false. The other expression within will not be evaluated. Requires three rands (one boolean, two of any type).
-| `define` | TODO. Requires at two rands (number).
-| `do` | TODO (int/float/boolean).
+| Name | Rands | Returns | Description
+| :------ | :------ | :------ | :------
+| `if` | boolean, any, any | any | Returns one expression if the given condition is true, and the other if false. The other expression within will not be evaluated. Requires three rands (one boolean, two of any type).
+| `define` | name, any | void | Creates a binding with the name given in the current scope.
+| `do` | any+ | void | Executes each invocation given.
 
 ## Technologies used
 * [Rust](https://github.com/rust-lang/rust)
