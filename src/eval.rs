@@ -1,7 +1,9 @@
 use std::collections::HashMap;
+use std::ops::Deref;
 use std::string::String;
 
 use crate::ast::*;
+use crate::native::add_native_library;
 
 #[derive(Clone, Debug)]
 pub enum Val {
@@ -14,8 +16,6 @@ pub enum Val {
 }
 
 use Val::{Boolean, Error, Number, Procedure as ProcedureVal, String as StringVal, Void};
-use std::ops::Deref;
-use crate::native::add_native_library;
 
 pub type ValList = Vec<Val>;
 
@@ -87,25 +87,15 @@ impl Environment {
 		self.bindings[len - 1].insert(name, Val::Procedure(ProcedureType::Native(val)));
 	}
 
-	pub fn get_binding(&mut self, name: String) -> Val {
-		let len = self.bindings.len();
-
-		for i in len..0 {
-			if self.bindings[i].contains_key(&name) {
-				let value = self.bindings[i].get(&name).unwrap();
+	pub fn get_binding(&self, name: String) -> Val {
+		for bindings in self.bindings.iter().rev() {
+			if bindings.contains_key(&name) {
+				let value = bindings.get(&name).unwrap();
 				return value.clone();
 			}
 		}
 
-		println!("Current env: ");
-
-		for s in &self.bindings {
-			for (str, val) in s {
-				println!("{}", str);
-			}
-		}
-
-		panic!("Binding {} does not exist!", name)
+		panic!(format!("Binding {} does not exist!", name)) // TODO: should use error val
 	}
 }
 

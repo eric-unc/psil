@@ -63,7 +63,7 @@ fn parse_atom(atom_tree: Pair<Rule>) -> AtomAst {
 			Rule::string => return AtomAst::String(parse_string(inner_pair)),
 			Rule::void => return AtomAst::Void,
 			Rule::lambda => return AtomAst::Lambda(parse_lambda(inner_pair)),
-			Rule::name => return AtomAst::Name(inner_pair.to_string()),
+			Rule::name => return AtomAst::Name(inner_pair.as_str().to_string()),
 			_ => unreachable!()
 		}
 	}

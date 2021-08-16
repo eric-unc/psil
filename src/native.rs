@@ -2,12 +2,13 @@ use crate::eval::{Environment, ProcedureType, Val, ValList};
 
 pub fn add_native_library(env: &mut Environment) {
 	// Math
-	env.add_proc(String::from("+"), add);
-	env.add_proc(String::from("-"), sub);
+	env.add_proc("+".to_string(), add);
+	env.add_proc("-".to_string(), sub);
 
 	// System
-	env.add_proc(String::from("exit"), exit);
-	env.add_proc(String::from("put"), put);
+	env.add_proc("exit".to_string(), exit);
+	env.add_proc("print".to_string(), print);
+	env.add_proc("put".to_string(), put);
 }
 
 // Macros
@@ -74,31 +75,38 @@ fn exit(args: ValList) -> Val {
 	}
 }
 
-fn put(args: ValList) -> Val {
+fn print(args: ValList) -> Val {
 	// expect_arity_at_least!(1, args.len());
 
 	for arg in args {
 		match arg {
 			Val::Number(n) => {
-				println!("{}", n)
+				print!("{}", n)
 			}
 			Val::Boolean(b) => {
-				println!("{}", b)
+				print!("{}", b)
 			}
 			Val::String(s) => {
-				println!("{}", s)
+				print!("{}", s)
 			}
 			Val::Void => {
-				println!("void")
+				print!("void")
 			}
 			Val::Procedure(_) => {
-				println!("TODO (lol)")
-			} // TODO
+				print!("<procedure>") // TODO: some day this will be much more advanced
+			}
 			Val::Error(e) => {
-				println!("{}", e)
+				print!("{}", e)
 			}
 		}
 	}
+
+	Val::Void
+}
+
+fn put(args: ValList) -> Val {
+	print(args);
+	println!();
 
 	Val::Void
 }
