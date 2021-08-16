@@ -8,6 +8,11 @@ pub fn add_native_library(env: &mut Environment) {
 	env.add_proc("-".to_string(), subtract);
 	env.add_proc("*".to_string(), multiply);
 	env.add_proc("/".to_string(), divide);
+	env.add_proc("%".to_string(), remainder);
+
+	// Boolean
+	env.add_proc("==".to_string(), equal);
+	env.add_proc("!=".to_string(), no_eq);
 
 	// System
 	env.add_proc("exit".to_string(), exit);
@@ -108,6 +113,55 @@ fn divide(args: ValList) -> Val {
 	}
 
 	Number(ret)
+}
+
+fn remainder(args: ValList) -> Val {
+	//expect_arity_at_least!(2, args.len());
+
+	let mut ret = 0.0;
+	let mut ret_init = false;
+
+	for val in args {
+		match val {
+			Val::Number(n) => {
+				if !ret_init {
+					ret = n;
+					ret_init = true;
+				} else {
+					ret %= n;
+				}
+			}
+			_ => {
+				return Error(String::from("Bad type"));
+			}
+		}
+	}
+
+	Number(ret)
+}
+
+///// Boolean
+
+fn equal(args: ValList) -> Val {
+	for i in 1..args.len() {
+		if args[0].ne(&args[i]) {
+			return Boolean(false)
+		}
+	}
+
+	Boolean(true)
+}
+
+fn no_eq(args: ValList) -> Val {
+	for i in 0..args.len() {
+		for j in i + 1..args.len() {
+			if args[i].eq(&args[j]) {
+				return Boolean(false);
+			}
+		}
+	}
+
+	Boolean(true)
 }
 
 ///// System

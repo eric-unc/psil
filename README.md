@@ -45,6 +45,9 @@ Psil has two major constructions. The first is the "atom", which is a singular u
 | `-` | number{2,} | number | Subtracts the first rand from the remaining rands.
 | `*` | number{2,} | number | Multiplies all rands.
 | `/` | number{2,} | number | Divides the first by each remaining rands.
+| `%` | number{2,} | number | Gives the remainder of the first by each remaining rands. `(% 5 5 1)` is equivalent to `(% (% 5 5) 1)`.
+| `==` | any{2,} | boolean | Checks for equality between all rands.
+| `!=` | any{2,} | boolean | Checks for inequality between all rands. `(!= 5 6 6)` would return false, since the two `6` are both equal, even if neither are equal to the first rand.
 | `put` | any* | void | Prints (each on a new line) each rand.
 | `print` | any* | void | Prints each rand with any new lines.
 | `exit` | number? | void | Exits the program with a 0 status. With an optional rand, it will exit with that status code.
