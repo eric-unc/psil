@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 use std::fmt;
-use std::ops::Deref;
 use std::string::String;
 
 use crate::ast::*;
