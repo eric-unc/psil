@@ -1,5 +1,5 @@
 # Psil
-**Psil** is a Lisp-like programming language implemented in Rust. Currently a work-in-progress.
+**Psil** is a Lisp-like programming language implemented in Rust. It's currently a work-in-progress, although basic functionality works.
 
 [Limp](https://github.com/eric-unc/limp) was the prototype for Psil and uses code from it.
 
