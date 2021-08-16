@@ -43,7 +43,8 @@ Psil has two major constructions. The first is the "atom", which is a singular u
 | :------ | :------ | :------ | :------
 | `+` | number{2,} | number | Adds all rands given.
 | `-` | number{2,} | number | Subtracts the first rand from the remaining rands.
-| `print` | any{1,} | void | Prints (on new lines) each rand. Requires at least one rand (number/boolean).
+| `put` | any* | void | Prints (each on a new line) each rand.
+| `print` | any* | void | Prints each rand with any new lines.
 | `exit` | number? | void | Exits the program with a 0 status. With an optional rand, it will exit with that status code.
 
 ### Special forms

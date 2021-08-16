@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::fmt;
 use std::ops::Deref;
 use std::string::String;
 
@@ -16,6 +17,19 @@ pub enum Val {
 }
 
 use Val::{Boolean, Error, Number, Procedure as ProcedureVal, String as StringVal, Void};
+
+impl fmt::Display for Val {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		write!(f, "{}", match self {
+			Number(n) => n.to_string(),
+			Boolean(b) => b.to_string(),
+			StringVal(s) => s.to_string(),
+			Void => "void".to_string(),
+			ProcedureVal(_) => "<procedure>".to_string(), // TODO: some day this will be much more advanced
+			Error(e) => e.to_string(), // TODO: this too
+		})
+	}
+}
 
 pub type ValList = Vec<Val>;
 
@@ -159,7 +173,6 @@ fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Val {
 
 	match proc {
 		Val::Procedure(p) => {
-			//invocation.expr_list.iter().map(|expr| eval_expr(*expr, env)));
 			let mut rands = Vec::new();
 
 			for expr in invocation.expr_list {
@@ -211,6 +224,7 @@ fn eval_if(if_form: IfAst, env: &mut Environment) -> Val {
 // define ::= ( define name expr )
 fn eval_define(define: DefineAst, env: &mut Environment) -> Val {
 	let val = eval_expr(define.value, env);
+
 	env.add_binding(define.name, val);
 
 	Void

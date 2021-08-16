@@ -79,34 +79,20 @@ fn print(args: ValList) -> Val {
 	// expect_arity_at_least!(1, args.len());
 
 	for arg in args {
-		match arg {
-			Val::Number(n) => {
-				print!("{}", n)
-			}
-			Val::Boolean(b) => {
-				print!("{}", b)
-			}
-			Val::String(s) => {
-				print!("{}", s)
-			}
-			Val::Void => {
-				print!("void")
-			}
-			Val::Procedure(_) => {
-				print!("<procedure>") // TODO: some day this will be much more advanced
-			}
-			Val::Error(e) => {
-				print!("{}", e)
-			}
-		}
+		print!("{}", arg);
 	}
 
 	Val::Void
 }
 
 fn put(args: ValList) -> Val {
-	print(args);
-	println!();
+	if args.len() == 0 {
+		println!();
+	} else {
+		for arg in args {
+			println!("{}", arg);
+		}
+	}
 
 	Val::Void
 }

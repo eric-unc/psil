@@ -89,9 +89,12 @@ fn parse_special_form(special_form_tree: Pair<Rule>) -> SpecialFormAst {
 fn parse_invocation(invocation_tree: Pair<Rule>) -> InvocationAst {
 	let mut iter = invocation_tree.into_inner();
 
-	//let proc = iter.next().unwrap().to_string();
 	let proc = iter.next().unwrap().as_str().to_string();
-	let expr_list = parse_expr_list(iter.next().unwrap());
+
+	let expr_list = match iter.next() {
+		Some(s) => parse_expr_list(s),
+		None => ExprListAst::new()
+	};
 
 	InvocationAst { proc, expr_list }
 }
@@ -111,7 +114,7 @@ fn parse_if(if_tree: Pair<Rule>) -> IfAst {
 fn parse_define(define_tree: Pair<Rule>) -> DefineAst {
 	let mut iter = define_tree.into_inner();
 
-	let name = iter.next().unwrap().to_string();
+	let name = iter.next().unwrap().as_str().to_string();
 	let value = parse_expr(iter.next().unwrap());
 
 	DefineAst { name, value }
@@ -139,7 +142,7 @@ fn parse_boolean(boolean_tree: Pair<Rule>) -> bool {
 fn parse_string(string_tree: Pair<Rule>) -> String {
 	for inner in string_tree.into_inner() {
 		match inner.as_rule() {
-			Rule::string_inner => return inner.to_string(),
+			Rule::string_inner => return inner.as_str().to_string(),
 			_ => unreachable!()
 		}
 	}
@@ -172,7 +175,7 @@ fn parse_params(params_tree: Pair<Rule>) -> ParamsAst {
 
 	for inner_pair in params_tree.into_inner() {
 		match inner_pair.as_rule() {
-			Rule::name => names.push(inner_pair.to_string()),
+			Rule::name => names.push(inner_pair.as_str().to_string()),
 			_ => unreachable!()
 		}
 	}
