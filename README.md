@@ -20,7 +20,7 @@ Psil has two major constructions. The first is the "atom", which is a singular u
 
 ### Example
 ```lisp
-(print (+ 10 5) 1)
+(put (+ 10 5) 1)
 ```
 
 #### Example output
@@ -59,6 +59,7 @@ Special forms are similar to procedures, but with special evaluation rules that 
 | Name | Rands | Returns | Description
 | :------ | :------ | :------ | :------
 | `if` | boolean, any, any | any | Returns one expression if the given condition is true, and the other if false. The other expression within will not be evaluated. Requires three rands (one boolean, two of any type).
+| `cond` | (boolean, any)+ | any | Returns expression associated with the true condition, or `void` if none are true. See `cond.lisp` or `fizzbuzz.lisp` in the `samples` folder for examples.
 | `define` | name, any | void | Creates a binding with the name given in the current scope.
 | `do` | any+ | void | Executes each invocation given.
 | `and` | boolean{2,} | boolean | Ands each rand together. Always short-circuited.

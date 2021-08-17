@@ -71,15 +71,16 @@ fn parse_atom(atom_tree: Pair<Rule>) -> AtomAst {
 	unreachable!();
 }
 
-// special_form ::= if | define | do | and
+// special_form ::= if | cond | define | do | and | or
 fn parse_special_form(special_form_tree: Pair<Rule>) -> SpecialFormAst {
 	for inner_pair in special_form_tree.into_inner() {
-		match inner_pair.as_rule() {
-			Rule::if_form => return SpecialFormAst::If(parse_if(inner_pair)),
-			Rule::define => return SpecialFormAst::Define(parse_define(inner_pair)),
-			Rule::do_form => return SpecialFormAst::Do(parse_do(inner_pair)),
-			Rule::and => return SpecialFormAst::And(parse_and(inner_pair)),
-			Rule::or => return SpecialFormAst::Or(parse_or(inner_pair)),
+		return match inner_pair.as_rule() {
+			Rule::if_form => SpecialFormAst::If(parse_if(inner_pair)),
+			Rule::cond => SpecialFormAst::Cond(parse_cond(inner_pair)),
+			Rule::define => SpecialFormAst::Define(parse_define(inner_pair)),
+			Rule::do_form => SpecialFormAst::Do(parse_do(inner_pair)),
+			Rule::and => SpecialFormAst::And(parse_and(inner_pair)),
+			Rule::or => SpecialFormAst::Or(parse_or(inner_pair)),
 			_ => unreachable!()
 		}
 	}
@@ -110,6 +111,32 @@ fn parse_if(if_tree: Pair<Rule>) -> IfAst {
 	let if_false = parse_expr(iter.next().unwrap());
 
 	IfAst { cond, if_true, if_false }
+}
+
+// cond ::= ( cond (expr expr)+ )
+fn parse_cond(cond_tree: Pair<Rule>) -> CondAst {
+	let mut is_on_cond = true;
+
+	let mut conds = ExprListAst::new();
+	let mut expr_list = ExprListAst::new();
+
+	for inner_pair in cond_tree.into_inner() {
+		let expr = parse_expr(inner_pair);
+
+		if is_on_cond {
+			conds.push(expr);
+			is_on_cond = false;
+		} else {
+			expr_list.push(expr);
+			is_on_cond = true;
+		}
+	}
+
+	if conds.len() != expr_list.len() { // This should be resolved by pest, but just in case.
+		panic!("Conditions and expressions are unmatching!");
+	}
+
+	CondAst { conds, expr_list }
 }
 
 // define ::= ( define name expr )

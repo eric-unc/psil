@@ -161,6 +161,7 @@ fn eval_atom(atom: AtomAst, env: &mut Environment) -> Val {
 fn eval_special_form(special_form: SpecialFormAst, env: &mut Environment) -> Val {
 	match special_form {
 		SpecialFormAst::If(i) => eval_if(i, env),
+		SpecialFormAst::Cond(c) => eval_cond(c, env),
 		SpecialFormAst::Define(d) => eval_define(d, env),
 		SpecialFormAst::Do(d) => eval_do(d, env),
 		SpecialFormAst::And(a) => eval_and(a, env),
@@ -220,6 +221,23 @@ fn eval_if(if_form: IfAst, env: &mut Environment) -> Val {
 		Error(e) => Error(e),
 		_ => Error("Expected boolean as condition!".to_string())
 	}
+}
+
+// cond ::= ( cond (expr expr)+ )
+fn eval_cond(cond_form: CondAst, env: &mut Environment) -> Val {
+	for (cond, expr) in cond_form.conds.iter().zip(cond_form.expr_list.iter()) {
+		match eval_expr(cond.clone(), env) {
+			Boolean(b) => {
+				if b {
+					return eval_expr(expr.clone(), env);
+				}
+			},
+			Error(e) => { return Error(e) },
+			_ => { return Error("Expected boolean as condition!".to_string()) }
+		}
+	}
+
+	Void
 }
 
 // define ::= ( define name expr )

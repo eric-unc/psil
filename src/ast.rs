@@ -34,6 +34,7 @@ pub struct LambdaAst {
 #[derive(Clone, Debug)]
 pub enum SpecialFormAst {
 	If(IfAst),
+	Cond(CondAst),
 	Define(DefineAst),
 	Do(DoAst),
 	And(AndAst),
@@ -52,6 +53,12 @@ pub struct IfAst {
 	pub cond: ExprAst,
 	pub if_true: ExprAst,
 	pub if_false: ExprAst,
+}
+
+#[derive(Clone, Debug)]
+pub struct CondAst {
+	pub conds: ExprListAst,
+	pub expr_list: ExprListAst,
 }
 
 #[derive(Clone, Debug)]
