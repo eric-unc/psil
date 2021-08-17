@@ -162,7 +162,8 @@ fn eval_special_form(special_form: SpecialFormAst, env: &mut Environment) -> Val
 	match special_form {
 		SpecialFormAst::If(i) => eval_if(i, env),
 		SpecialFormAst::Define(d) => eval_define(d, env),
-		SpecialFormAst::Do(d) => eval_do(d, env)
+		SpecialFormAst::Do(d) => eval_do(d, env),
+		SpecialFormAst::And(a) => eval_and(a, env)
 	}
 }
 
@@ -216,7 +217,7 @@ fn eval_if(if_form: IfAst, env: &mut Environment) -> Val {
 			}
 		}
 		Error(e) => Error(e),
-		_ => Error(String::from("Expected boolean as condition!"))
+		_ => Error("Expected boolean as condition!".to_string())
 	}
 }
 
@@ -228,6 +229,7 @@ fn eval_define(define: DefineAst, env: &mut Environment) -> Val {
 
 	Void
 }
+
 // do ::= ( do expr_list? )
 fn eval_do(do_ast: DoAst, env: &mut Environment) -> Val {
 	for expr in do_ast.expr_list {
@@ -235,5 +237,22 @@ fn eval_do(do_ast: DoAst, env: &mut Environment) -> Val {
 	}
 
 	Void
+}
+
+// and ::= ( and expr_list )
+fn eval_and(and_ast: AndAst, env: &mut Environment) -> Val {
+	// TODO: check for rands
+	for expr in and_ast.expr_list {
+		match eval_expr(expr, env) {
+			Boolean(b) => {
+				if !b {
+					return Boolean(false);
+				}
+			}
+			_ => { return Error("Expected boolean as condition!".to_string()); }
+		}
+	}
+
+	Boolean(true)
 }
 

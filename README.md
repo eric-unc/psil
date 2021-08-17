@@ -53,12 +53,13 @@ Psil has two major constructions. The first is the "atom", which is a singular u
 | `exit` | number? | void | Exits the program with a 0 status. With an optional rand, it will exit with that status code.
 
 ### Special forms
-Special forms are something like procedures.
+Special forms are similar to procedures, but with special evaluation rules that don't allow them to be implemented as regular procedures.
 | Name | Rands | Returns | Description
 | :------ | :------ | :------ | :------
 | `if` | boolean, any, any | any | Returns one expression if the given condition is true, and the other if false. The other expression within will not be evaluated. Requires three rands (one boolean, two of any type).
 | `define` | name, any | void | Creates a binding with the name given in the current scope.
 | `do` | any+ | void | Executes each invocation given.
+| `and` | boolean{2,} | boolean | Ands each rand together. Always short-circuited.
 
 ## Technologies used
 * [Rust](https://github.com/rust-lang/rust)

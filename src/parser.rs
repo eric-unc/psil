@@ -71,13 +71,14 @@ fn parse_atom(atom_tree: Pair<Rule>) -> AtomAst {
 	unreachable!();
 }
 
-// special_form ::= if | define | do
+// special_form ::= if | define | do | and
 fn parse_special_form(special_form_tree: Pair<Rule>) -> SpecialFormAst {
 	for inner_pair in special_form_tree.into_inner() {
 		match inner_pair.as_rule() {
 			Rule::if_form => return SpecialFormAst::If(parse_if(inner_pair)),
 			Rule::define => return SpecialFormAst::Define(parse_define(inner_pair)),
 			Rule::do_form => return SpecialFormAst::Do(parse_do(inner_pair)),
+			Rule::and => return SpecialFormAst::And(parse_and(inner_pair)),
 			_ => unreachable!()
 		}
 	}
@@ -125,6 +126,13 @@ fn parse_do(do_tree: Pair<Rule>) -> DoAst {
 	let expr_list = parse_expr_list(do_tree.into_inner().next().unwrap());
 
 	DoAst { expr_list }
+}
+
+// and ::= ( and expr_list )
+fn parse_and(and_tree: Pair<Rule>) -> AndAst {
+	let expr_list = parse_expr_list(and_tree.into_inner().next().unwrap());
+
+	AndAst { expr_list }
 }
 
 fn parse_number(float_tree: Pair<Rule>) -> f64 {
