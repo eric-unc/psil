@@ -211,14 +211,10 @@ fn parse_lambda(lambda_tree: Pair<Rule>) -> LambdaAst {
 }
 
 fn parse_params(params_tree: Pair<Rule>) -> ParamsAst {
-	let mut names = Vec::new();
-
-	for inner_pair in params_tree.into_inner() {
-		match inner_pair.as_rule() {
-			Rule::name => names.push(inner_pair.as_str().to_string()),
-			_ => unreachable!()
-		}
-	}
+	let names = params_tree
+		.into_inner()
+		.map(|pair| pair.as_str().to_string())
+		.collect();
 
 	ParamsAst { names }
 }
