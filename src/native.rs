@@ -1,3 +1,5 @@
+use std::io::{self, Write};
+
 use crate::eval::{Environment, Val, ValList};
 
 use Val::{Boolean, Error, Number, Procedure as ProcedureVal, String as StringVal, Void};
@@ -15,11 +17,16 @@ pub fn add_native_library(env: &mut Environment) {
 	env.add_proc("xor".to_string(), xor);
 	env.add_proc("==".to_string(), equal);
 	env.add_proc("!=".to_string(), no_eq);
+	env.add_proc(">".to_string(), gt);
+	env.add_proc(">=".to_string(), gte);
+	env.add_proc("<".to_string(), lt);
+	env.add_proc("<=".to_string(), lte);
 
 	// System
 	env.add_proc("exit".to_string(), exit);
 	env.add_proc("print".to_string(), print);
 	env.add_proc("put".to_string(), put);
+	env.add_proc("input".to_string(), input);
 }
 
 // Macros
@@ -193,6 +200,102 @@ fn no_eq(args: ValList) -> Val {
 	Boolean(true)
 }
 
+fn gt(args: ValList) -> Val {
+	// TODO: check args
+	let mut first = None;
+
+	for rand in args {
+		match rand {
+			Number(n) => {
+				match first {
+					Some(f) => {
+						if n >= f {
+							return Boolean(false);
+						}
+					},
+					None => { first = Some(n); }
+				}
+			}
+			Error(e) => { return Error(e); },
+			_ => { return Error("Bad type for >!".to_string()); }
+		}
+	}
+
+	Boolean(true)
+}
+
+fn gte(args: ValList) -> Val {
+	// TODO: check args
+	let mut first = None;
+
+	for rand in args {
+		match rand {
+			Number(n) => {
+				match first {
+					Some(f) => {
+						if n > f {
+							return Boolean(false);
+						}
+					},
+					None => { first = Some(n); }
+				}
+			}
+			Error(e) => { return Error(e); },
+			_ => { return Error("Bad type for >=!".to_string()); }
+		}
+	}
+
+	Boolean(true)
+}
+
+fn lt(args: ValList) -> Val {
+	// TODO: check args
+	let mut first = None;
+
+	for rand in args {
+		match rand {
+			Number(n) => {
+				match first {
+					Some(f) => {
+						if n <= f {
+							return Boolean(false);
+						}
+					},
+					None => { first = Some(n); }
+				}
+			}
+			Error(e) => { return Error(e); },
+			_ => { return Error("Bad type for <!".to_string()); }
+		}
+	}
+
+	Boolean(true)
+}
+
+fn lte(args: ValList) -> Val {
+	// TODO: check args
+	let mut first = None;
+
+	for rand in args {
+		match rand {
+			Number(n) => {
+				match first {
+					Some(f) => {
+						if n < f {
+							return Boolean(false);
+						}
+					},
+					None => { first = Some(n); }
+				}
+			}
+			Error(e) => { return Error(e); },
+			_ => { return Error("Bad type for <=!".to_string()); }
+		}
+	}
+
+	Boolean(true)
+}
+
 ///// System
 
 fn exit(args: ValList) -> Val {
@@ -226,4 +329,13 @@ fn put(args: ValList) -> Val {
 	}
 
 	Void
+}
+
+fn input(_args: ValList) -> Val {
+	// TODO: check for no args
+	let mut line = String::new();
+	io::stdin().read_line(&mut line).unwrap();
+	line = line.trim().to_string();
+
+	StringVal(line)
 }

@@ -50,8 +50,13 @@ Psil has two major constructions. The first is the "atom", which is a singular u
 | `xor` | boolean{2,} | boolean | Xors all rands.
 | `==` | any{2,} | boolean | Checks for equality between all rands.
 | `!=` | any{2,} | boolean | Checks for inequality between all rands. `(!= 5 6 6)` would return false, since the two `6` are both equal, even if neither are equal to the first rand.
+| `>` | number{2,} | boolean | Checks that first rand is greater than all other rands.
+| `>=` | number{2,} | boolean | Checks that first rand is greater than or equal to all other rands.
+| `<` | number{2,} | boolean | Checks that first rand is less than all other rands.
+| `<=` | number{2,} | boolean | Checks that first rand is less than or equal to all other rands.
 | `put` | any* | void | Prints (each on a new line) each rand.
 | `print` | any* | void | Prints each rand without any new lines.
+| `input` | _none_ | string | Takes input from console.
 | `exit` | number? | void | Exits the program with a 0 status. With an optional rand, it will exit with that status code.
 
 ### Special forms
