@@ -163,7 +163,8 @@ fn eval_special_form(special_form: SpecialFormAst, env: &mut Environment) -> Val
 		SpecialFormAst::If(i) => eval_if(i, env),
 		SpecialFormAst::Define(d) => eval_define(d, env),
 		SpecialFormAst::Do(d) => eval_do(d, env),
-		SpecialFormAst::And(a) => eval_and(a, env)
+		SpecialFormAst::And(a) => eval_and(a, env),
+		SpecialFormAst::Or(a) => eval_or(a, env)
 	}
 }
 
@@ -254,5 +255,22 @@ fn eval_and(and_ast: AndAst, env: &mut Environment) -> Val {
 	}
 
 	Boolean(true)
+}
+
+// or ::= ( or expr_list )
+fn eval_or(or_ast: OrAst, env: &mut Environment) -> Val {
+	// TODO: check for rands
+	for expr in or_ast.expr_list {
+		match eval_expr(expr, env) {
+			Boolean(b) => {
+				if b {
+					return Boolean(true);
+				}
+			}
+			_ => { return Error("Expected boolean as condition!".to_string()); }
+		}
+	}
+
+	Boolean(false)
 }
 

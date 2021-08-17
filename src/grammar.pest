@@ -3,7 +3,7 @@ program = { SOI ~ expr_list? ~ EOI }
 expr_list = { expr+ }
 expr = { atom | special_form | invocation }
 atom = { number | boolean | string | void | lambda | name }
-special_form = { if_form | define | do_form | and }
+special_form = { if_form | define | do_form | and | or }
 invocation = { "(" ~ name ~ expr_list? ~ ")" }
 
 // Special forms
@@ -12,6 +12,7 @@ if_form = { "(" ~ "if" ~ expr ~ expr ~ expr ~ ")" } // cannot use reserved keywo
 define = { "(" ~ "define" ~ name ~ expr ~ ")" }
 do_form = { "(" ~ "do" ~ expr_list? ~ ")" }
 and = { "(" ~ "and" ~ expr_list ~ ")" }
+or = { "(" ~ "or" ~ expr_list ~ ")" }
 
 // Atoms
 number = @{ ("+" | "-")? ~ ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+)? }

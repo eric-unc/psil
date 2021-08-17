@@ -79,6 +79,7 @@ fn parse_special_form(special_form_tree: Pair<Rule>) -> SpecialFormAst {
 			Rule::define => return SpecialFormAst::Define(parse_define(inner_pair)),
 			Rule::do_form => return SpecialFormAst::Do(parse_do(inner_pair)),
 			Rule::and => return SpecialFormAst::And(parse_and(inner_pair)),
+			Rule::or => return SpecialFormAst::Or(parse_or(inner_pair)),
 			_ => unreachable!()
 		}
 	}
@@ -133,6 +134,13 @@ fn parse_and(and_tree: Pair<Rule>) -> AndAst {
 	let expr_list = parse_expr_list(and_tree.into_inner().next().unwrap());
 
 	AndAst { expr_list }
+}
+
+// or ::= ( or expr_list )
+fn parse_or(or_tree: Pair<Rule>) -> OrAst {
+	let expr_list = parse_expr_list(or_tree.into_inner().next().unwrap());
+
+	OrAst { expr_list }
 }
 
 fn parse_number(float_tree: Pair<Rule>) -> f64 {

@@ -60,6 +60,7 @@ Special forms are similar to procedures, but with special evaluation rules that 
 | `define` | name, any | void | Creates a binding with the name given in the current scope.
 | `do` | any+ | void | Executes each invocation given.
 | `and` | boolean{2,} | boolean | Ands each rand together. Always short-circuited.
+| `or` | boolean{2,} | boolean | Ors each rand together. Always short-circuited.
 
 ## Technologies used
 * [Rust](https://github.com/rust-lang/rust)

@@ -36,7 +36,8 @@ pub enum SpecialFormAst {
 	If(IfAst),
 	Define(DefineAst),
 	Do(DoAst),
-	And(AndAst)
+	And(AndAst),
+	Or(OrAst)
 }
 
 #[derive(Clone, Debug)]
@@ -66,6 +67,11 @@ pub struct DoAst {
 
 #[derive(Clone, Debug)]
 pub struct AndAst {
+	pub expr_list: ExprListAst,
+}
+
+#[derive(Clone, Debug)]
+pub struct OrAst {
 	pub expr_list: ExprListAst,
 }
 
