@@ -2,7 +2,6 @@ use crate::Rule;
 use pest::iterators::{Pair, Pairs};
 
 use crate::ast::*;
-use pest::Parser;
 
 pub fn parse(tree: Pairs<Rule>) -> ProgramAst {
 	parse_program(tree)
@@ -19,9 +18,7 @@ pub fn parse_program(tree: Pairs<Rule>) -> ProgramAst {
 					list = parse_expr_list(inner_pair);
 				},
 				Rule::EOI => {},
-				_ => {
-					unreachable!();
-				}
+				_ => unreachable!()
 			}
 		}
 	}
@@ -57,13 +54,13 @@ fn parse_expr(expr_tree: Pair<Rule>) -> ExprAst {
 // atom ::= number | boolean | string | void | lambda | name
 fn parse_atom(atom_tree: Pair<Rule>) -> AtomAst {
 	for inner_pair in atom_tree.into_inner() {
-		match inner_pair.as_rule() {
-			Rule::number => return AtomAst::Number(parse_number(inner_pair)),
-			Rule::boolean => return AtomAst::Boolean(parse_boolean(inner_pair)),
-			Rule::string => return AtomAst::String(parse_string(inner_pair)),
-			Rule::void => return AtomAst::Void,
-			Rule::lambda => return AtomAst::Lambda(parse_lambda(inner_pair)),
-			Rule::name => return AtomAst::Name(inner_pair.as_str().to_string()),
+		return match inner_pair.as_rule() {
+			Rule::number => AtomAst::Number(parse_number(inner_pair)),
+			Rule::boolean => AtomAst::Boolean(parse_boolean(inner_pair)),
+			Rule::string => AtomAst::String(parse_string(inner_pair)),
+			Rule::void => AtomAst::Void,
+			Rule::lambda => AtomAst::Lambda(parse_lambda(inner_pair)),
+			Rule::name => AtomAst::Name(inner_pair.as_str().to_string()),
 			_ => unreachable!()
 		}
 	}
@@ -178,7 +175,7 @@ fn parse_boolean(boolean_tree: Pair<Rule>) -> bool {
 	match boolean_tree.as_span().as_str() {
 		"true" => true,
 		"false" => false,
-		_ => panic!()
+		_ => unreachable!()
 	}
 }
 

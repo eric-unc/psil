@@ -1,8 +1,8 @@
-use std::io::{self, Write};
+use std::io;
 
 use crate::eval::{Environment, Val, ValList};
 
-use Val::{Boolean, Error, Number, Procedure as ProcedureVal, String as StringVal, Void};
+use Val::{Boolean, Error, Number, Procedure, String as StringVal, Void};
 
 pub fn add_native_library(env: &mut Environment) {
 	// Math
