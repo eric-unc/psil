@@ -11,6 +11,8 @@ pub fn add_native_library(env: &mut Environment) {
 	env.add_proc("%".to_string(), remainder);
 
 	// Boolean
+	env.add_proc("not".to_string(), not);
+	env.add_proc("xor".to_string(), xor);
 	env.add_proc("==".to_string(), equal);
 	env.add_proc("!=".to_string(), no_eq);
 
@@ -141,6 +143,33 @@ fn remainder(args: ValList) -> Val {
 }
 
 ///// Boolean
+fn not(args: ValList) -> Val {
+	// TODO: error checkings
+
+	match args[0] {
+		Boolean(b) => Boolean(!b),
+		_ => Error("Bad type for not!".to_string())
+	}
+}
+
+fn xor(args: ValList) -> Val {
+	// Wikipedia: "[xor] may be considered to be an n-ary operator which is true if and only if an odd number of arguments are true"
+	let mut trues = 0;
+
+	for rand in args {
+		match rand {
+			Boolean(b) => {
+				if b {
+					trues += 1;
+				}
+			},
+			_ => { return Error("Bad type for xor!".to_string()) }
+		}
+	}
+
+
+	Boolean(trues % 2 == 1)
+}
 
 fn equal(args: ValList) -> Val {
 	for i in 1..args.len() {
