@@ -112,10 +112,6 @@ pub fn eval(program: ProgramAst) {
 	eval_program(program, env);
 }*/
 
-pub fn eval_expr_with_env(expr: ExprAst, env: &mut Environment) {
-	eval_expr_with_env(expr, env);
-}
-
 // program ::= expr_list?
 fn eval_program(program: ProgramAst, env: &mut Environment) {
 	eval_expr_list(program.expr_list, env);
@@ -129,7 +125,7 @@ fn eval_expr_list(expr_list: ExprListAst, env: &mut Environment) -> Vec<Val> {
 }
 
 // expr ::= atom | special_form | invocation
-fn eval_expr(expr: ExprAst, env: &mut Environment) -> Val {
+pub fn eval_expr(expr: ExprAst, env: &mut Environment) -> Val {
 	match expr {
 		ExprAst::Atom(a) => eval_atom(*a, env),
 		ExprAst::SpecialForm(s) => eval_special_form(*s, env),

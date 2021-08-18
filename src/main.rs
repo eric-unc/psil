@@ -9,7 +9,7 @@ use std::{env, fs};
 pub mod ast;
 
 pub mod eval;
-use eval::{eval, eval_expr_with_env, Environment};
+use eval::{eval, eval_expr, Environment};
 
 pub mod native;
 
@@ -62,7 +62,7 @@ fn repl() {
 		match parse_tree {
 			Ok(tree) => {
 				for pair in tree {
-					eval_expr_with_env(parse_expr(pair), &mut env);
+					eval_expr(parse_expr(pair), &mut env);
 				}
 			}
 			Err(e) => println!("{}", e)
