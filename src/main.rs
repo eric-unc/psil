@@ -63,14 +63,13 @@ fn repl() {
 		let parse_tree = PsilPestParser::parse(Rule::expr, &line);
 
 		match parse_tree {
-			Ok(tree) => {
+			Ok(tree) =>
 				for pair in tree {
 					match eval_expr(parse_expr(pair), &mut env) {
 						Ok(val) => println!("{}", val),
 						Err(e) => eprintln!("{}", e)
 					}
 				}
-			}
 			Err(e) => eprintln!("{}", e)
 		}
 

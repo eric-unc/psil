@@ -148,10 +148,8 @@ fn xor(rands: ValList) -> Result<Val, String> {
 
 	for rand in rands {
 		match rand {
-			Boolean(b) =>
-				if b {
-					trues += 1
-				}
+			Boolean(true) => trues += 1,
+			Boolean(false) => continue,
 			_ => return Err("Bad type for xor!".to_string())
 		}
 	}
@@ -187,16 +185,12 @@ fn gt(rands: ValList) -> Result<Val, String> {
 	let mut first = None;
 
 	for rand in rands {
-		match rand {
-			Number(n) => {
-				match first {
-					Some(f) =>
-						if n >= f {
-							return Ok(Boolean(false))
-						}
-					None => first = Some(n)
+		match (rand, first) {
+			(Number(n), Some(f)) =>
+				if n >= f {
+					return Ok(Boolean(false))
 				}
-			}
+			(Number(n), None) => first = Some(n),
 			_ => return Err("Bad type for >!".to_string())
 		}
 	}
@@ -209,16 +203,12 @@ fn gte(rands: ValList) -> Result<Val, String> {
 	let mut first = None;
 
 	for rand in rands {
-		match rand {
-			Number(n) => {
-				match first {
-					Some(f) =>
-						if n > f {
-							return Ok(Boolean(false))
-						}
-					None => first = Some(n)
+		match (rand, first) {
+			(Number(n), Some(f)) =>
+				if n > f {
+					return Ok(Boolean(false))
 				}
-			}
+			(Number(n), None) => first = Some(n),
 			_ => return Err("Bad type for >=!".to_string())
 		}
 	}
@@ -231,16 +221,12 @@ fn lt(rands: ValList) -> Result<Val, String> {
 	let mut first = None;
 
 	for rand in rands {
-		match rand {
-			Number(n) => {
-				match first {
-					Some(f) =>
-						if n <= f {
-							return Ok(Boolean(false))
-						}
-					None => first = Some(n)
+		match (rand, first) {
+			(Number(n), Some(f)) =>
+				if n <= f {
+					return Ok(Boolean(false))
 				}
-			}
+			(Number(n), None) => first = Some(n),
 			_ => return Err("Bad type for <!".to_string())
 		}
 	}
@@ -253,16 +239,12 @@ fn lte(rands: ValList) -> Result<Val, String> {
 	let mut first = None;
 
 	for rand in rands {
-		match rand {
-			Number(n) => {
-				match first {
-					Some(f) =>
-						if n < f {
-							return Ok(Boolean(false))
-						}
-					None => first = Some(n)
+		match (rand, first) {
+			(Number(n), Some(f)) =>
+				if n < f {
+					return Ok(Boolean(false))
 				}
-			}
+			(Number(n), None) => first = Some(n),
 			_ => return Err("Bad type for <=!".to_string())
 		}
 	}
@@ -278,8 +260,8 @@ fn exit(rands: ValList) -> Result<Val, String> {
 		1 => match rands[0] {
 			Number(n) => std::process::exit(n as i32),
 			_ => Err(format!("Bad type of {:?} for exit!", rands[0])),
-		},
-		_ => Err("Bad arity for exit!".to_string()),
+		}
+		_ => Err("Bad arity for exit!".to_string())
 	}
 }
 

@@ -23,7 +23,7 @@ impl Display for Val {
 			Boolean(b) => b.to_string(),
 			StringVal(s) => s.to_string(),
 			Void => "void".to_string(),
-			Procedure(_) => "<procedure>".to_string() // TODO: some day this will be much more advanced
+			Procedure(_) => "<procedure>".to_string() // #3: most interesting output
 		})
 	}
 }
@@ -33,7 +33,7 @@ pub type ValList = Vec<Val>;
 #[derive(Clone, Debug)]
 pub enum ProcedureType {
 	Native(NativeProcedure),
-	Pure(LambdaAst),
+	Pure(LambdaAst)
 }
 
 pub type NativeProcedure = fn(ValList) -> Result<Val, String>;
@@ -57,7 +57,7 @@ pub type Scope = HashMap<String, Val>;
 pub type Bindings = Vec<Scope>;
 
 pub struct Environment {
-	bindings: Bindings,
+	bindings: Bindings
 }
 
 impl Environment {
@@ -113,11 +113,7 @@ fn eval_program(program: ProgramAst, env: &mut Environment) -> Result<Vec<Val>, 
 
 // expr_list ::= expr+
 fn eval_expr_list(expr_list: ExprListAst, env: &mut Environment) -> Result<Vec<Val>, String> {
-	/*Ok(expr_list.into_iter()
-		.map(|expr| eval_expr(expr, env))
-		.collect())*/
-
-	let mut ret = Vec::new();
+	let mut ret = Vec::new(); // TODO: could maybe convert to functional-style
 
 	for expr in expr_list.into_iter() {
 		let val = eval_expr(expr, env);
@@ -171,48 +167,41 @@ fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Result<V
 	let proc_fetch = env.get_binding(name.clone());
 
 	match proc_fetch {
-		Ok(proc) => {
-			match proc {
-				Procedure(p) => {
-					/*let rands = invocation.expr_list.into_iter()
-						.map(|expr| eval_expr(expr, env))
-						.collect();*/
+		Ok(Procedure(p)) => {
+			// TODO: could maybe convert to functional-style
+			let mut rands = Vec::new();
 
-					let mut rands = Vec::new();
-
-					for expr in invocation.expr_list.into_iter() {
-						match eval_expr(expr, env) {
-							Ok(val) => rands.push(val),
-							Err(e) => return Err(e)
-						}
-					}
-
-					match p {
-						ProcedureType::Native(n) => { n(rands) }
-						ProcedureType::Pure(p) => {
-							if p.params.names.len() > rands.len() {
-								return Err(format!("Procedure {} called with {} missing parameters!", name.clone(), p.params.names.len() - rands.len()))
-							} else if p.params.names.len() < rands.len() {
-								return Err(format!("Procedure {} called with {} extra parameters!", name.clone(), rands.len() - p.params.names.len()))
-							}
-
-							env.add_scope();
-
-							p.params.names.into_iter()
-								.zip(rands.into_iter())
-								.for_each(|(name, value)| env.add_binding(name, value));
-
-							let ret = eval_expr(p.expr, env);
-
-							env.close_scope();
-
-							ret
-						}
-					}
+			for expr in invocation.expr_list.into_iter() {
+				match eval_expr(expr, env) {
+					Ok(val) => rands.push(val),
+					Err(e) => return Err(e)
 				}
-				_ => Err(format!("Binding {} is not a procedure!", name.clone()))
+			}
+
+			match p {
+				ProcedureType::Native(n) => { n(rands) }
+				ProcedureType::Pure(p) => {
+					if p.params.names.len() > rands.len() {
+						return Err(format!("Procedure {} called with {} missing parameters!", name.clone(), p.params.names.len() - rands.len()))
+					} else if p.params.names.len() < rands.len() {
+						return Err(format!("Procedure {} called with {} extra parameters!", name.clone(), rands.len() - p.params.names.len()))
+					}
+
+					env.add_scope();
+
+					p.params.names.into_iter()
+						.zip(rands.into_iter())
+						.for_each(|(name, value)| env.add_binding(name, value));
+
+					let ret = eval_expr(p.expr, env);
+
+					env.close_scope();
+
+					ret
+				}
 			}
 		}
+		Ok(_) => Err(format!("Binding {} is not a procedure!", name.clone())),
 		Err(e) => Err(e)
 	}
 }
@@ -220,10 +209,8 @@ fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Result<V
 // if ::= ( if expr expr expr )
 fn eval_if(if_form: IfAst, env: &mut Environment) -> Result<Val, String> {
 	match eval_expr(if_form.cond, env) {
-		Ok(cond) => match cond {
-			Boolean(b) => eval_expr(if b { if_form.if_true } else { if_form.if_false }, env),
-			_ => Err("Expected boolean as condition!".to_string())
-		}
+		Ok(Boolean(b)) => eval_expr(if b { if_form.if_true } else { if_form.if_false }, env),
+		Ok(_)=> Err("Expected boolean as condition!".to_string()),
 		Err(e) => Err(e)
 	}
 }
@@ -232,22 +219,10 @@ fn eval_if(if_form: IfAst, env: &mut Environment) -> Result<Val, String> {
 fn eval_cond(cond_form: CondAst, env: &mut Environment) -> Result<Val, String> {
 	// TODO: convert to functional
 	for (cond, expr) in cond_form.conds.into_iter().zip(cond_form.expr_list.into_iter()) {
-		/*match eval_expr(cond, env) {
-			Boolean(b) =>
-				if b {
-					return eval_expr(expr, env)
-				}
-			Error(e) => return Error(e),
-			_ => return Error("Expected boolean as condition!".to_string())
-		}*/
 		match eval_expr(cond, env) {
-			Ok(val) => match val {
-				Boolean(b) =>
-					if b {
-						return eval_expr(expr, env)
-					}
-				_ => return Err("Expected boolean as condition!".to_string())
-			}
+			Ok(Boolean(false)) => continue,
+			Ok(Boolean(true)) => return eval_expr(expr, env),
+			Ok(_) => return Err("Expected boolean as condition!".to_string()),
 			Err(e) => return Err(e)
 		}
 	}
@@ -277,10 +252,6 @@ fn eval_do(do_ast: DoAst, env: &mut Environment) -> Result<Val, String> {
 		}
 	}
 
-	// TODO: For some reason, this doesn't work.
-	/*do_ast.expr_list.into_iter()
-		.for_each(|expr| eval_expr(expr, env));*/
-
 	Ok(Void)
 }
 
@@ -289,13 +260,9 @@ fn eval_and(and_ast: AndAst, env: &mut Environment) -> Result<Val, String> {
 	// TODO: check for rands
 	for expr in and_ast.expr_list {
 		match eval_expr(expr, env) {
-			Ok(v) => match v {
-				Boolean(b) =>
-					if !b {
-						return Ok(Boolean(false))
-					}
-				_ => return Err("Expected boolean as condition!".to_string())
-			}
+			Ok(Boolean(false)) => return Ok(Boolean(false)),
+			Ok(Boolean(true)) => continue,
+			Ok(_) => return Err("Expected boolean as condition!".to_string()),
 			Err(e) => return Err(e)
 		}
 	}
@@ -308,16 +275,11 @@ fn eval_or(or_ast: OrAst, env: &mut Environment) -> Result<Val, String> {
 	// TODO: check for rands
 	for expr in or_ast.expr_list {
 		match eval_expr(expr, env) {
-			Ok(val) => match val {
-				Boolean(b) =>
-					if b {
-						return Ok(Boolean(true))
-					}
-				_ => return Err("Expected boolean as condition!".to_string())
-			}
+			Ok(Boolean(false)) => continue,
+			Ok(Boolean(true)) => return Ok(Boolean(true)),
+			Ok(_) => return Err("Expected boolean as condition!".to_string()),
 			Err(e) => return Err(e)
 		}
-
 	}
 
 	Ok(Boolean(false))
