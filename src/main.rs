@@ -9,12 +9,12 @@ use std::{env, fs};
 pub mod ast;
 
 pub mod eval;
-use eval::{eval, eval_with_env, Environment};
+use eval::{eval, eval_expr_with_env, Environment};
 
 pub mod native;
 
 pub mod parser;
-use parser::parse;
+use parser::{parse, parse_expr};
 
 #[derive(Parser)]
 #[grammar = "grammar.pest"]
@@ -24,9 +24,9 @@ fn main() {
 	let args: Vec<String> = env::args().collect();
 
 	if args.len() >= 2 { // first arg is always the name of the executable
-		load_and_interpret(&args[1])
+		load_and_interpret(&args[1]);
 	} else {
-		repl()
+		repl();
 	}
 }
 
@@ -57,10 +57,14 @@ fn repl() {
 			continue
 		}
 
-		let parse_tree = PsilPestParser::parse(Rule::program, &line);
+		let parse_tree = PsilPestParser::parse(Rule::expr, &line);
 
 		match parse_tree {
-			Ok(tree) => eval_with_env(parse(tree), &mut env),
+			Ok(tree) => {
+				for pair in tree {
+					eval_expr_with_env(parse_expr(pair), &mut env);
+				}
+			}
 			Err(e) => println!("{}", e)
 		}
 

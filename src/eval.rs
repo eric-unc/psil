@@ -104,11 +104,16 @@ impl Environment {
 }
 
 pub fn eval(program: ProgramAst) {
-	eval_with_env(program, &mut Environment::new());
+	//eval_with_env(program, &mut Environment::new());
+	eval_program(program, &mut Environment::new());
 }
 
-pub fn eval_with_env(program: ProgramAst, env: &mut Environment) {
+/*fn eval_with_env(program: ProgramAst, env: &mut Environment) {
 	eval_program(program, env);
+}*/
+
+pub fn eval_expr_with_env(expr: ExprAst, env: &mut Environment) {
+	eval_expr_with_env(expr, env);
 }
 
 // program ::= expr_list?
