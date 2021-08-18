@@ -24,9 +24,9 @@ fn main() {
 	let args: Vec<String> = env::args().collect();
 
 	if args.len() >= 2 { // first arg is always the name of the executable
-		load_and_interpret(&args[1]);
+		load_and_interpret(&args[1])
 	} else {
-		repl();
+		repl()
 	}
 }
 
