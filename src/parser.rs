@@ -14,10 +14,8 @@ pub fn parse_program(tree: Pairs<Rule>) -> ProgramAst {
 	for pair in tree {
 		for inner_pair in pair.into_inner() {
 			match inner_pair.as_rule() {
-				Rule::expr_list => {
-					list = parse_expr_list(inner_pair);
-				},
-				Rule::EOI => {},
+				Rule::expr_list => list = parse_expr_list(inner_pair),
+				Rule::EOI => {}
 				_ => unreachable!()
 			}
 		}

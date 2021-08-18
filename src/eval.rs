@@ -172,9 +172,9 @@ fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Val {
 				ProcedureType::Native(n) => { n(rands) }
 				ProcedureType::Pure(p) => {
 					if p.params.names.len() > rands.len() {
-						return Error(format!("Procedure {} called with {} missing parameters!", name.clone(), p.params.names.len() - rands.len()));
+						return Error(format!("Procedure {} called with {} missing parameters!", name.clone(), p.params.names.len() - rands.len()))
 					} else if p.params.names.len() < rands.len() {
-						return Error(format!("Procedure {} called with {} extra parameters!", name.clone(), rands.len() - p.params.names.len()));
+						return Error(format!("Procedure {} called with {} extra parameters!", name.clone(), rands.len() - p.params.names.len()))
 					}
 
 					env.add_scope();
@@ -211,11 +211,10 @@ fn eval_cond(cond_form: CondAst, env: &mut Environment) -> Val {
 	// TODO: convert to functional
 	for (cond, expr) in cond_form.conds.into_iter().zip(cond_form.expr_list.into_iter()) {
 		match eval_expr(cond, env) {
-			Boolean(b) => {
+			Boolean(b) =>
 				if b {
-					return eval_expr(expr, env);
+					return eval_expr(expr, env)
 				}
-			}
 			Error(e) => return Error(e),
 			_ => return Error("Expected boolean as condition!".to_string()),
 		}
@@ -251,11 +250,10 @@ fn eval_and(and_ast: AndAst, env: &mut Environment) -> Val {
 	// TODO: check for rands
 	for expr in and_ast.expr_list {
 		match eval_expr(expr, env) {
-			Boolean(b) => {
+			Boolean(b) =>
 				if !b {
-					return Boolean(false);
+					return Boolean(false)
 				}
-			}
 			_ => return Error("Expected boolean as condition!".to_string())
 		}
 	}
@@ -268,11 +266,10 @@ fn eval_or(or_ast: OrAst, env: &mut Environment) -> Val {
 	// TODO: check for rands
 	for expr in or_ast.expr_list {
 		match eval_expr(expr, env) {
-			Boolean(b) => {
+			Boolean(b) =>
 				if b {
-					return Boolean(true);
+					return Boolean(true)
 				}
-			}
 			_ => return Error("Expected boolean as condition!".to_string())
 		}
 	}

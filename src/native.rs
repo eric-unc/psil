@@ -101,7 +101,7 @@ fn divide(rands: ValList) -> Val {
 					ret = n;
 					ret_init = true;
 				} else {
-					ret /= n;
+					ret /= n
 				}
 			_ => return Error(String::from("Bad type"))
 		}
@@ -123,7 +123,7 @@ fn remainder(rands: ValList) -> Val {
 					ret = n;
 					ret_init = true;
 				} else {
-					ret %= n;
+					ret %= n
 				}
 			_ => return Error(String::from("Bad type"))
 		}
@@ -299,7 +299,7 @@ fn print(rands: ValList) -> Val {
 
 fn put(rands: ValList) -> Val {
 	if rands.len() == 0 {
-		println!();
+		println!()
 	} else {
 		for arg in rands {
 			println!("{}", arg);
