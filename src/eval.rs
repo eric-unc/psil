@@ -12,10 +12,9 @@ pub enum Val {
 	String(String),
 	Void,
 	Procedure(ProcedureType),
-	Error(String),
 }
 
-use Val::{Boolean, Error, Number, Procedure, String as StringVal, Void};
+use Val::{Boolean, Number, Procedure, String as StringVal, Void};
 
 impl Display for Val {
 	fn fmt(&self, f: &mut Formatter) -> ResultFmt {
@@ -24,8 +23,7 @@ impl Display for Val {
 			Boolean(b) => b.to_string(),
 			StringVal(s) => s.to_string(),
 			Void => "void".to_string(),
-			Procedure(_) => "<procedure>".to_string(), // TODO: some day this will be much more advanced
-			Error(e) => e.to_string(), // TODO: this too
+			Procedure(_) => "<procedure>".to_string() // TODO: some day this will be much more advanced
 		})
 	}
 }
@@ -38,7 +36,7 @@ pub enum ProcedureType {
 	Pure(LambdaAst),
 }
 
-pub type NativeProcedure = fn(ValList) -> Val;
+pub type NativeProcedure = fn(ValList) -> Result<Val, String>;
 
 impl PartialEq for Val {
 	fn eq(&self, other: &Self) -> bool {
@@ -190,7 +188,7 @@ fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Result<V
 					}
 
 					match p {
-						ProcedureType::Native(n) => { Ok(n(rands)) } // TODO
+						ProcedureType::Native(n) => { n(rands) }
 						ProcedureType::Pure(p) => {
 							if p.params.names.len() > rands.len() {
 								return Err(format!("Procedure {} called with {} missing parameters!", name.clone(), p.params.names.len() - rands.len()))

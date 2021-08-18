@@ -10,7 +10,7 @@ Psil can be installed by doing the following:
 
 ## Running
 Psil's command line interface has two modes: REPL and file loading:
-* REPL mode: With no argument, Psil will take continually read input from the user and evaluate it. Note that the REPL will (as of yet) not automatically print what is evaluated, so it is not really a true REPL.
+* REPL mode: With no argument, Psil will take continually read input from the user and evaluate it as an expression, and then print the resulting value.
 * Load mode: With a single argument, it will load the file and run it. Conventionally, Psil files can end in `.psil` or `.lisp`. This repository uses `.lisp` so that GitHub recognizes it as code.
 
 ## Language
@@ -36,7 +36,6 @@ Psil has two major constructions. The first is the "atom", which is a singular u
 | boolean | Booleans are truth values, which can either be `true` or `false`.
 | string | Strings are a series of characters, like `"Ahhh!"` or `"545"`.
 | procedure | A procedure is a block that returns an atom with optional arguments. See `procs.lisp` in the `samples` directory for examples. Procedures can be invoked easily if defined.
-| error | Errors come up when something goes wrong.
 
 ### Built-in procedures
 | Name | Rands | Returns | Description

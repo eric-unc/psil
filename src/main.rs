@@ -15,7 +15,6 @@ pub mod native;
 
 pub mod parser;
 use parser::{parse, parse_expr};
-use crate::eval::Val;
 
 #[derive(Parser)]
 #[grammar = "grammar.pest"]
