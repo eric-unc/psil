@@ -38,9 +38,7 @@ fn load_and_interpret(file_name: &String) {
 			let parse_tree = PsilPestParser::parse(Rule::program, &s).unwrap();
 			eval(parse(parse_tree));
 		}
-		Err(e) => {
-			panic!("{:?}", e)
-		}
+		Err(e) => panic!("{:?}", e)
 	}
 }
 
@@ -62,12 +60,8 @@ fn repl() {
 		let parse_tree = PsilPestParser::parse(Rule::program, &line);
 
 		match parse_tree {
-			Ok(tree) => {
-				eval_with_env(parse(tree), &mut env);
-			}
-			Err(e) => {
-				println!("{}", e)
-			}
+			Ok(tree) => eval_with_env(parse(tree), &mut env),
+			Err(e) => println!("{}", e)
 		}
 
 		io::stdout().flush().unwrap();

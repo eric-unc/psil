@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::fmt;
+use std::fmt::{Display, Formatter, Result};
 use std::string::String;
 
 use crate::ast::*;
@@ -15,16 +15,16 @@ pub enum Val {
 	Error(String),
 }
 
-use Val::{Boolean, Error, Number, Procedure as ProcedureVal, String as StringVal, Void};
+use Val::{Boolean, Error, Number, Procedure, String as StringVal, Void};
 
-impl fmt::Display for Val {
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+impl Display for Val {
+	fn fmt(&self, f: &mut Formatter) -> Result {
 		write!(f, "{}", match self {
 			Number(n) => n.to_string(),
 			Boolean(b) => b.to_string(),
 			StringVal(s) => s.to_string(),
 			Void => "void".to_string(),
-			ProcedureVal(_) => "<procedure>".to_string(), // TODO: some day this will be much more advanced
+			Procedure(_) => "<procedure>".to_string(), // TODO: some day this will be much more advanced
 			Error(e) => e.to_string(), // TODO: this too
 		})
 	}
@@ -42,20 +42,11 @@ pub type NativeProcedure = fn(ValList) -> Val;
 
 impl PartialEq for Val {
 	fn eq(&self, other: &Self) -> bool {
-		match self {
-			Number(n) => match other {
-				Number(o) => *n == *o,
-				_ => false,
-			},
-			Boolean(b) => match other {
-				Boolean(o) => *b == *o,
-				_ => false,
-			},
-			StringVal(s) => match other {
-				StringVal(o) => s.eq(o),
-				_ => false,
-			},
-			_ => false,
+		match (self, other) {
+			(Number(n), Number(o)) => *n == *o,
+			(Boolean(b), Boolean(o)) => *b == *o,
+			(StringVal(s), StringVal(o)) => s.eq(o),
+			_ => false
 		}
 	}
 
@@ -88,19 +79,19 @@ impl Environment {
 		self.bindings.pop();
 	}
 
-	pub fn add_binding(&mut self, name: String, val: Val) {
+	pub fn add_binding(&mut self, name: NameAst, val: Val) {
 		let len = self.bindings.len();
 
 		self.bindings[len - 1].insert(name, val);
 	}
 
-	pub fn add_proc(&mut self, name: String, val: NativeProcedure) {
+	pub fn add_proc(&mut self, name: NameAst, val: NativeProcedure) {
 		let len = self.bindings.len();
 
-		self.bindings[len - 1].insert(name, Val::Procedure(ProcedureType::Native(val)));
+		self.bindings[len - 1].insert(name, Procedure(ProcedureType::Native(val)));
 	}
 
-	pub fn get_binding(&self, name: String) -> Val {
+	pub fn get_binding(&self, name: NameAst) -> Val {
 		for bindings in self.bindings.iter().rev() {
 			if bindings.contains_key(&name) {
 				let value = bindings.get(&name).unwrap();
@@ -108,7 +99,7 @@ impl Environment {
 			}
 		}
 
-		panic!(format!("Binding {} does not exist!", name)) // TODO: should use error val
+		Error(format!("Binding {} does not exist!", name))
 	}
 }
 
@@ -127,13 +118,9 @@ fn eval_program(program: ProgramAst, env: &mut Environment) {
 
 // expr_list ::= expr+
 fn eval_expr_list(expr_list: ExprListAst, env: &mut Environment) -> Vec<Val> {
-	let mut ret = Vec::new();
-
-	for expr in expr_list {
-		ret.push(eval_expr(expr, env));
-	}
-
-	ret
+	expr_list.into_iter()
+		.map(|expr| eval_expr(expr, env))
+		.collect()
 }
 
 // expr ::= atom | special_form | invocation
@@ -148,16 +135,16 @@ fn eval_expr(expr: ExprAst, env: &mut Environment) -> Val {
 // atom ::= number | boolean | string | void | lambda | name
 fn eval_atom(atom: AtomAst, env: &mut Environment) -> Val {
 	match atom {
-		AtomAst::Number(n) => Val::Number(n),
-		AtomAst::Boolean(b) => Val::Boolean(b),
-		AtomAst::String(s) => Val::String(s),
-		AtomAst::Void => Val::Void,
-		AtomAst::Lambda(l) => Val::Procedure(ProcedureType::Pure(l)),
+		AtomAst::Number(n) => Number(n),
+		AtomAst::Boolean(b) => Boolean(b),
+		AtomAst::String(s) => StringVal(s),
+		AtomAst::Void => Void,
+		AtomAst::Lambda(l) => Procedure(ProcedureType::Pure(l)),
 		AtomAst::Name(n) => env.get_binding(n)
 	}
 }
 
-// special_form ::= if | define | do
+// special_form ::= if | cond | define | do | and | or
 fn eval_special_form(special_form: SpecialFormAst, env: &mut Environment) -> Val {
 	match special_form {
 		SpecialFormAst::If(i) => eval_if(i, env),
@@ -171,28 +158,30 @@ fn eval_special_form(special_form: SpecialFormAst, env: &mut Environment) -> Val
 
 // invocation ::= ( name expr_list? )
 fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Val {
-	let proc = env.get_binding(invocation.proc);
+	// TODO: some weirdness with Rust borrowing here, should try to see if there's a better way to do this.
+	let name = invocation.proc;
+	let proc = env.get_binding(name.clone());
 
 	match proc {
-		Val::Procedure(p) => {
-			let mut rands = Vec::new();
-
-			for expr in invocation.expr_list {
-				rands.push(eval_expr(expr, env));
-			}
+		Procedure(p) => {
+			let rands = invocation.expr_list.into_iter()
+				.map(|expr| eval_expr(expr, env))
+				.collect();
 
 			match p {
 				ProcedureType::Native(n) => { n(rands) }
 				ProcedureType::Pure(p) => {
 					if p.params.names.len() > rands.len() {
-						panic!("Not enough parameters!");
+						return Error(format!("Procedure {} called with {} missing parameters!", name.clone(), p.params.names.len() - rands.len()));
+					} else if p.params.names.len() < rands.len() {
+						return Error(format!("Procedure {} called with {} extra parameters!", name.clone(), rands.len() - p.params.names.len()));
 					}
 
 					env.add_scope();
 
-					for i in 0..p.params.names.len() {
-						env.add_binding(p.params.names[i].clone(), rands[i].clone())
-					}
+					p.params.names.into_iter()
+						.zip(rands.into_iter())
+						.for_each(|(name, value)| env.add_binding(name, value));
 
 					let ret = eval_expr(p.expr, env);
 
@@ -201,8 +190,8 @@ fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Val {
 					ret
 				}
 			}
-		},
-		_ => Error(" is not a procedure!".parse().unwrap())
+		}
+		_ => Error(format!("Binding {} is not a procedure!", name.clone()))
 	}
 }
 
@@ -211,13 +200,7 @@ fn eval_if(if_form: IfAst, env: &mut Environment) -> Val {
 	let cond = eval_expr(if_form.cond, env);
 
 	match cond {
-		Boolean(b) => {
-			if b {
-				eval_expr(if_form.if_true, env)
-			} else {
-				eval_expr(if_form.if_false, env)
-			}
-		}
+		Boolean(b) => eval_expr(if b { if_form.if_true } else { if_form.if_false }, env),
 		Error(e) => Error(e),
 		_ => Error("Expected boolean as condition!".to_string())
 	}
@@ -225,15 +208,16 @@ fn eval_if(if_form: IfAst, env: &mut Environment) -> Val {
 
 // cond ::= ( cond (expr expr)+ )
 fn eval_cond(cond_form: CondAst, env: &mut Environment) -> Val {
-	for (cond, expr) in cond_form.conds.iter().zip(cond_form.expr_list.iter()) {
-		match eval_expr(cond.clone(), env) {
+	// TODO: convert to functional
+	for (cond, expr) in cond_form.conds.into_iter().zip(cond_form.expr_list.into_iter()) {
+		match eval_expr(cond, env) {
 			Boolean(b) => {
 				if b {
-					return eval_expr(expr.clone(), env);
+					return eval_expr(expr, env);
 				}
-			},
-			Error(e) => { return Error(e) },
-			_ => { return Error("Expected boolean as condition!".to_string()) }
+			}
+			Error(e) => return Error(e),
+			_ => return Error("Expected boolean as condition!".to_string()),
 		}
 	}
 
@@ -255,6 +239,10 @@ fn eval_do(do_ast: DoAst, env: &mut Environment) -> Val {
 		eval_expr(expr, env);
 	}
 
+	// TODO: For some reason, this doesn't work.
+	/*do_ast.expr_list.into_iter()
+		.for_each(|expr| eval_expr(expr, env));*/
+
 	Void
 }
 
@@ -268,7 +256,7 @@ fn eval_and(and_ast: AndAst, env: &mut Environment) -> Val {
 					return Boolean(false);
 				}
 			}
-			_ => { return Error("Expected boolean as condition!".to_string()); }
+			_ => return Error("Expected boolean as condition!".to_string())
 		}
 	}
 
@@ -285,7 +273,7 @@ fn eval_or(or_ast: OrAst, env: &mut Environment) -> Val {
 					return Boolean(true);
 				}
 			}
-			_ => { return Error("Expected boolean as condition!".to_string()); }
+			_ => return Error("Expected boolean as condition!".to_string())
 		}
 	}
 

@@ -36,113 +36,96 @@ pub fn add_native_library(env: &mut Environment) {
 
 ///// Math
 
-fn add(args: ValList) -> Val {
-	//expect_arity_at_least!(2, args.len());
+fn add(rands: ValList) -> Val {
+	//expect_arity_at_least!(2, rands.len());
 
 	let mut ret = 0.0;
 
-	for val in args {
+	for val in rands {
 		match val {
-			Number(n) => {
-				ret += n;
-			}
-			_ => {
-				return Error(String::from("Bad type"));
-			}
-		}
-	}
-
-	Val::Number(ret)
-}
-
-fn subtract(args: ValList) -> Val {
-	//expect_arity_at_least!(2, args.len());
-
-	let mut ret = 0.0;
-	let mut ret_init = false;
-
-	for val in args {
-		match val {
-			Val::Number(n) => {
-				if !ret_init {
-					ret = n;
-					ret_init = true;
-				} else {
-					ret -= n;
-				}
-			}
-			_ => {
-				return Error(String::from("Bad type"));
-			}
+			Number(n) => ret += n,
+			_ => return Error(String::from("Bad type"))
 		}
 	}
 
 	Number(ret)
 }
 
-fn multiply(args: ValList) -> Val {
-	//expect_arity_at_least!(2, args.len());
+fn subtract(rands: ValList) -> Val {
+	//expect_arity_at_least!(2, rands.len());
+
+	let mut ret = 0.0;
+	let mut ret_init = false;
+
+	for val in rands {
+		match val {
+			Number(n) =>
+				if !ret_init {
+					ret = n;
+					ret_init = true;
+				} else {
+					ret -= n
+				}
+			_ => return Error("Bad type".to_string())
+		}
+	}
+
+	Number(ret)
+}
+
+fn multiply(rands: ValList) -> Val {
+	//expect_arity_at_least!(2, rands.len());
 
 	let mut ret = 1.0;
 
-	for val in args {
+	for val in rands {
 		match val {
-			Number(n) => {
-				ret *= n;
-			}
-			_ => {
-				return Error(String::from("Bad type"));
-			}
+			Number(n) => ret *= n,
+			_ => return Error(String::from("Bad type"))
 		}
 	}
 
 	Val::Number(ret)
 }
 
-fn divide(args: ValList) -> Val {
-	//expect_arity_at_least!(2, args.len());
+fn divide(rands: ValList) -> Val {
+	//expect_arity_at_least!(2, rands.len());
 
 	let mut ret = 0.0;
 	let mut ret_init = false;
 
-	for val in args {
+	for val in rands {
 		match val {
-			Val::Number(n) => {
+			Number(n) =>
 				if !ret_init {
 					ret = n;
 					ret_init = true;
 				} else {
 					ret /= n;
 				}
-			}
-			_ => {
-				return Error(String::from("Bad type"));
-			}
+			_ => return Error(String::from("Bad type"))
 		}
 	}
 
 	Number(ret)
 }
 
-fn remainder(args: ValList) -> Val {
-	//expect_arity_at_least!(2, args.len());
+fn remainder(rands: ValList) -> Val {
+	//expect_arity_at_least!(2, rands.len());
 
 	let mut ret = 0.0;
 	let mut ret_init = false;
 
-	for val in args {
+	for val in rands {
 		match val {
-			Val::Number(n) => {
+			Number(n) =>
 				if !ret_init {
 					ret = n;
 					ret_init = true;
 				} else {
 					ret %= n;
 				}
-			}
-			_ => {
-				return Error(String::from("Bad type"));
-			}
+			_ => return Error(String::from("Bad type"))
 		}
 	}
 
@@ -150,27 +133,26 @@ fn remainder(args: ValList) -> Val {
 }
 
 ///// Boolean
-fn not(args: ValList) -> Val {
+fn not(rands: ValList) -> Val {
 	// TODO: error checkings
 
-	match args[0] {
+	match rands[0] {
 		Boolean(b) => Boolean(!b),
 		_ => Error("Bad type for not!".to_string())
 	}
 }
 
-fn xor(args: ValList) -> Val {
+fn xor(rands: ValList) -> Val {
 	// Wikipedia: "[xor] may be considered to be an n-ary operator which is true if and only if an odd number of arguments are true"
-	let mut trues = 0;
+	let mut trues: usize = 0;
 
-	for rand in args {
+	for rand in rands {
 		match rand {
-			Boolean(b) => {
+			Boolean(b) =>
 				if b {
-					trues += 1;
+					trues += 1
 				}
-			},
-			_ => { return Error("Bad type for xor!".to_string()) }
+			_ => return Error("Bad type for xor!".to_string())
 		}
 	}
 
@@ -178,9 +160,9 @@ fn xor(args: ValList) -> Val {
 	Boolean(trues % 2 == 1)
 }
 
-fn equal(args: ValList) -> Val {
-	for i in 1..args.len() {
-		if args[0].ne(&args[i]) {
+fn equal(rands: ValList) -> Val {
+	for i in 1..rands.len() {
+		if rands[0].ne(&rands[i]) {
 			return Boolean(false)
 		}
 	}
@@ -188,11 +170,11 @@ fn equal(args: ValList) -> Val {
 	Boolean(true)
 }
 
-fn no_eq(args: ValList) -> Val {
-	for i in 0..args.len() {
-		for j in i + 1..args.len() {
-			if args[i].eq(&args[j]) {
-				return Boolean(false);
+fn no_eq(rands: ValList) -> Val {
+	for i in 0..rands.len() {
+		for j in i + 1..rands.len() {
+			if rands[i].eq(&rands[j]) {
+				return Boolean(false)
 			}
 		}
 	}
@@ -200,96 +182,92 @@ fn no_eq(args: ValList) -> Val {
 	Boolean(true)
 }
 
-fn gt(args: ValList) -> Val {
-	// TODO: check args
+fn gt(rands: ValList) -> Val {
+	// TODO: check rands
 	let mut first = None;
 
-	for rand in args {
+	for rand in rands {
 		match rand {
 			Number(n) => {
 				match first {
-					Some(f) => {
+					Some(f) =>
 						if n >= f {
-							return Boolean(false);
+							return Boolean(false)
 						}
-					},
-					None => { first = Some(n); }
+					None => first = Some(n)
 				}
 			}
-			Error(e) => { return Error(e); },
-			_ => { return Error("Bad type for >!".to_string()); }
+			Error(e) => return Error(e),
+			_ => return Error("Bad type for >!".to_string())
 		}
 	}
 
 	Boolean(true)
 }
 
-fn gte(args: ValList) -> Val {
-	// TODO: check args
+fn gte(rands: ValList) -> Val {
+	// TODO: check rands
 	let mut first = None;
 
-	for rand in args {
+	for rand in rands {
 		match rand {
 			Number(n) => {
 				match first {
-					Some(f) => {
+					Some(f) =>
 						if n > f {
-							return Boolean(false);
+							return Boolean(false)
 						}
-					},
-					None => { first = Some(n); }
+					None => first = Some(n)
 				}
 			}
-			Error(e) => { return Error(e); },
-			_ => { return Error("Bad type for >=!".to_string()); }
+			Error(e) => return Error(e),
+			_ => return Error("Bad type for >=!".to_string())
 		}
 	}
 
 	Boolean(true)
 }
 
-fn lt(args: ValList) -> Val {
-	// TODO: check args
+fn lt(rands: ValList) -> Val {
+	// TODO: check rands
 	let mut first = None;
 
-	for rand in args {
+	for rand in rands {
 		match rand {
 			Number(n) => {
 				match first {
-					Some(f) => {
+					Some(f) =>
 						if n <= f {
-							return Boolean(false);
+							return Boolean(false)
 						}
-					},
-					None => { first = Some(n); }
+					None => first = Some(n)
 				}
 			}
-			Error(e) => { return Error(e); },
-			_ => { return Error("Bad type for <!".to_string()); }
+			Error(e) => return Error(e),
+			_ => return Error("Bad type for <!".to_string())
 		}
 	}
 
 	Boolean(true)
 }
 
-fn lte(args: ValList) -> Val {
-	// TODO: check args
+fn lte(rands: ValList) -> Val {
+	// TODO: check rands
 	let mut first = None;
 
-	for rand in args {
+	for rand in rands {
 		match rand {
 			Number(n) => {
 				match first {
-					Some(f) => {
+					Some(f) =>
 						if n < f {
-							return Boolean(false);
+							return Boolean(false)
 						}
-					},
-					None => { first = Some(n); }
+					None => first = Some(n)
 				}
 			}
-			Error(e) => { return Error(e); },
-			_ => { return Error("Bad type for <=!".to_string()); }
+			Error(e) => return Error(e),
+			_ => return Error("Bad type for <=!".to_string())
 		}
 	}
 
@@ -298,32 +276,32 @@ fn lte(args: ValList) -> Val {
 
 ///// System
 
-fn exit(args: ValList) -> Val {
-	match args.len() {
+fn exit(rands: ValList) -> Val {
+	match rands.len() {
 		0 => std::process::exit(0),
-		1 => match args[0] {
+		1 => match rands[0] {
 			Number(n) => std::process::exit(n as i32),
-			_ => Error(format!("Bad type of {:?} for exit!", args[0])),
+			_ => Error(format!("Bad type of {:?} for exit!", rands[0])),
 		},
 		_ => Error("Bad arity for exit!".to_string()),
 	}
 }
 
-fn print(args: ValList) -> Val {
-	// expect_arity_at_least!(1, args.len());
+fn print(rands: ValList) -> Val {
+	// expect_arity_at_least!(1, rands.len());
 
-	for arg in args {
+	for arg in rands {
 		print!("{}", arg);
 	}
 
 	Void
 }
 
-fn put(args: ValList) -> Val {
-	if args.len() == 0 {
+fn put(rands: ValList) -> Val {
+	if rands.len() == 0 {
 		println!();
 	} else {
-		for arg in args {
+		for arg in rands {
 			println!("{}", arg);
 		}
 	}
@@ -331,8 +309,8 @@ fn put(args: ValList) -> Val {
 	Void
 }
 
-fn input(_args: ValList) -> Val {
-	// TODO: check for no args
+fn input(_rands: ValList) -> Val {
+	// TODO: check for no rands
 	let mut line = String::new();
 	io::stdin().read_line(&mut line).unwrap();
 	line = line.trim().to_string();

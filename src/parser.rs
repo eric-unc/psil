@@ -28,22 +28,19 @@ pub fn parse_program(tree: Pairs<Rule>) -> ProgramAst {
 
 // expr_list ::= expr+
 fn parse_expr_list(exprs_tree: Pair<Rule>) -> ExprListAst {
-	let mut ret = Vec::new();
-
-	for expr in exprs_tree.into_inner() {
-		ret.push(parse_expr(expr));
-	}
-
-	ret
+	exprs_tree.into_inner()
+		.into_iter()
+		.map(|expr| parse_expr(expr))
+		.collect()
 }
 
 // expr ::= atom | special_form | invocation
 fn parse_expr(expr_tree: Pair<Rule>) -> ExprAst {
 	for inner_pair in expr_tree.into_inner() {
-		match inner_pair.as_rule() {
-			Rule::atom => return ExprAst::Atom(Box::from(parse_atom(inner_pair))),
-			Rule::special_form => return ExprAst::SpecialForm(Box::from(parse_special_form(inner_pair))),
-			Rule::invocation => return ExprAst::Invocation(parse_invocation(inner_pair)),
+		return match inner_pair.as_rule() {
+			Rule::atom => ExprAst::Atom(Box::from(parse_atom(inner_pair))),
+			Rule::special_form => ExprAst::SpecialForm(Box::from(parse_special_form(inner_pair))),
+			Rule::invocation => ExprAst::Invocation(parse_invocation(inner_pair)),
 			_ => unreachable!()
 		}
 	}
@@ -65,7 +62,7 @@ fn parse_atom(atom_tree: Pair<Rule>) -> AtomAst {
 		}
 	}
 
-	unreachable!();
+	unreachable!()
 }
 
 // special_form ::= if | cond | define | do | and | or
@@ -82,7 +79,7 @@ fn parse_special_form(special_form_tree: Pair<Rule>) -> SpecialFormAst {
 		}
 	}
 
-	unreachable!();
+	unreachable!()
 }
 
 // invocation ::= ( name expr_list? )
@@ -130,7 +127,7 @@ fn parse_cond(cond_tree: Pair<Rule>) -> CondAst {
 	}
 
 	if conds.len() != expr_list.len() { // This should be resolved by pest, but just in case.
-		panic!("Conditions and expressions are unmatching!");
+		panic!("Conditions and expressions are unmatching!")
 	}
 
 	CondAst { conds, expr_list }
@@ -181,8 +178,8 @@ fn parse_boolean(boolean_tree: Pair<Rule>) -> bool {
 
 fn parse_string(string_tree: Pair<Rule>) -> String {
 	for inner in string_tree.into_inner() {
-		match inner.as_rule() {
-			Rule::string_inner => return inner.as_str().to_string(),
+		return match inner.as_rule() {
+			Rule::string_inner => inner.as_str().to_string(),
 			_ => unreachable!()
 		}
 	}
@@ -199,15 +196,15 @@ fn parse_lambda(lambda_tree: Pair<Rule>) -> LambdaAst {
 		Rule::params => {
 			let params = parse_params(first);
 			let expr = parse_expr(iter.next().unwrap());
-			return LambdaAst { params, expr }
-		},
+			LambdaAst { params, expr }
+		}
 		Rule::expr => {
 			let params = ParamsAst { names: vec![] };
 			let expr = parse_expr(first);
-			return LambdaAst { params, expr }
-		},
+			LambdaAst { params, expr }
+		}
 		_ => unreachable!()
-	};
+	}
 }
 
 fn parse_params(params_tree: Pair<Rule>) -> ParamsAst {
