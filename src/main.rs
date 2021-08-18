@@ -15,6 +15,7 @@ pub mod native;
 
 pub mod parser;
 use parser::{parse, parse_expr};
+use crate::eval::Val;
 
 #[derive(Parser)]
 #[grammar = "grammar.pest"]
@@ -36,9 +37,12 @@ fn load_and_interpret(file_name: &String) {
 	match script {
 		Ok(s) => {
 			let parse_tree = PsilPestParser::parse(Rule::program, &s).unwrap();
-			eval(parse(parse_tree));
+			match eval(parse(parse_tree)) {
+				Ok(_) => {}
+				Err(e) => eprintln!("{}", e)
+			}
 		}
-		Err(e) => panic!("{:?}", e)
+		Err(e) => eprintln!("{:?}", e)
 	}
 }
 
@@ -62,10 +66,13 @@ fn repl() {
 		match parse_tree {
 			Ok(tree) => {
 				for pair in tree {
-					eval_expr(parse_expr(pair), &mut env);
+					match eval_expr(parse_expr(pair), &mut env) {
+						Ok(val) => println!("{}", val),
+						Err(e) => eprintln!("{}", e)
+					}
 				}
 			}
-			Err(e) => println!("{}", e)
+			Err(e) => eprintln!("{}", e)
 		}
 
 		io::stdout().flush().unwrap();
