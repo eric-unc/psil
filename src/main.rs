@@ -9,12 +9,12 @@ use std::{env, fs};
 pub mod ast;
 
 pub mod eval;
-use eval::{eval, eval_with_env, Environment};
+use eval::{eval, eval_expr, Environment};
 
 pub mod native;
 
 pub mod parser;
-use parser::parse;
+use parser::{parse, parse_expr};
 
 #[derive(Parser)]
 #[grammar = "grammar.pest"]
@@ -36,9 +36,12 @@ fn load_and_interpret(file_name: &String) {
 	match script {
 		Ok(s) => {
 			let parse_tree = PsilPestParser::parse(Rule::program, &s).unwrap();
-			eval(parse(parse_tree));
+			match eval(parse(parse_tree)) {
+				Ok(_) => {}
+				Err(e) => eprintln!("{}", e)
+			}
 		}
-		Err(e) => panic!("{:?}", e)
+		Err(e) => eprintln!("{:?}", e)
 	}
 }
 
@@ -57,11 +60,17 @@ fn repl() {
 			continue
 		}
 
-		let parse_tree = PsilPestParser::parse(Rule::program, &line);
+		let parse_tree = PsilPestParser::parse(Rule::expr, &line);
 
 		match parse_tree {
-			Ok(tree) => eval_with_env(parse(tree), &mut env),
-			Err(e) => println!("{}", e)
+			Ok(tree) =>
+				for pair in tree {
+					match eval_expr(parse_expr(pair), &mut env) {
+						Ok(val) => println!("{}", val),
+						Err(e) => eprintln!("{}", e)
+					}
+				}
+			Err(e) => eprintln!("{}", e)
 		}
 
 		io::stdout().flush().unwrap();
