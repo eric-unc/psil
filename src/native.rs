@@ -25,6 +25,7 @@ pub fn add_native_library(env: &mut Environment) {
 
 	// System
 	env.add_proc("exit".to_string(), exit);
+	env.add_proc("fail".to_string(), fail);
 	env.add_proc("print".to_string(), print);
 	env.add_proc("put".to_string(), put);
 	env.add_proc("input".to_string(), input);
@@ -313,6 +314,19 @@ fn exit(rands: ValList) -> Result<Val, String> {
 		1 => match rands[0] {
 			Number(n) => std::process::exit(n as i32),
 			_ => fail_on_bad_type!("exit", "number", rands)
+		}
+		_ => unreachable!()
+	}
+}
+
+fn fail(rands: ValList) -> Result<Val, String> {
+	check_arity_between!("fail", 0, 1, rands);
+
+	match rands.len() {
+		0 => Err("'fail' called from within Psil!".to_string()),
+		1 => match &rands[0] {
+			StringVal(s) => Err(s.clone()),
+			_ => fail_on_bad_type!("fail", "string", rands)
 		}
 		_ => unreachable!()
 	}

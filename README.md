@@ -52,6 +52,7 @@ Yay, sin(0) is 0!
 | boolean | Booleans are truth values, which can either be `true` or `false`.
 | string | Strings are a series of characters, like `"Ahhh!"` or `"545"`.
 | procedure | A procedure is a block that returns an atom with optional arguments. See `procs.lisp` in the `samples` directory for examples. Procedures can be invoked easily if defined.
+| void | Void is a singleton, usually returned from functions that don't return anything interesting.
 
 ### Built-in procedures
 Special forms are marked with a `*` next to their names. They are similar to procedures, but with special evaluation rules that don't allow them to be implemented as regular procedures.
@@ -63,7 +64,8 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 | `cond`* | (boolean, any)+ | any | Returns expression associated with the true condition, or `void` if none are true. See `cond.lisp` or `fizzbuzz.lisp` in the `samples` folder for examples.
 | `define`* | name, any | void | Creates a binding with the name given in the current scope.
 | `do`* | any+ | void | Executes each invocation given.
-| `exit` | number? | void | Exits the program with a 0 status. With an optional rand, it will exit with that status code.
+| `fail` | string? | void | Generates an error, with an optional error message.
+| `exit` | number? | void | Exits the program with an status code (without a rand, the status code is `0`).
 
 #### String, input/output
 | Name | Rands | Returns | Description
@@ -84,8 +86,8 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 #### Boolean
 | Name | Rands | Returns | Description
 | :------ | :------ | :------ | :------
-| `and`* | boolean{2,} | boolean | Ands each rand together. Always short-circuited.
-| `or`* | boolean{2,} | boolean | Ors each rand together. Always short-circuited.
+| `and`* | boolean{2,} | boolean | ANDs each rand together. Always short-circuited.
+| `or`* | boolean{2,} | boolean | ORs each rand together. Always short-circuited.
 | `not` | boolean | boolean | Gives the negation of the given rand.
 | `xor` | boolean{2,} | boolean | XORs all rands.
 | `==` | any{2,} | boolean | Checks for equality between all rands.
@@ -100,6 +102,6 @@ Special forms are marked with a `*` next to their names. They are similar to pro
     * [Cargo](https://github.com/rust-lang/cargo)
     * [pest](https://github.com/pest-parser/pest)
 
-## Author
+## Authors
 1. Eric Schneider (main author)
 2. Chongyi Zheng (contributor to Limp)
