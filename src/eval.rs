@@ -181,10 +181,12 @@ fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Result<V
 			match p {
 				ProcedureType::Native(n) => { n(rands) }
 				ProcedureType::Pure(p) => {
-					if p.params.names.len() > rands.len() {
-						return Err(format!("Procedure {} called with {} missing parameters!", name.clone(), p.params.names.len() - rands.len()))
-					} else if p.params.names.len() < rands.len() {
-						return Err(format!("Procedure {} called with {} extra parameters!", name.clone(), rands.len() - p.params.names.len()))
+					if p.params.names.len() != rands.len() {
+						return match p.params.names.len() {
+							0 => Err(format!("Proc '{}' expected no rands! Given {}.", name.clone(), rands.len())),
+							1 => Err(format!("Proc '{}' expected 1 rand! Given {}.", name.clone(), rands.len())),
+							_ => Err(format!("Proc '{}' expected {} rands! Given {}.", name.clone(), p.params.names.len(), rands.len()))
+						}
 					}
 
 					env.add_scope();
