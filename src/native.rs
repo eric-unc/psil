@@ -64,6 +64,14 @@ macro_rules! check_arity_between {
 	}
 }
 
+// used in eval for and, or, etc
+#[macro_export]
+macro_rules! fail_on_bad_type {
+	( $proc_name:literal, $expected_type:literal, $rands:expr ) => {
+		return Err(format!("Native proc '{}' expected a {}!", $proc_name, $expected_type))
+	}
+}
+
 
 ////////// Native (Rust) methods
 
@@ -77,7 +85,7 @@ fn add(rands: ValList) -> Result<Val, String> {
 	for val in rands {
 		match val {
 			Number(n) => ret += n,
-			_ => return Err("Bad type".to_string())
+			_ => fail_on_bad_type!("+", "number", rands)
 		}
 	}
 
@@ -99,7 +107,7 @@ fn subtract(rands: ValList) -> Result<Val, String> {
 				} else {
 					ret -= n
 				}
-			_ => return Err("Bad type".to_string())
+			_ => fail_on_bad_type!("-", "number", rands)
 		}
 	}
 
@@ -114,7 +122,7 @@ fn multiply(rands: ValList) -> Result<Val, String> {
 	for val in rands {
 		match val {
 			Number(n) => ret *= n,
-			_ => return Err("Bad type".to_string())
+			_ => fail_on_bad_type!("*", "number", rands)
 		}
 	}
 
@@ -136,7 +144,7 @@ fn divide(rands: ValList) -> Result<Val, String> {
 				} else {
 					ret /= n
 				}
-			_ => return Err("Bad type".to_string())
+			_ => fail_on_bad_type!("/", "number", rands)
 		}
 	}
 
@@ -158,7 +166,7 @@ fn remainder(rands: ValList) -> Result<Val, String> {
 				} else {
 					ret %= n
 				}
-			_ => return Err("Bad type".to_string())
+			_ => fail_on_bad_type!("%", "number", rands)
 		}
 	}
 
@@ -171,7 +179,7 @@ fn not(rands: ValList) -> Result<Val, String> {
 
 	match rands[0] {
 		Boolean(b) => Ok(Boolean(!b)),
-		_ => Err("Bad type for not!".to_string())
+		_ => fail_on_bad_type!("not", "boolean", rands)
 	}
 }
 
@@ -185,7 +193,7 @@ fn xor(rands: ValList) -> Result<Val, String> {
 		match rand {
 			Boolean(true) => trues += 1,
 			Boolean(false) => continue,
-			_ => return Err("Bad type for xor!".to_string())
+			_ => fail_on_bad_type!("xor", "boolean", rands)
 		}
 	}
 
@@ -231,7 +239,7 @@ fn gt(rands: ValList) -> Result<Val, String> {
 					return Ok(Boolean(false))
 				}
 			(Number(n), None) => first = Some(n),
-			_ => return Err("Bad type for >!".to_string())
+			_ => fail_on_bad_type!(">", "number", rands)
 		}
 	}
 
@@ -250,7 +258,7 @@ fn gte(rands: ValList) -> Result<Val, String> {
 					return Ok(Boolean(false))
 				}
 			(Number(n), None) => first = Some(n),
-			_ => return Err("Bad type for >=!".to_string())
+			_ => fail_on_bad_type!(">=", "number", rands)
 		}
 	}
 
@@ -269,7 +277,7 @@ fn lt(rands: ValList) -> Result<Val, String> {
 					return Ok(Boolean(false))
 				}
 			(Number(n), None) => first = Some(n),
-			_ => return Err("Bad type for <!".to_string())
+			_ => fail_on_bad_type!("<", "number", rands)
 		}
 	}
 
@@ -288,7 +296,7 @@ fn lte(rands: ValList) -> Result<Val, String> {
 					return Ok(Boolean(false))
 				}
 			(Number(n), None) => first = Some(n),
-			_ => return Err("Bad type for <=!".to_string())
+			_ => fail_on_bad_type!("<=", "number", rands)
 		}
 	}
 
@@ -304,7 +312,7 @@ fn exit(rands: ValList) -> Result<Val, String> {
 		0 => std::process::exit(0),
 		1 => match rands[0] {
 			Number(n) => std::process::exit(n as i32),
-			_ => Err(format!("Bad type of {:?} for exit!", rands[0])),
+			_ => fail_on_bad_type!("exit", "number", rands)
 		}
 		_ => unreachable!()
 	}
