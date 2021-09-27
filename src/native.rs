@@ -29,8 +29,8 @@ pub fn add_native_library(env: &mut Environment) {
 	env.add_proc("input".to_string(), input);
 }
 
-// Macros
-// TODO
+// Macros/constants
+macro_rules! at_least_arity_error { () => { "Native proc {} expected at least {} rands!" }; }
 
 ////////// Native (Rust) methods
 
@@ -38,6 +38,10 @@ pub fn add_native_library(env: &mut Environment) {
 
 fn add(rands: ValList) -> Result<Val, String> {
 	//expect_arity_at_least!(2, rands.len());
+
+	if rands.len() < 2 {
+		return Err(format!(at_least_arity_error!(), "+", 2))
+	}
 
 	let mut ret = 0.0;
 
