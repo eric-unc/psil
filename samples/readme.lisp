@@ -11,4 +11,4 @@
 
 (if (== num 0)
 	(put "Yay, sin(0) is 0!")
-	(put "How can sin(0) not be 0???"))
+	(fail "How can sin(0) not be 0???"))

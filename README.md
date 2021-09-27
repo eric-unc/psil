@@ -34,7 +34,7 @@ Other examples may be found in the `samples` directory.
 
 (if (== num 0)
 	(put "Yay, sin(0) is 0!")
-	(put "How can sin(0) not be 0???"))
+	(fail "How can sin(0) not be 0???"))
 ```
 
 #### Example output
@@ -51,7 +51,7 @@ Yay, sin(0) is 0!
 | number | Numbers are float-point values, such as `3`, `-55`, `0.55`.
 | boolean | Booleans are truth values, which can either be `true` or `false`.
 | string | Strings are a series of characters, like `"Ahhh!"` or `"545"`.
-| procedure | A procedure is a block that returns an atom with optional arguments. See `procs.lisp` in the `samples` directory for examples. Procedures can be invoked easily if defined.
+| procedure | A procedure (or "proc") is a block that returns an atom with optional arguments. See `procs.lisp` in the `samples` directory for examples. Procedures can be invoked easily if defined.
 | void | Void is a singleton, usually returned from functions that don't return anything interesting.
 
 ### Built-in procedures
@@ -64,7 +64,7 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 | `cond`* | (boolean, any)+ | any | Returns expression associated with the true condition, or `void` if none are true. See `cond.lisp` or `fizzbuzz.lisp` in the `samples` folder for examples.
 | `define`* | name, any | void | Creates a binding with the name given in the current scope.
 | `do`* | any+ | void | Executes each invocation given.
-| `fail` | string? | void | Generates an error, with an optional error message.
+| `fail` | string? | void | Generates an error, with an optional error message. In REPL mode, Psil will just output the error message to standard error, and continue to accept input, while in load mode, Psil will terminate execution of the given script after the error message is printed.
 | `exit` | number? | void | Exits the program with an status code (without a rand, the status code is `0`).
 
 #### String, input/output
