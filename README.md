@@ -16,17 +16,33 @@ Psil's command line interface has two modes: REPL and file loading:
 ## Language
 Psil is a Lisp-like programming languages, with some twists.
 
-Psil has two major constructions. The first is the "atom", which is a singular unit of value (such as an integer, or a name). The second is the "invocation," which is the activation of a procedure (must be a name type), and a series of values. The activated procedure is the "rator" (operator), and the passed values are the "rands" (operands). The rands are always resolved before the effect of the rator applies, except in the case of "special forms." Invocations will always return a value, even if that value is the void value.
+Psil has two major constructions. The first is the "atom", which is a singular unit of value (such as an integer, or a name). The second is the "invocation," which is the activation of a procedure (must be a name type), and a series of expressions. The activated procedure is the "rator" (operator), and the passed expressions are the "rands" (operands). The rands are always resolved before the effect of the rator applies, except in the case of "special forms." Invocations will always return a value, even if that value is the void value.
 
 ### Example
+Other examples may be found in the `samples` directory.
 ```lisp
-(put (+ 10 5) 1)
+(put "Hello, World!")
+
+(put) ; extra new line
+
+; approximation for x near 0
+(define sin {|x| x})
+
+(put "What's the sin of 0?")
+
+(define num (sin 0))
+
+(if (== num 0)
+	(put "Yay, sin(0) is 0!")
+	(put "How can sin(0) not be 0???"))
 ```
 
 #### Example output
 ```
-15
-1
+Hello, World!
+
+What's the sin of 0?
+Yay, sin(0) is 0!
 ```
 
 ### Types
@@ -38,6 +54,25 @@ Psil has two major constructions. The first is the "atom", which is a singular u
 | procedure | A procedure is a block that returns an atom with optional arguments. See `procs.lisp` in the `samples` directory for examples. Procedures can be invoked easily if defined.
 
 ### Built-in procedures
+Special forms are marked with a `*` next to their names. They are similar to procedures, but with special evaluation rules that don't allow them to be implemented as regular procedures.
+
+#### Control
+| Name | Rands | Returns | Description
+| :------ | :------ | :------ | :------
+| `if`* | boolean, any, any | any | Returns one expression if the given condition is true, and the other if false. The other expression within will not be evaluated. Requires three rands (one boolean, two of any type).
+| `cond`* | (boolean, any)+ | any | Returns expression associated with the true condition, or `void` if none are true. See `cond.lisp` or `fizzbuzz.lisp` in the `samples` folder for examples.
+| `define`* | name, any | void | Creates a binding with the name given in the current scope.
+| `do`* | any+ | void | Executes each invocation given.
+| `exit` | number? | void | Exits the program with a 0 status. With an optional rand, it will exit with that status code.
+
+#### String, input/output
+| Name | Rands | Returns | Description
+| :------ | :------ | :------ | :------
+| `put` | any* | void | Prints (each on a new line) each rand.
+| `print` | any+ | void | Prints each rand without any new lines.
+| `input` | _none_ | string | Takes input from console.
+
+#### Math
 | Name | Rands | Returns | Description
 | :------ | :------ | :------ | :------
 | `+` | number{2,} | number | Adds all rands given.
@@ -45,29 +80,20 @@ Psil has two major constructions. The first is the "atom", which is a singular u
 | `*` | number{2,} | number | Multiplies all rands.
 | `/` | number{2,} | number | Divides the first by each remaining rands.
 | `%` | number{2,} | number | Gives the remainder of the first by each remaining rands. `(% 5 5 1)` is equivalent to `(% (% 5 5) 1)`.
+
+#### Boolean
+| Name | Rands | Returns | Description
+| :------ | :------ | :------ | :------
+| `and`* | boolean{2,} | boolean | Ands each rand together. Always short-circuited.
+| `or`* | boolean{2,} | boolean | Ors each rand together. Always short-circuited.
 | `not` | boolean | boolean | Gives the negation of the given rand.
-| `xor` | boolean{2,} | boolean | Xors all rands.
+| `xor` | boolean{2,} | boolean | XORs all rands.
 | `==` | any{2,} | boolean | Checks for equality between all rands.
 | `!=` | any{2,} | boolean | Checks for inequality between all rands. `(!= 5 6 6)` would return false, since the two `6` are both equal, even if neither are equal to the first rand.
 | `>` | number{2,} | boolean | Checks that first rand is greater than all other rands.
 | `>=` | number{2,} | boolean | Checks that first rand is greater than or equal to all other rands.
 | `<` | number{2,} | boolean | Checks that first rand is less than all other rands.
 | `<=` | number{2,} | boolean | Checks that first rand is less than or equal to all other rands.
-| `put` | any* | void | Prints (each on a new line) each rand.
-| `print` | any* | void | Prints each rand without any new lines.
-| `input` | _none_ | string | Takes input from console.
-| `exit` | number? | void | Exits the program with a 0 status. With an optional rand, it will exit with that status code.
-
-### Special forms
-Special forms are similar to procedures, but with special evaluation rules that don't allow them to be implemented as regular procedures.
-| Name | Rands | Returns | Description
-| :------ | :------ | :------ | :------
-| `if` | boolean, any, any | any | Returns one expression if the given condition is true, and the other if false. The other expression within will not be evaluated. Requires three rands (one boolean, two of any type).
-| `cond` | (boolean, any)+ | any | Returns expression associated with the true condition, or `void` if none are true. See `cond.lisp` or `fizzbuzz.lisp` in the `samples` folder for examples.
-| `define` | name, any | void | Creates a binding with the name given in the current scope.
-| `do` | any+ | void | Executes each invocation given.
-| `and` | boolean{2,} | boolean | Ands each rand together. Always short-circuited.
-| `or` | boolean{2,} | boolean | Ors each rand together. Always short-circuited.
 
 ## Technologies used
 * [Rust](https://github.com/rust-lang/rust)
