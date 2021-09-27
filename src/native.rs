@@ -30,18 +30,20 @@ pub fn add_native_library(env: &mut Environment) {
 }
 
 // Macros/constants
-macro_rules! at_least_arity_error { () => { "Native proc {} expected at least {} rands!" }; }
+macro_rules! check_arity_at_least {
+	( $proc_name:literal, $arity:literal, $rands:expr ) => {
+		if $rands.len() < $arity {
+			return Err(format!("Native proc {} expected at least {} rands!", $proc_name, $arity))
+		}
+	}
+}
 
 ////////// Native (Rust) methods
 
 ///// Math
 
 fn add(rands: ValList) -> Result<Val, String> {
-	//expect_arity_at_least!(2, rands.len());
-
-	if rands.len() < 2 {
-		return Err(format!(at_least_arity_error!(), "+", 2))
-	}
+	check_arity_at_least!("+", 2, rands);
 
 	let mut ret = 0.0;
 
