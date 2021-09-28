@@ -1,3 +1,3 @@
 (if true
-	(print "It's true!")
-	(print "It's false..."))
+	(put "It's true!")
+	(put "It's false..."))

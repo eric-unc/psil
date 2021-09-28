@@ -10,12 +10,10 @@
 
 (put)
 (put "What's the cos of 0?")
-(print (cos 0) "!")
-(put)
+(put (cos 0) "!")
 
 (put "How about the cos/sin of pi?!?")
-(print "Cos: " (cos pi) ", sin: " (sin pi) "!")
-(put)
+(put "Cos: " (cos pi) ", sin: " (sin pi) "!")
 
 (put)
 (put "(Yeah that's totally correct!)")

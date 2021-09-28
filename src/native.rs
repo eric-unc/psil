@@ -28,6 +28,7 @@ pub fn add_native_library(env: &mut Environment) {
 	env.add_proc("fail".to_string(), fail);
 	env.add_proc("print".to_string(), print);
 	env.add_proc("put".to_string(), put);
+	env.add_proc("put-each".to_string(), put_each);
 	env.add_proc("input".to_string(), input);
 }
 
@@ -343,12 +344,20 @@ fn print(rands: ValList) -> Result<Val, String> {
 }
 
 fn put(rands: ValList) -> Result<Val, String> {
-	if rands.len() == 0 {
-		println!()
-	} else {
-		for arg in rands {
-			println!("{}", arg);
-		}
+	for arg in rands {
+		print!("{}", arg);
+	}
+
+	println!();
+
+	Ok(Void)
+}
+
+fn put_each(rands: ValList) -> Result<Val, String> {
+	check_arity_at_least!("put-each", 1, rands);
+
+	for arg in rands {
+		println!("{}", arg);
 	}
 
 	Ok(Void)

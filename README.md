@@ -70,7 +70,8 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 #### String, input/output
 | Name | Rands | Returns | Description
 | :------ | :------ | :------ | :------
-| `put` | any* | void | Prints (each on a new line) each rand.
+| `put` | any* | void | Prints each rand concatenated, followed by a new line.
+| `put-each` | any+ | void | Puts each rand, each on a new line.
 | `print` | any+ | void | Prints each rand without any new lines.
 | `input` | _none_ | string | Takes input from console.
 
