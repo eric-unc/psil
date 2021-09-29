@@ -78,7 +78,7 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 #### String
 | Name | Rands | Returns | Description
 | :------ | :------ | :------ | :------
-| `str-cat` | string{2,} | string | Concatenates each string.
+| `str-cat` | any{2,} | string | Concatenates each rand.
 | `str-len` | string | number | Returns the length of the string.
 
 #### Math

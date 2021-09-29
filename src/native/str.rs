@@ -15,10 +15,7 @@ fn str_cat(rands: ValList) -> Result<Val, String> {
 	let mut ret = String::from("");
 
 	for val in rands {
-		match val {
-			StringVal(s) => ret.push_str(s.as_str()),
-			_ => fail_on_bad_type!("str-cat", "string", rands)
-		}
+		ret.push_str(val.to_string().as_str())
 	}
 
 	Ok(StringVal(ret))
