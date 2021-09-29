@@ -2,19 +2,21 @@ extern crate pest;
 #[macro_use]
 extern crate pest_derive;
 
-use pest::Parser;
-use std::io::{self, Write};
 use std::{env, fs};
+use std::io::{self, Write};
+
+use pest::Parser;
+
+use environment::Environment;
+use eval::{eval, eval_expr};
+use parser::{parse, parse_expr};
 
 pub mod ast;
-
+pub mod environment;
 pub mod eval;
-use eval::{eval, eval_expr, Environment};
-
 pub mod native;
-
 pub mod parser;
-use parser::{parse, parse_expr};
+pub mod val;
 
 #[derive(Parser)]
 #[grammar = "grammar.pest"]
