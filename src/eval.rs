@@ -1,110 +1,13 @@
-use std::collections::HashMap;
-use std::fmt::{Display, Formatter, Result as ResultFmt};
 use std::string::String;
 
 use crate::ast::*;
-use crate::native::add_native_library;
-
-#[derive(Clone, Debug)]
-pub enum Val {
-	Number(f64),
-	Boolean(bool),
-	String(String),
-	Void,
-	Procedure(ProcedureType),
-}
-
-use Val::{Boolean, Number, Procedure, String as StringVal, Void};
-
-impl Display for Val {
-	fn fmt(&self, f: &mut Formatter) -> ResultFmt {
-		write!(f, "{}", match self {
-			Number(n) => n.to_string(),
-			Boolean(b) => b.to_string(),
-			StringVal(s) => s.to_string(),
-			Void => "void".to_string(),
-			Procedure(_) => "<procedure>".to_string() // #3: more interesting output
-		})
-	}
-}
-
-pub type ValList = Vec<Val>;
-
-#[derive(Clone, Debug)]
-pub enum ProcedureType {
-	Native(NativeProcedure),
-	Pure(LambdaAst)
-}
-
-pub type NativeProcedure = fn(ValList) -> Result<Val, String>;
-
-impl PartialEq for Val {
-	fn eq(&self, other: &Self) -> bool {
-		match (self, other) {
-			(Number(n), Number(o)) => *n == *o,
-			(Boolean(b), Boolean(o)) => *b == *o,
-			(StringVal(s), StringVal(o)) => s.eq(o),
-			_ => false
-		}
-	}
-
-	fn ne(&self, other: &Self) -> bool {
-		!self.eq(other)
-	}
-}
-
-pub type Scope = HashMap<String, Val>;
-pub type Bindings = Vec<Scope>;
-
-pub struct Environment {
-	bindings: Bindings
-}
-
-impl Environment {
-	pub fn new() -> Self {
-		let mut ret = Self { bindings: vec![Scope::new()], };
-
-		add_native_library(&mut ret);
-
-		ret
-	}
-
-	pub fn add_scope(&mut self) {
-		self.bindings.push(Scope::new());
-	}
-
-	pub fn close_scope(&mut self) {
-		self.bindings.pop();
-	}
-
-	pub fn add_binding(&mut self, name: NameAst, val: Val) {
-		let len = self.bindings.len();
-
-		self.bindings[len - 1].insert(name, val);
-	}
-
-	pub fn add_proc(&mut self, name: NameAst, val: NativeProcedure) {
-		let len = self.bindings.len();
-
-		self.bindings[len - 1].insert(name, Procedure(ProcedureType::Native(val)));
-	}
-
-	pub fn get_binding(&self, name: NameAst) -> Result<Val, String> {
-		for bindings in self.bindings.iter().rev() {
-			if bindings.contains_key(&name) {
-				let value = bindings.get(&name).unwrap();
-				return Ok(value.clone());
-			}
-		}
-
-		Err(format!("Binding {} does not exist!", name))
-	}
-}
+use crate::environment::Environment;
+use crate::val::{ProcedureType, Val};
+use crate::val::Val::{Boolean, Number, Procedure, String as StringVal, Void};
 
 pub fn eval(program: ProgramAst) -> Result<Vec<Val>, String> {
 	eval_program(program, &mut Environment::new())
 }
-
 
 // program ::= expr_list?
 fn eval_program(program: ProgramAst, env: &mut Environment) -> Result<Vec<Val>, String> {

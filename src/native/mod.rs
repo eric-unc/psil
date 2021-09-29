@@ -4,7 +4,7 @@ mod str;
 mod math;
 mod boolean;
 
-use crate::eval::Environment;
+use crate::environment::Environment;
 
 /// Actually extends environment with natively-defined functions
 pub fn add_native_library(env: &mut Environment) {

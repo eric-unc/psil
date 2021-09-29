@@ -1,7 +1,7 @@
-use crate::eval::{Environment, Val, ValList};
 use crate::{check_arity_between, fail_on_bad_type};
-
-use Val::{Number, String as StringVal};
+use crate::environment::Environment;
+use crate::val::{Val, ValList};
+use crate::val::Val::{Number, String as StringVal};
 
 pub fn add_control_procs(env: &mut Environment) {
 	env.add_proc("exit".to_string(), exit);

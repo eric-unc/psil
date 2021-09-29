@@ -1,7 +1,7 @@
-use crate::eval::{Environment, Val, ValList};
 use crate::{check_arity_at_least, check_arity_is, fail_on_bad_type};
-
-use Val::{Boolean, Number};
+use crate::environment::Environment;
+use crate::val::{Val, ValList};
+use crate::val::Val::{Boolean, Number};
 
 pub fn add_boolean_procs(env: &mut Environment) {
 	env.add_proc("not".to_string(), not);

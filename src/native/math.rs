@@ -1,7 +1,7 @@
-use crate::eval::{Environment, Val, ValList};
 use crate::{check_arity_at_least, fail_on_bad_type};
-
-use Val::Number;
+use crate::environment::Environment;
+use crate::val::{Val, ValList};
+use crate::val::Val::Number;
 
 pub fn add_math_procs(env: &mut Environment) {
 	env.add_proc("+".to_string(), add);

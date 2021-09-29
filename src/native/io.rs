@@ -1,9 +1,9 @@
 use std::io;
 
-use crate::eval::{Environment, Val, ValList};
 use crate::{check_arity_at_least, check_arity_is};
-
-use Val::{String as StringVal, Void};
+use crate::environment::Environment;
+use crate::val::{Val, ValList};
+use crate::val::Val::{String as StringVal, Void};
 
 pub fn add_io_procs(env: &mut Environment) {
 	env.add_proc("print".to_string(), print);
