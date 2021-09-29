@@ -67,7 +67,7 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 | `fail` | string? | void | Generates an error, with an optional error message. In REPL mode, Psil will just output the error message to standard error, and continue to accept input, while in load mode, Psil will terminate execution of the given script after the error message is printed.
 | `exit` | number? | void | Exits the program with an status code (without a rand, the status code is `0`).
 
-#### String, input/output
+#### Input/output, string
 | Name | Rands | Returns | Description
 | :------ | :------ | :------ | :------
 | `put` | any* | void | Prints each rand concatenated, followed by a new line.
