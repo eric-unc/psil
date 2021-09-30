@@ -78,8 +78,10 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 #### String
 | Name | Rands | Returns | Description
 | :------ | :------ | :------ | :------
-| `str-cat` | any{2,} | string | Concatenates each rand.
+| `str-cat` | any{2,} | string | Concatenates each rand. If a rand is not a string, it will be converted into one.
+| `str-contains?` | string{2} | boolean | Checks if the second rand is contained in the first rand.
 | `str-len` | string | number | Returns the length of the string.
+| `str-trunc` | string, number | string | Shortens the given string to the length of the second rand.
 
 #### Math
 | Name | Rands | Returns | Description
