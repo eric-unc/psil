@@ -3,7 +3,7 @@ use std::string::String;
 use crate::ast::*;
 use crate::environment::Environment;
 use crate::val::{ProcedureType, Val};
-use crate::val::Val::{Boolean, Number, Procedure, String as StringVal, Void};
+use crate::val::Val::{Boolean, Number, Procedure, String as StringVal, Symbol, Void};
 
 pub fn eval(program: ProgramAst) -> Result<Vec<Val>, String> {
 	eval_program(program, &mut Environment::new())
@@ -39,12 +39,13 @@ pub fn eval_expr(expr: ExprAst, env: &mut Environment) -> Result<Val, String> {
 	}
 }
 
-// atom ::= number | boolean | string | void | lambda | name
+// atom ::= number | boolean | string | symbol | void | lambda | name
 fn eval_atom(atom: AtomAst, env: &mut Environment) -> Result<Val, String> {
 	match atom {
 		AtomAst::Number(n) => Ok(Number(n)),
 		AtomAst::Boolean(b) => Ok(Boolean(b)),
 		AtomAst::String(s) => Ok(StringVal(s)),
+		AtomAst::Symbol(s) => Ok(Symbol(s)),
 		AtomAst::Void => Ok(Void),
 		AtomAst::Lambda(l) => Ok(Procedure(ProcedureType::Pure(l))),
 		AtomAst::Name(n) => env.get_binding(n)

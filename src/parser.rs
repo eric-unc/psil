@@ -53,6 +53,7 @@ fn parse_atom(atom_tree: Pair<Rule>) -> AtomAst {
 			Rule::number => AtomAst::Number(parse_number(inner_pair)),
 			Rule::boolean => AtomAst::Boolean(parse_boolean(inner_pair)),
 			Rule::string => AtomAst::String(parse_string(inner_pair)),
+			Rule::symbol => AtomAst::String(parse_symbol(inner_pair)),
 			Rule::void => AtomAst::Void,
 			Rule::lambda => AtomAst::Lambda(parse_lambda(inner_pair)),
 			Rule::name => AtomAst::Name(inner_pair.as_str().to_string()),
@@ -178,6 +179,17 @@ fn parse_string(string_tree: Pair<Rule>) -> String {
 	for inner in string_tree.into_inner() {
 		return match inner.as_rule() {
 			Rule::string_inner => inner.as_str().to_string(),
+			_ => unreachable!()
+		}
+	}
+
+	unreachable!()
+}
+
+fn parse_symbol(symbol_tree: Pair<Rule>) -> String {
+	for inner in symbol_tree.into_inner() {
+		return match inner.as_rule() {
+			Rule::symbol_inner => inner.as_str().to_string(),
 			_ => unreachable!()
 		}
 	}

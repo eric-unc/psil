@@ -1,13 +1,14 @@
 use std::fmt::{Display, Formatter, Result as ResultFmt};
 
 use crate::ast::LambdaAst;
-use crate::val::Val::{Boolean, Number, Procedure, String as StringVal, Void};
+use crate::val::Val::{Boolean, Number, Procedure, String as StringVal, Symbol, Void};
 
 #[derive(Clone, Debug)]
 pub enum Val {
 	Number(f64),
 	Boolean(bool),
 	String(String),
+	Symbol(String),
 	Void,
 	Procedure(ProcedureType),
 }
@@ -20,6 +21,11 @@ impl Display for Val {
 			Number(n) => n.to_string(),
 			Boolean(b) => b.to_string(),
 			StringVal(s) => s.to_string(),
+			Symbol(s) => {
+				let mut ret = String::from("#");
+				ret.push_str(s);
+				ret
+			}
 			Void => "void".to_string(),
 			Procedure(_) => "<procedure>".to_string() // #3: more interesting output
 		})
@@ -32,6 +38,7 @@ impl PartialEq for Val {
 			(Number(n), Number(o)) => *n == *o,
 			(Boolean(b), Boolean(o)) => *b == *o,
 			(StringVal(s), StringVal(o)) => s.eq(o),
+			(Symbol(s), Symbol(o)) => s.eq(o),
 			_ => false
 		}
 	}

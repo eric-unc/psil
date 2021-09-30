@@ -2,7 +2,7 @@
 program = { SOI ~ expr_list? ~ EOI }
 expr_list = { expr+ }
 expr = { atom | special_form | invocation }
-atom = { number | boolean | string | void | lambda | name }
+atom = { number | boolean | string | symbol | void | lambda | name }
 special_form = { if_form | cond | define | do_form | and | or }
 invocation = { "(" ~ name ~ expr_list? ~ ")" }
 
@@ -19,15 +19,18 @@ or = { "(" ~ "or" ~ expr_list ~ ")" }
 number = @{ ("+" | "-")? ~ ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+)? }
 boolean = @{ "true" | "false" }
 string = ${ "\"" ~ string_inner ~ "\"" }
+symbol = ${ "#" ~ symbol_inner }
 void = @{ "void" }
 lambda = { "{"  ~ params? ~ expr ~ "}" }
 params = { "|" ~ name+ ~ "|"}
 name = @{ !reserved_words ~ char+ } // this is intentionally quite inclusive
 reserved_words = { "if" | "cond" | "define" | "do" | "and" | "or" | "true" | "false" | "void" }
 
-char = { "!" | '#'..'&' | '*'..'Z' | '^'..'_' | 'a'..'z' }
+char = { "!" | '$'..'&' | '*'..'Z' | '^'..'_' | 'a'..'z' }
 string_inner = @{ string_char* }
 string_char = { !("\"" | "\\") ~ ANY }
+
+symbol_inner = { char+ }
 
 WHITESPACE = _{ " " | "\t" | "\n" | "\r" | "\r\n" }
 COMMENT = _{ ";" ~ (!NEWLINE ~ ANY)* ~ NEWLINE}

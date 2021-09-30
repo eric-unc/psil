@@ -20,6 +20,7 @@ pub enum AtomAst {
 	Number(f64),
 	Boolean(bool),
 	String(String),
+	Symbol(String),
 	Void,
 	Lambda(LambdaAst),
 	Name(String),
