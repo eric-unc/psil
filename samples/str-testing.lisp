@@ -7,3 +7,5 @@
 (put (str-contains? x "world4")) ; false
 
 (put (str-trunc "hellohello" 3)) ; hel
+
+(put (str-insert "bar" 0 "foo")) ; foobar

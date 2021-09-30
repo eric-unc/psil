@@ -78,10 +78,19 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 #### String
 | Name | Rands | Returns | Description
 | :------ | :------ | :------ | :------
+| `2str` | any | string | Converts any value to a string.
 | `str-cat` | any{2,} | string | Concatenates each rand. If a rand is not a string, it will be converted into one.
 | `str-contains?` | string{2} | boolean | Checks if the second rand is contained in the first rand.
+| `str-empty?` | string | boolean | Checks if the string is the empty string (`""`).
+| `str-insert` | string, number, string | string | Inserts the second rand into the first at the given index.
 | `str-len` | string | number | Returns the length of the string.
+| `str-low` | string | string | Returns the lowercase version of the given string.
+| `str-repeat` | string, number | string | Returns the string repeated as many times the second rand is.
+| `str-replace` | string{3} | string | Returns the first string with all instances of the second rand (the "old text") replaced by the third rand (the "new text").
+| `str-starts-with?` | string{2} | boolean | Checks if the first rand starts with the second rand.
+| `str-strip` | string | string | Removes leading/trailing whitespace from the given string.
 | `str-trunc` | string, number | string | Shortens the given string to the length of the second rand.
+| `str-up` | string | string | Returns the uppercase version of the given string.
 
 #### Math
 | Name | Rands | Returns | Description
