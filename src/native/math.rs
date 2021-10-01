@@ -1,7 +1,7 @@
-use crate::{check_arity_at_least, fail_on_bad_type};
+use crate::{check_arity_is, check_arity_at_least, fail_on_bad_type};
 use crate::environment::Environment;
 use crate::val::{Val, ValList};
-use crate::val::Val::Number;
+use crate::val::Val::{Boolean, Number};
 
 pub fn add_math_procs(env: &mut Environment) {
 	env.add_proc("+".to_string(), add);
@@ -9,6 +9,7 @@ pub fn add_math_procs(env: &mut Environment) {
 	env.add_proc("*".to_string(), multiply);
 	env.add_proc("/".to_string(), divide);
 	env.add_proc("%".to_string(), remainder);
+	env.add_proc("is-num?".to_string(), is_num);
 }
 
 fn add(rands: ValList) -> Result<Val, String> {
@@ -105,4 +106,13 @@ fn remainder(rands: ValList) -> Result<Val, String> {
 	}
 
 	Ok(Number(ret))
+}
+
+fn is_num(rands: ValList) -> Result<Val, String> {
+	check_arity_is!("is-num?", 1, rands);
+
+	match rands[0] {
+		Number(_) => Ok(Boolean(true)),
+		_ => Ok(Boolean(false))
+	}
 }

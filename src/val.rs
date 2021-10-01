@@ -1,18 +1,30 @@
 use std::fmt::{Display, Formatter, Result as ResultFmt};
 
 use crate::ast::LambdaAst;
-use crate::val::Val::{Boolean, Number, Procedure, String as StringVal, Void};
+use crate::val::Val::{Boolean, Number, Procedure, String as StringVal, Symbol};
 
 #[derive(Clone, Debug)]
 pub enum Val {
 	Number(f64),
 	Boolean(bool),
 	String(String),
-	Void,
+	Symbol(String),
 	Procedure(ProcedureType),
 }
 
 pub type ValList = Vec<Val>;
+
+impl Val {
+	pub fn get_type_name(&self) -> &str {
+		match self {
+			Number(_) => "number",
+			Boolean(_) => "boolean",
+			StringVal(_) => "string",
+			Symbol(_) => "symbol",
+			Procedure(_) => "procedure"
+		}
+	}
+}
 
 impl Display for Val {
 	fn fmt(&self, f: &mut Formatter) -> ResultFmt {
@@ -20,7 +32,11 @@ impl Display for Val {
 			Number(n) => n.to_string(),
 			Boolean(b) => b.to_string(),
 			StringVal(s) => s.to_string(),
-			Void => "void".to_string(),
+			Symbol(s) => {
+				let mut ret = String::from("#");
+				ret.push_str(s);
+				ret
+			}
 			Procedure(_) => "<procedure>".to_string() // #3: more interesting output
 		})
 	}
@@ -32,6 +48,7 @@ impl PartialEq for Val {
 			(Number(n), Number(o)) => *n == *o,
 			(Boolean(b), Boolean(o)) => *b == *o,
 			(StringVal(s), StringVal(o)) => s.eq(o),
+			(Symbol(s), Symbol(o)) => s.eq(o),
 			_ => false
 		}
 	}
@@ -48,3 +65,7 @@ pub enum ProcedureType {
 }
 
 pub type NativeProcedure = fn(ValList) -> Result<Val, String>;
+
+pub fn void() -> Val {
+	Symbol("void".to_string())
+}

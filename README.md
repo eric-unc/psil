@@ -16,7 +16,7 @@ Psil's command line interface has two modes: REPL and file loading:
 ## Language
 Psil is a Lisp-like programming languages, with some twists.
 
-Psil has two major constructions. The first is the "atom", which is a singular unit of value (such as an integer, or a name). The second is the "invocation," which is the activation of a procedure (must be a name type), and a series of expressions. The activated procedure is the "rator" (operator), and the passed expressions are the "rands" (operands). The rands are always resolved before the effect of the rator applies, except in the case of "special forms." Invocations will always return a value, even if that value is the void value.
+Psil has two major constructions. The first is the "atom", which is a singular unit of value (such as an integer, or a name). The second is the "invocation," which is the activation of a procedure (must be a name type), and a series of expressions. The activated procedure is the "rator" (operator), and the passed expressions are the "rands" (operands). The rands are always resolved before the effect of the rator applies, except in the case of "special forms." Invocations will always return a value, even if that value is the `#void` symbol.
 
 ### Example
 Other examples may be found in the `samples` directory.
@@ -51,8 +51,8 @@ Yay, sin(0) is 0!
 | number | Numbers are float-point values, such as `3`, `-55`, `0.55`.
 | boolean | Booleans are truth values, which can either be `true` or `false`.
 | string | Strings are a series of characters, like `"Ahhh!"` or `"545"`.
+| symbol | Symbols are similar to strings, but more for internal use as human-readable identifiers. They can be used like enums, like `#north`, `#south`, `#east`, `#west`. One important symbol is `#void`, a singleton returned from functions that don't return anything interesting.
 | procedure | A procedure (or "proc") is a block that returns an atom with optional arguments. See `procs.lisp` in the `samples` directory for examples. Procedures can be invoked easily if defined.
-| void | Void is a singleton, usually returned from functions that don't return anything interesting.
 
 ### Built-in procedures
 Special forms are marked with a `*` next to their names. They are similar to procedures, but with special evaluation rules that don't allow them to be implemented as regular procedures.
@@ -66,6 +66,7 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 | `do`* | any+ | void | Executes each invocation given.
 | `fail` | string? | void | Generates an error, with an optional error message. In REPL mode, Psil will just output the error message to standard error, and continue to accept input, while in load mode, Psil will terminate execution of the given script after the error message is printed.
 | `exit` | number? | void | Exits the program with an status code (without a rand, the status code is `0`).
+| `type` | any | symbol | Returns the type of the given rand.
 
 #### Input/output
 | Name | Rands | Returns | Description
@@ -79,6 +80,7 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 | Name | Rands | Returns | Description
 | :------ | :------ | :------ | :------
 | `2str` | any | string | Converts any value to a string.
+| `is-str?` | any | boolean | Checks if the rand is a string.
 | `str-cat` | any{2,} | string | Concatenates each rand. If a rand is not a string, it will be converted into one.
 | `str-contains?` | string{2} | boolean | Checks if the second rand is contained in the first rand.
 | `str-empty?` | string | boolean | Checks if the string is the empty string (`""`).
@@ -100,6 +102,7 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 | `*` | number{2,} | number | Multiplies all rands.
 | `/` | number{2,} | number | Divides the first by each remaining rands.
 | `%` | number{2,} | number | Gives the remainder of the first by each remaining rands. `(% 5 5 1)` is equivalent to `(% (% 5 5) 1)`.
+| `is-num?` | any | boolean | Checks if the rand is a number.
 
 #### Boolean
 | Name | Rands | Returns | Description
@@ -114,6 +117,20 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 | `>=` | number{2,} | boolean | Checks that first rand is greater than or equal to all other rands.
 | `<` | number{2,} | boolean | Checks that first rand is less than all other rands.
 | `<=` | number{2,} | boolean | Checks that first rand is less than or equal to all other rands.
+| `is-bool?` | any | boolean | Checks if the rand is a boolean.
+
+#### Symbol
+| Name | Rands | Returns | Description
+| :------ | :------ | :------ | :------
+| `str2symb` | string | symbol | Converts given string to a symbol.
+| `symb2str` | symbol | string | Converts given symbol to a string.
+| `is-symb?` | any | boolean | Checks if the rand is a symbol.
+| `is-void?` | any | boolean | Checks if the rand is `#void`.
+
+#### Procedure
+| Name | Rands | Returns | Description
+| :------ | :------ | :------ | :------
+| `is-proc?` | any | boolean | Checks if the rand is a procedure.
 
 ## Technologies used
 * [Rust](https://github.com/rust-lang/rust)
