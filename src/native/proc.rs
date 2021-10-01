@@ -1,4 +1,3 @@
-use std::borrow::Borrow;
 use crate::{check_arity_is, fail_on_bad_type};
 use crate::environment::Environment;
 use crate::val::{Val, ValList};

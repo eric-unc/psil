@@ -2,8 +2,8 @@ use std::string::String;
 
 use crate::ast::*;
 use crate::environment::Environment;
-use crate::val::{ProcedureType, Val};
-use crate::val::Val::{Boolean, Number, Procedure, String as StringVal, Symbol, Void};
+use crate::val::{ProcedureType, Val, void};
+use crate::val::Val::{Boolean, Number, Procedure, String as StringVal, Symbol};
 
 pub fn eval(program: ProgramAst) -> Result<Vec<Val>, String> {
 	eval_program(program, &mut Environment::new())
@@ -39,14 +39,13 @@ pub fn eval_expr(expr: ExprAst, env: &mut Environment) -> Result<Val, String> {
 	}
 }
 
-// atom ::= number | boolean | string | symbol | void | lambda | name
+// atom ::= number | boolean | string | symbol | lambda | name
 fn eval_atom(atom: AtomAst, env: &mut Environment) -> Result<Val, String> {
 	match atom {
 		AtomAst::Number(n) => Ok(Number(n)),
 		AtomAst::Boolean(b) => Ok(Boolean(b)),
 		AtomAst::String(s) => Ok(StringVal(s)),
 		AtomAst::Symbol(s) => Ok(Symbol(s)),
-		AtomAst::Void => Ok(Void),
 		AtomAst::Lambda(l) => Ok(Procedure(ProcedureType::Pure(l))),
 		AtomAst::Name(n) => env.get_binding(n)
 	}
@@ -133,7 +132,7 @@ fn eval_cond(cond_form: CondAst, env: &mut Environment) -> Result<Val, String> {
 		}
 	}
 
-	Ok(Void)
+	Ok(void())
 }
 
 // define ::= ( define name expr )
@@ -143,7 +142,7 @@ fn eval_define(define: DefineAst, env: &mut Environment) -> Result<Val, String> 
 	match val {
 		Ok(val) => {
 			env.add_binding(define.name, val);
-			Ok(Void)
+			Ok(void())
 		}
 		Err(e) => Err(e)
 	}
@@ -158,7 +157,7 @@ fn eval_do(do_ast: DoAst, env: &mut Environment) -> Result<Val, String> {
 		}
 	}
 
-	Ok(Void)
+	Ok(void())
 }
 
 // and ::= ( and expr_list )

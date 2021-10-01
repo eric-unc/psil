@@ -1,7 +1,7 @@
 use crate::{check_arity_between, check_arity_is, fail_on_bad_type};
 use crate::environment::Environment;
 use crate::val::{Val, ValList};
-use crate::val::Val::{Number, Boolean, String as StringVal, Symbol, Void, Procedure};
+use crate::val::Val::{Number, Boolean, String as StringVal, Symbol};
 
 pub fn add_control_procs(env: &mut Environment) {
 	env.add_proc("exit".to_string(), exit);

@@ -2,8 +2,8 @@ use std::io;
 
 use crate::{check_arity_at_least, check_arity_is};
 use crate::environment::Environment;
-use crate::val::{Val, ValList};
-use crate::val::Val::{String as StringVal, Void};
+use crate::val::{Val, ValList, void};
+use crate::val::Val::String as StringVal;
 
 pub fn add_io_procs(env: &mut Environment) {
 	env.add_proc("print".to_string(), print);
@@ -19,7 +19,7 @@ fn print(rands: ValList) -> Result<Val, String> {
 		print!("{}", arg);
 	}
 
-	Ok(Void)
+	Ok(void())
 }
 
 fn put(rands: ValList) -> Result<Val, String> {
@@ -29,7 +29,7 @@ fn put(rands: ValList) -> Result<Val, String> {
 
 	println!();
 
-	Ok(Void)
+	Ok(void())
 }
 
 fn put_each(rands: ValList) -> Result<Val, String> {
@@ -39,7 +39,7 @@ fn put_each(rands: ValList) -> Result<Val, String> {
 		println!("{}", arg);
 	}
 
-	Ok(Void)
+	Ok(void())
 }
 
 fn input(rands: ValList) -> Result<Val, String> {

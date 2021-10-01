@@ -21,7 +21,6 @@ pub enum AtomAst {
 	Boolean(bool),
 	String(String),
 	Symbol(String),
-	Void,
 	Lambda(LambdaAst),
 	Name(String),
 }

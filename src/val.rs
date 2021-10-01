@@ -1,7 +1,7 @@
 use std::fmt::{Display, Formatter, Result as ResultFmt};
 
 use crate::ast::LambdaAst;
-use crate::val::Val::{Boolean, Number, Procedure, String as StringVal, Symbol, Void};
+use crate::val::Val::{Boolean, Number, Procedure, String as StringVal, Symbol};
 
 #[derive(Clone, Debug)]
 pub enum Val {
@@ -9,7 +9,6 @@ pub enum Val {
 	Boolean(bool),
 	String(String),
 	Symbol(String),
-	Void,
 	Procedure(ProcedureType),
 }
 
@@ -22,7 +21,6 @@ impl Val {
 			Boolean(_) => "boolean",
 			StringVal(_) => "string",
 			Symbol(_) => "symbol",
-			Void => "void",
 			Procedure(_) => "procedure"
 		}
 	}
@@ -39,7 +37,6 @@ impl Display for Val {
 				ret.push_str(s);
 				ret
 			}
-			Void => "void".to_string(),
 			Procedure(_) => "<procedure>".to_string() // #3: more interesting output
 		})
 	}
@@ -68,3 +65,7 @@ pub enum ProcedureType {
 }
 
 pub type NativeProcedure = fn(ValList) -> Result<Val, String>;
+
+pub fn void() -> Val {
+	Symbol("void".to_string())
+}

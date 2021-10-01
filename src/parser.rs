@@ -46,7 +46,7 @@ pub fn parse_expr(expr_tree: Pair<Rule>) -> ExprAst {
 	unreachable!()
 }
 
-// atom ::= number | boolean | string | void | lambda | name
+// atom ::= number | boolean | string | lambda | name
 fn parse_atom(atom_tree: Pair<Rule>) -> AtomAst {
 	for inner_pair in atom_tree.into_inner() {
 		return match inner_pair.as_rule() {
@@ -54,7 +54,6 @@ fn parse_atom(atom_tree: Pair<Rule>) -> AtomAst {
 			Rule::boolean => AtomAst::Boolean(parse_boolean(inner_pair)),
 			Rule::string => AtomAst::String(parse_string(inner_pair)),
 			Rule::symbol => AtomAst::Symbol(parse_symbol(inner_pair)),
-			Rule::void => AtomAst::Void,
 			Rule::lambda => AtomAst::Lambda(parse_lambda(inner_pair)),
 			Rule::name => AtomAst::Name(inner_pair.as_str().to_string()),
 			_ => unreachable!()
