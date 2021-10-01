@@ -125,6 +125,7 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 | `str2symb` | string | symbol | Converts given string to a symbol.
 | `symb2str` | symbol | string | Converts given symbol to a string.
 | `is-symb?` | any | boolean | Checks if the rand is a symbol.
+| `is-void?` | any | boolean | Checks if the rand is `#void`.
 
 #### Procedure
 | Name | Rands | Returns | Description
