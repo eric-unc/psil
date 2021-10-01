@@ -12,6 +12,7 @@ pub fn add_boolean_procs(env: &mut Environment) {
 	env.add_proc(">=".to_string(), gte);
 	env.add_proc("<".to_string(), lt);
 	env.add_proc("<=".to_string(), lte);
+	env.add_proc("is-bool?".to_string(), is_bool);
 }
 
 fn not(rands: ValList) -> Result<Val, String> {
@@ -141,4 +142,13 @@ fn lte(rands: ValList) -> Result<Val, String> {
 	}
 
 	Ok(Boolean(true))
+}
+
+fn is_bool(rands: ValList) -> Result<Val, String> {
+	check_arity_is!("is-bool?", 1, rands);
+
+	match rands[0] {
+		Boolean(_) => Ok(Boolean(true)),
+		_ => Ok(Boolean(false))
+	}
 }

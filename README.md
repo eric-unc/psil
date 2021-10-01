@@ -81,6 +81,7 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 | Name | Rands | Returns | Description
 | :------ | :------ | :------ | :------
 | `2str` | any | string | Converts any value to a string.
+| `is-str?` | any | boolean | Checks if the rand is a string.
 | `str-cat` | any{2,} | string | Concatenates each rand. If a rand is not a string, it will be converted into one.
 | `str-contains?` | string{2} | boolean | Checks if the second rand is contained in the first rand.
 | `str-empty?` | string | boolean | Checks if the string is the empty string (`""`).
@@ -102,6 +103,7 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 | `*` | number{2,} | number | Multiplies all rands.
 | `/` | number{2,} | number | Divides the first by each remaining rands.
 | `%` | number{2,} | number | Gives the remainder of the first by each remaining rands. `(% 5 5 1)` is equivalent to `(% (% 5 5) 1)`.
+| `is-num?` | any | boolean | Checks if the rand is a number.
 
 #### Boolean
 | Name | Rands | Returns | Description
@@ -116,12 +118,19 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 | `>=` | number{2,} | boolean | Checks that first rand is greater than or equal to all other rands.
 | `<` | number{2,} | boolean | Checks that first rand is less than all other rands.
 | `<=` | number{2,} | boolean | Checks that first rand is less than or equal to all other rands.
+| `is-bool?` | any | boolean | Checks if the rand is a boolean.
 
 #### Symbol
 | Name | Rands | Returns | Description
 | :------ | :------ | :------ | :------
 | `str2symb` | string | symbol | Converts given string to a symbol.
 | `symb2str` | symbol | string | Converts given symbol to a string.
+| `is-symb?` | any | boolean | Checks if the rand is a symbol.
+
+#### Procedure
+| Name | Rands | Returns | Description
+| :------ | :------ | :------ | :------
+| `is-proc?` | any | boolean | Checks if the rand is a procedure.
 
 ## Technologies used
 * [Rust](https://github.com/rust-lang/rust)

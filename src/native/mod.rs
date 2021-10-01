@@ -4,6 +4,7 @@ mod str;
 mod math;
 mod boolean;
 mod symb;
+mod proc;
 
 use crate::environment::Environment;
 
@@ -15,6 +16,7 @@ pub fn add_native_library(env: &mut Environment) {
 	math::add_math_procs(env);
 	boolean::add_boolean_procs(env);
 	symb::add_symbol_procs(env);
+	proc::add_procedure_procs(env);
 }
 
 // Macros for module

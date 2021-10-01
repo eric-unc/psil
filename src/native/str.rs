@@ -6,6 +6,7 @@ use crate::val::Val::{Boolean, Number, String as StringVal};
 
 pub fn add_str_procs(env: &mut Environment) {
 	env.add_proc("2str".to_string(), to_str);
+	env.add_proc("is-str?".to_string(), is_str);
 	env.add_proc("str-cat".to_string(), str_cat);
 	env.add_proc("str-contains?".to_string(), str_contains);
 	env.add_proc("str-empty?".to_string(), str_empty);
@@ -24,6 +25,15 @@ fn to_str(rands: ValList) -> Result<Val, String> {
 	check_arity_is!("2str", 1, rands);
 
 	Ok(StringVal(rands[0].to_string()))
+}
+
+fn is_str(rands: ValList) -> Result<Val, String> {
+	check_arity_is!("is-str?", 1, rands);
+
+	match rands[0] {
+		StringVal(_) => Ok(Boolean(true)),
+		_ => Ok(Boolean(false))
+	}
 }
 
 fn str_cat(rands: ValList) -> Result<Val, String> {
