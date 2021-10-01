@@ -51,6 +51,7 @@ Yay, sin(0) is 0!
 | number | Numbers are float-point values, such as `3`, `-55`, `0.55`.
 | boolean | Booleans are truth values, which can either be `true` or `false`.
 | string | Strings are a series of characters, like `"Ahhh!"` or `"545"`.
+| symbol | Symbols are similar to strings, but more for internal use as human-readable identifiers. They can be used like enums, like `#north`, `#south`, `#east`, `#west`.
 | procedure | A procedure (or "proc") is a block that returns an atom with optional arguments. See `procs.lisp` in the `samples` directory for examples. Procedures can be invoked easily if defined.
 | void | Void is a singleton, usually returned from functions that don't return anything interesting.
 
@@ -114,6 +115,12 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 | `>=` | number{2,} | boolean | Checks that first rand is greater than or equal to all other rands.
 | `<` | number{2,} | boolean | Checks that first rand is less than all other rands.
 | `<=` | number{2,} | boolean | Checks that first rand is less than or equal to all other rands.
+
+#### Symbol
+| Name | Rands | Returns | Description
+| :------ | :------ | :------ | :------
+| `str2symb` | string | symbol | Converts given string to a symbol.
+| `symb2str` | symbol | string | Converts given symbol to a string.
 
 ## Technologies used
 * [Rust](https://github.com/rust-lang/rust)
