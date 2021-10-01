@@ -15,6 +15,19 @@ pub enum Val {
 
 pub type ValList = Vec<Val>;
 
+impl Val {
+	pub fn get_type_name(&self) -> &str {
+		match self {
+			Number(_) => "number",
+			Boolean(_) => "boolean",
+			StringVal(_) => "string",
+			Symbol(_) => "symbol",
+			Void => "void",
+			Procedure(_) => "procedure"
+		}
+	}
+}
+
 impl Display for Val {
 	fn fmt(&self, f: &mut Formatter) -> ResultFmt {
 		write!(f, "{}", match self {
