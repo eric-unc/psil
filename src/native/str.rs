@@ -115,7 +115,12 @@ fn str_repeat(rands: ValList) -> Result<Val, String> {
 	match rands[0].borrow() {
 		StringVal(s) =>
 			match rands[1] {
-				Number(n) => Ok(StringVal(s.repeat(n as usize))),
+				Number(n) =>
+					if n < 0.0 || n % 1.0 != 0.0 {
+						Err("str-repeat expects integer value!".to_string())
+					} else {
+						Ok(StringVal(s.repeat(n as usize)))
+					}
 				_ => fail_on_bad_type!("str-repeat", "number", rands)
 			}
 		_ => fail_on_bad_type!("str-repeat", "string", rands)
@@ -168,9 +173,13 @@ fn str_trunc(rands: ValList) -> Result<Val, String> {
 		StringVal(s) =>
 			match rands[1].borrow() {
 				Number(n) => {
-					let mut ret = s.clone();
-					ret.truncate(*n as usize);
-					Ok(StringVal(ret))
+					if *n < 0.0 || *n % 1.0 != 0.0 {
+						Err("str-str_trunc expects integer value!".to_string())
+					} else {
+						let mut ret = s.clone();
+						ret.truncate(*n as usize);
+						Ok(StringVal(ret))
+					}
 				}
 				_ => fail_on_bad_type!("str-trunc", "number", rands)
 			}

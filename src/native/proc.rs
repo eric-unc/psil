@@ -1,4 +1,4 @@
-use crate::{check_arity_is, fail_on_bad_type};
+use crate::check_arity_is;
 use crate::environment::Environment;
 use crate::val::{Val, ValList};
 use crate::val::Val::{Boolean, Procedure};

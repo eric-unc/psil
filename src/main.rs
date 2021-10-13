@@ -18,6 +18,9 @@ pub mod native;
 pub mod parser;
 pub mod val;
 
+#[cfg(test)]
+mod tests;
+
 #[derive(Parser)]
 #[grammar = "grammar.pest"]
 pub struct PsilPestParser;
