@@ -77,7 +77,11 @@ fn divide(rands: ValList) -> Result<Val, String> {
 					ret = n;
 					ret_init = true;
 				} else {
-					ret /= n
+					if n == 0.0 {
+						return Err("Divide by zero!".to_string());
+					}
+
+					ret /= n;
 				}
 			_ => fail_on_bad_type!("/", "number", rands)
 		}
@@ -99,7 +103,11 @@ fn remainder(rands: ValList) -> Result<Val, String> {
 					ret = n;
 					ret_init = true;
 				} else {
-					ret %= n
+					if n == 0.0 {
+						return Err("Divide/remainder by zero!".to_string());
+					}
+
+					ret %= n;
 				}
 			_ => fail_on_bad_type!("%", "number", rands)
 		}
