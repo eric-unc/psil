@@ -3,7 +3,9 @@ mod control;
 mod io;
 mod math;
 mod number;
+mod proc;
 mod str;
+mod symb;
 
 use pest::error::Error;
 use pest::iterators::{Pair, Pairs};

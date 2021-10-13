@@ -1,5 +1,5 @@
 use crate::{evals_and_eq, fails_eval};
-use crate::val::Val::{Boolean, Number, String};
+use crate::val::Val::Boolean;
 
 use crate::tests::{eval, parse};
 
