@@ -1,8 +1,6 @@
-use crate::{evals_and_eq, evals_and_eq_with_env, fails_eval};
-use crate::val::Val::{Boolean, Number, Symbol};
+use crate::{evals_and_eq, fails_eval};
 use crate::val::void;
 
-use crate::environment::Environment;
 use crate::tests::{eval, eval_with_env, parse};
 
 // TODO: kind of a pain to test these properly
