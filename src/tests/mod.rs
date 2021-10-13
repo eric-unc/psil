@@ -1,3 +1,4 @@
+mod boolean;
 mod control;
 mod io;
 mod math;

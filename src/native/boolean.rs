@@ -25,7 +25,7 @@ fn not(rands: ValList) -> Result<Val, String> {
 }
 
 fn xor(rands: ValList) -> Result<Val, String> {
-	check_arity_at_least!("xor", 1, rands);
+	check_arity_at_least!("xor", 2, rands);
 
 	// Wikipedia: "[xor] may be considered to be an n-ary operator which is true if and only if an odd number of arguments are true"
 	let mut trues: usize = 0;
