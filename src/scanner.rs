@@ -1,3 +1,5 @@
+use std::str::Chars;
+
 #[derive(Clone, Debug)]
 pub enum Token {
 	// main
@@ -18,18 +20,21 @@ pub enum Token {
 	Symbol(String)
 }
 
+// TODO
+
 #[derive(Clone, Debug)]
-pub struct Scanner {
-	text: String
+pub struct Scanner<'a> {
+	text: Chars<'a>,
+	position: usize
 }
 
 impl Scanner {
 	pub fn new(text: String) -> Self {
-		Self { text }
+		Self { text: text.chars(), position: 0 }
 	}
 
 	pub fn scan(&mut self) -> Token {
-		// TODO
-		Token::Boolean(true)
+		let curr_char = self.text;
+		let x = curr_char.nth(0).unwrap();
 	}
 }
