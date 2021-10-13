@@ -173,9 +173,13 @@ fn str_trunc(rands: ValList) -> Result<Val, String> {
 		StringVal(s) =>
 			match rands[1].borrow() {
 				Number(n) => {
-					let mut ret = s.clone();
-					ret.truncate(*n as usize);
-					Ok(StringVal(ret))
+					if *n < 0.0 || *n % 1.0 != 0.0 {
+						Err("str-str_trunc expects integer value!".to_string())
+					} else {
+						let mut ret = s.clone();
+						ret.truncate(*n as usize);
+						Ok(StringVal(ret))
+					}
 				}
 				_ => fail_on_bad_type!("str-trunc", "number", rands)
 			}

@@ -73,6 +73,7 @@ fn str_len() {
 #[test]
 fn str_low() {
 	evals_and_eq!("(str-low \"HELLO\")", String("hello".to_string()));
+	evals_and_eq!("(str-low \"HeLLo5\")", String("hello5".to_string()));
 
 	fails_eval!("(str-low)");
 	fails_eval!("(str-low \"\" \"\")");
@@ -113,6 +114,29 @@ fn str_starts_with() {
 
 #[test]
 fn str_strip() {
-	evals_and_eq!("(str-starts-with? \"    helloyes \")", String("helloyes".to_string()));
-	evals_and_eq!("(str-starts-with? \"helloyes\")", String("helloyes".to_string()));
+	evals_and_eq!("(str-strip \"    helloyes \")", String("helloyes".to_string()));
+	evals_and_eq!("(str-strip \"helloyes\")", String("helloyes".to_string()));
+
+	fails_eval!("(str-strip)");
+	fails_eval!("(str-strip 5)");
+}
+
+#[test]
+fn str_trunc() {
+	evals_and_eq!("(str-trunc \"hello\" 3)", String("hel".to_string()));
+
+	fails_eval!("(str-trunc)");
+	fails_eval!("(str-trunc \"hello\")");
+	fails_eval!("(str-trunc \"hello\" \"hello\")");
+	fails_eval!("(str-trunc \"hello\" -1)");
+}
+
+#[test]
+fn str_up() {
+	evals_and_eq!("(str-up \"hello\")", String("HELLO".to_string()));
+	evals_and_eq!("(str-up \"HeLLo5\")", String("HELLO5".to_string()));
+
+	fails_eval!("(str-up)");
+	fails_eval!("(str-up \"\" \"\")");
+	fails_eval!("(str-up 5)");
 }
