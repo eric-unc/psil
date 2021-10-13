@@ -8,6 +8,7 @@ use crate::val::Val::Procedure;
 pub type Scope = HashMap<String, Val>;
 pub type Bindings = Vec<Scope>;
 
+#[derive(Clone)]
 pub struct Environment {
 	bindings: Bindings
 }
