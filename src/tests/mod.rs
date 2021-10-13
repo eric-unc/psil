@@ -1,3 +1,4 @@
+mod control;
 mod math;
 mod number;
 
