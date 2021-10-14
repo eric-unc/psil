@@ -23,18 +23,17 @@ pub enum Token {
 // TODO
 
 #[derive(Clone, Debug)]
-pub struct Scanner<'a> {
-	text: Chars<'a>,
+pub struct Scanner {
+	text: String,
 	position: usize
 }
 
 impl Scanner {
 	pub fn new(text: String) -> Self {
-		Self { text: text.chars(), position: 0 }
+		Self { text, position: 0 }
 	}
 
 	pub fn scan(&mut self) -> Token {
-		let curr_char = self.text;
-		let x = curr_char.nth(0).unwrap();
+		let mut curr_char = self.text.chars().nth(0).unwrap();
 	}
 }
