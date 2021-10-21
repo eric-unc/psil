@@ -16,6 +16,14 @@ fn word() {
 }
 
 #[test]
+fn letter() {
+	let mut scanner = Scanner::new("l".to_string());
+
+	assert_eq!(scanner.scan(), Token::Identifier("l".to_string()));
+	assert_eq!(scanner.scan(), Token::End);
+}
+
+#[test]
 fn simple_num() {
 	let mut scanner = Scanner::new("5".to_string());
 

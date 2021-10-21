@@ -31,31 +31,42 @@ impl Scanner {
 
 	fn remove_whitespace(&mut self) {
 		let mut chars = self.text.chars();
-		while chars.nth(self.pos).is_some() && chars.nth(self.pos).unwrap().is_whitespace() {
+
+		let mut possible_char = chars.nth(self.pos);
+		while possible_char.is_some() && possible_char.unwrap().is_whitespace() {
 			self.pos += 1;
+			possible_char = chars.nth(self.pos);
 		}
 	}
 
 	fn remove_sl_comment(&mut self) {
 		let mut chars = self.text.chars();
-		while chars.nth(self.pos).is_some() && chars.nth(self.pos).unwrap() != '\n' {
+
+		let mut possible_char = chars.nth(self.pos);
+		while possible_char.is_some() && possible_char.unwrap() != '\n' {
 			self.pos += 1;
+			possible_char = chars.nth(self.pos);
 		}
 	}
 
 	fn read_string(&mut self) -> Token {
 		let mut chars = self.text.chars();
 
-		if chars.nth(self.pos).is_none() || chars.nth(self.pos).unwrap() != '"' {
+		let mut possible_char = chars.nth(self.pos);
+		if possible_char.is_none() || possible_char.unwrap() != '"' {
 			panic!();
 		}
 		self.pos += 1;
 
 		let mut str = String::from("");
 
-		while chars.nth(self.pos).is_some() {
-			match chars.nth(self.pos).unwrap() {
-				'"' => return Token::String(str),
+		possible_char = chars.nth(self.pos);
+		while possible_char.is_some() {
+			match possible_char.unwrap() {
+				'"' => {
+					self.pos += 1;
+					return Token::String(str);
+				},
 				'\\' => {
 					self.pos += 1;
 
@@ -98,9 +109,11 @@ impl Scanner {
 		let mut chars = self.text.chars();
 		let mut ret = String::from("");
 
-		while chars.nth(self.pos).is_some() && !chars.nth(self.pos).unwrap().is_whitespace() {
-			ret.push(chars.nth(self.pos).unwrap());
+		let mut possible_char = chars.nth(self.pos);
+		while possible_char.is_some() && !possible_char.unwrap().is_whitespace() {
+			ret.push(possible_char.unwrap());
 			self.pos += 1;
+			possible_char = chars.nth(self.pos);
 		}
 
 		match ret.chars().nth(0).unwrap() {
@@ -122,8 +135,6 @@ impl Scanner {
 				}
 			}
 		}
-
-
 	}
 
 	pub fn scan(&mut self) -> Token {
