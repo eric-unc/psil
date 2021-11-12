@@ -19,12 +19,8 @@ fn eval_expr_list(expr_list: ExprListAst, env: &mut Environment) -> Result<Vec<V
 	let mut ret = Vec::new(); // TODO: could maybe convert to functional-style
 
 	for expr in expr_list.into_iter() {
-		let val = eval_expr(expr, env);
-
-		match val {
-			Ok(v) => ret.push(v),
-			Err(e) => return Err(e)
-		}
+		let val = eval_expr(expr, env)?;
+		ret.push(val);
 	}
 
 	Ok(ret)
@@ -75,10 +71,8 @@ fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Result<V
 			let mut rands = Vec::new();
 
 			for expr in invocation.expr_list.into_iter() {
-				match eval_expr(expr, env) {
-					Ok(val) => rands.push(val),
-					Err(e) => return Err(e)
-				}
+				let val = eval_expr(expr, env)?;
+				rands.push(val);
 			}
 
 			match p {
@@ -137,24 +131,15 @@ fn eval_cond(cond_form: CondAst, env: &mut Environment) -> Result<Val, String> {
 
 // define ::= ( define name expr )
 fn eval_define(define: DefineAst, env: &mut Environment) -> Result<Val, String> {
-	let val = eval_expr(define.value, env);
-
-	match val {
-		Ok(val) => {
-			env.add_binding(define.name, val);
-			Ok(void())
-		}
-		Err(e) => Err(e)
-	}
+	let val = eval_expr(define.value, env)?;
+	env.add_binding(define.name, val);
+	Ok(void())
 }
 
 // do ::= ( do expr_list? )
 fn eval_do(do_ast: DoAst, env: &mut Environment) -> Result<Val, String> {
 	for expr in do_ast.expr_list {
-		match eval_expr(expr, env) {
-			Ok(_) => {},
-			Err(e) => return Err(e)
-		}
+		eval_expr(expr, env)?;
 	}
 
 	Ok(void())
