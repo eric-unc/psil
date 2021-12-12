@@ -21,6 +21,7 @@ test_scanner!(end, "", End);
 test_scanner!(word, "word", Identifier("word".to_string()), End);
 test_scanner!(letter, "l", Identifier("l".to_string()), End);
 test_scanner!(identifier_with_numbers, "bla555", Identifier("bla555".to_string()), End);
+test_scanner!(identifier_starting_with_numbers, "555bla", Identifier("555bla".to_string()), End);
 
 // Symbols
 test_scanner!(left_paren, "(", LeftParen, End);
@@ -75,6 +76,8 @@ test_scanner!(if_form, "if", If, End);
 test_scanner!(cond, "cond", Cond, End);
 test_scanner!(define, "define", Define, End);
 test_scanner!(do_form, "do", Do, End);
+test_scanner!(and, "and", And, End);
+test_scanner!(or, "or", Or, End);
 
 // Spacing
 test_scanner!(spaces, "    ", End);

@@ -24,7 +24,9 @@ pub enum Token {
 	If,
 	Cond,
 	Define,
-	Do
+	Do,
+	And,
+	Or
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -102,6 +104,8 @@ fn read_word(iter: &mut Scanner) -> Result<Token, ScannerError> {
 				"cond" => Token::Cond,
 				"define" => Token::Define,
 				"do" => Token::Do,
+				"and" => Token::And,
+				"or" => Token::Or,
 				_ => Token::Identifier(ret)
 			}
 		}
