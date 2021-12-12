@@ -1,0 +1,3 @@
+hard_tabs = true
+max_width = 10000
+trailing_comma = "Never"
