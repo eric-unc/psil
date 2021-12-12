@@ -27,6 +27,12 @@ pub enum Token {
 	Do
 }
 
+#[derive(Clone, Debug, PartialEq)]
+pub enum ScannerError {
+	IncompleteString,
+	UnknownEscapeChar(char)
+}
+
 type Scanner<'a> = Peekable<Chars<'a>>;
 
 fn remove_whitespace(iter: &mut Scanner) {
@@ -41,48 +47,45 @@ fn remove_sl_comment(iter: &mut Scanner) {
 	}
 }
 
-fn read_string(iter: &mut Scanner) -> Token {
-	let c = iter.next();
-	if c.is_none() || c.unwrap() != '"' {
-		panic!("missing \"");
-	}
+fn read_string(iter: &mut Scanner) -> Result<Token, ScannerError> {
+	iter.next().unwrap(); // get rid of "
 
 	let mut str = String::from("");
 	while iter.peek().is_some() {
 		match iter.next().unwrap() {
-			'"' => return Token::String(str),
+			'"' => return Ok(Token::String(str)),
 			'\\' => {
 				match iter.next() {
-					None => panic!("Incomplete string!"),
+					None => return Err(ScannerError::IncompleteString),
 					Some('\\') => str.push('\\'),
 					Some('n') => str.push('\n'),
 					Some('r') => str.push('\r'),
 					Some('t') => str.push('\t'),
 					Some('"') => str.push('"'),
-					Some(_) => panic!("Unexpected escape character!")
+					Some(c) => return Err(ScannerError::UnknownEscapeChar(c))
 				}
 			}
 			c => str.push(c) // and continue;
 		}
 	}
 
-	panic!("Incomplete string!")
+	Err(ScannerError::IncompleteString)
 }
 
 fn is_iden_char(c: char) -> bool {
 	!(c.is_whitespace() || c == '(' || c == ')' || c == '{' || c == '}' || c == '|')
 }
 
-fn read_word(iter: &mut Scanner) -> Token {
+fn read_word(iter: &mut Scanner) -> Result<Token, ScannerError> {
 	let mut ret = String::from("");
 
 	while iter.peek().is_some() && is_iden_char(*iter.peek().unwrap()) {
 		ret.push(iter.next().unwrap());
 	}
 
-	match ret.chars().nth(0).unwrap() {
+	Ok(match ret.chars().nth(0).unwrap() {
 		'-' | '.' | '0'..='9' => {
-			match ret.parse::<f64>() {
+			match ret.parse::<f64>() { // TODO: this will be improved in the big number update
 				Ok(n) => Token::Number(n),
 				Err(_) => Token::Identifier(ret)
 			}
@@ -102,36 +105,36 @@ fn read_word(iter: &mut Scanner) -> Token {
 				_ => Token::Identifier(ret)
 			}
 		}
-	}
+	})
 }
 
-pub fn scan(iter: &mut Scanner) -> Token {
+pub fn scan(iter: &mut Scanner) -> Result<Token, ScannerError> {
 	remove_whitespace(iter);
 	match iter.peek() {
-		None => Token::End,
+		None => Ok(Token::End),
 		Some(';') => {
 			remove_sl_comment(iter);
 			scan(iter)
 		}
 		Some('(') => {
 			iter.next();
-			Token::LeftParen
+			Ok(Token::LeftParen)
 		}
 		Some(')') => {
 			iter.next();
-			Token::RightParen
+			Ok(Token::RightParen)
 		}
 		Some('{') => {
 			iter.next();
-			Token::LeftBracket
+			Ok(Token::LeftBracket)
 		}
 		Some('}') => {
 			iter.next();
-			Token::RightBracket
+			Ok(Token::RightBracket)
 		}
 		Some('|') => {
 			iter.next();
-			Token::Bar
+			Ok(Token::Bar)
 		}
 		Some('"') => read_string(iter),
 		Some(_) => read_word(iter)
