@@ -56,16 +56,14 @@ fn read_string(iter: &mut Scanner) -> Result<Token, ScannerError> {
 	while iter.peek().is_some() {
 		match iter.next().unwrap() {
 			'"' => return Ok(Token::String(str)),
-			'\\' => {
-				match iter.next() {
-					None => return Err(ScannerError::IncompleteString),
-					Some('\\') => str.push('\\'),
-					Some('n') => str.push('\n'),
-					Some('r') => str.push('\r'),
-					Some('t') => str.push('\t'),
-					Some('"') => str.push('"'),
-					Some(c) => return Err(ScannerError::UnknownEscapeChar(c))
-				}
+			'\\' => match iter.next() {
+				None => return Err(ScannerError::IncompleteString),
+				Some('\\') => str.push('\\'),
+				Some('n') => str.push('\n'),
+				Some('r') => str.push('\r'),
+				Some('t') => str.push('\t'),
+				Some('"') => str.push('"'),
+				Some(c) => return Err(ScannerError::UnknownEscapeChar(c))
 			}
 			c => str.push(c) // and continue;
 		}
@@ -86,28 +84,25 @@ fn read_word(iter: &mut Scanner) -> Result<Token, ScannerError> {
 	}
 
 	Ok(match ret.chars().nth(0).unwrap() {
-		'-' | '.' | '0'..='9' => {
+		'-' | '.' | '0'..='9' =>
 			match ret.parse::<f64>() { // TODO: this will be improved in the big number update
 				Ok(n) => Token::Number(n),
 				Err(_) => Token::Identifier(ret)
 			}
-		}
 		'#' => {
 			let ret = &ret[1..];
 			Token::Symbol(ret.to_string())
 		}
-		_ => {
-			match ret.as_str() {
-				"true" => Token::Boolean(true),
-				"false" => Token::Boolean(false),
-				"if" => Token::If,
-				"cond" => Token::Cond,
-				"define" => Token::Define,
-				"do" => Token::Do,
-				"and" => Token::And,
-				"or" => Token::Or,
-				_ => Token::Identifier(ret)
-			}
+		_ => match ret.as_str() {
+			"true" => Token::Boolean(true),
+			"false" => Token::Boolean(false),
+			"if" => Token::If,
+			"cond" => Token::Cond,
+			"define" => Token::Define,
+			"do" => Token::Do,
+			"and" => Token::And,
+			"or" => Token::Or,
+			_ => Token::Identifier(ret)
 		}
 	})
 }
