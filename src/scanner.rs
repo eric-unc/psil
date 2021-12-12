@@ -23,11 +23,6 @@ pub enum Token {
 
 type Scanner<'a> = Peekable<Chars<'a>>;
 
-/*fn new_scanner<'a>(mut str: String) -> Scanner<'a> {
-	let z = str.chars().peekable();
-	z.collect()
-}*/
-
 fn remove_whitespace(iter: &mut Scanner) {
 	while iter.peek().is_some() && iter.peek().unwrap().is_whitespace() {
 		iter.next();

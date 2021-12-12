@@ -1,65 +1,23 @@
 use crate::scanner::*;
 
-#[test]
-fn end() {
-	let mut scanner = "".chars().peekable();
+macro_rules! test_scanner {
+	($name:ident, $src:expr, $( $expected:expr ),*) => {
+        #[test]
+        fn $name() {
+			let mut scanner = $src.chars().peekable();
 
-	assert_eq!(scan(&mut scanner), Token::End);
+			$(
+				assert_eq!(scan(&mut scanner), $expected);
+			)*
+        }
+	}
 }
 
-
-#[test]
-fn word() {
-	let mut scanner = "word".chars().peekable();
-
-	assert_eq!(scan(&mut scanner), Token::Identifier("word".to_string()));
-	assert_eq!(scan(&mut scanner), Token::End);
-}
-
-#[test]
-fn letter() {
-	let mut scanner = "l".chars().peekable();
-
-	assert_eq!(scan(&mut scanner), Token::Identifier("l".to_string()));
-	assert_eq!(scan(&mut scanner), Token::End);
-}
-
-#[test]
-fn simple_num() {
-	let mut scanner = "5".chars().peekable();
-
-	assert_eq!(scan(&mut scanner), Token::Number(5.0));
-	assert_eq!(scan(&mut scanner), Token::End);
-}
-
-#[test]
-fn long_num() {
-	let mut scanner = "6000".chars().peekable();
-
-	assert_eq!(scan(&mut scanner), Token::Number(6000.0));
-	assert_eq!(scan(&mut scanner), Token::End);
-}
-
-#[test]
-fn negative_num() {
-	let mut scanner = "-7000".chars().peekable();
-
-	assert_eq!(scan(&mut scanner), Token::Number(-7000.0));
-	assert_eq!(scan(&mut scanner), Token::End);
-}
-
-#[test]
-fn decimal_num() {
-	let mut scanner = "0.56".chars().peekable();
-
-	assert_eq!(scan(&mut scanner), Token::Number(0.56));
-	assert_eq!(scan(&mut scanner), Token::End);
-}
-
-#[test]
-fn negative_decimal_num() {
-	let mut scanner = "-0.399".chars().peekable();
-
-	assert_eq!(scan(&mut scanner), Token::Number(-0.399));
-	assert_eq!(scan(&mut scanner), Token::End);
-}
+test_scanner!(end, "", Token::End);
+test_scanner!(word, "word", Token::Identifier("word".to_string()), Token::End);
+test_scanner!(letter, "l", Token::Identifier("l".to_string()), Token::End);
+test_scanner!(simple_num, "5", Token::Number(5.0), Token::End);
+test_scanner!(long_num, "6000", Token::Number(6000.0), Token::End);
+test_scanner!(negative_num, "-7000", Token::Number(-7000.0), Token::End);
+test_scanner!(decimal_num, "-7000", Token::Number(0.56), Token::End);
+test_scanner!(negative_decimal_num, "-0.399", Token::Number(-0.399), Token::End);
