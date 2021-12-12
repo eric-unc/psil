@@ -4,6 +4,7 @@ mod io;
 mod math;
 mod number;
 mod proc;
+mod scanner;
 mod str;
 mod symb;
 

@@ -16,6 +16,7 @@ pub mod environment;
 pub mod eval;
 pub mod native;
 pub mod parser;
+pub mod scanner;
 pub mod val;
 
 #[cfg(test)]
