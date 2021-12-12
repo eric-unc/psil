@@ -18,7 +18,13 @@ pub enum Token {
 	Number(f64),
 	Boolean(bool),
 	String(String),
-	Symbol(String)
+	Symbol(String),
+
+	// Special forms/keywords
+	If,
+	Cond,
+	Define,
+	Do
 }
 
 type Scanner<'a> = Peekable<Chars<'a>>;
@@ -63,10 +69,14 @@ fn read_string(iter: &mut Scanner) -> Token {
 	panic!("Incomplete string!")
 }
 
+fn is_iden_char(c: char) -> bool {
+	!(c.is_whitespace() || c == '(' || c == ')' || c == '{' || c == '}' || c == '|')
+}
+
 fn read_word(iter: &mut Scanner) -> Token {
 	let mut ret = String::from("");
 
-	while iter.peek().is_some() && !iter.peek().unwrap().is_whitespace() {
+	while iter.peek().is_some() && is_iden_char(*iter.peek().unwrap()) {
 		ret.push(iter.next().unwrap());
 	}
 
@@ -84,7 +94,11 @@ fn read_word(iter: &mut Scanner) -> Token {
 		_ => {
 			match ret.as_str() {
 				"true" => Token::Boolean(true),
-				"false" => Token::Boolean(true),
+				"false" => Token::Boolean(false),
+				"if" => Token::If,
+				"cond" => Token::Cond,
+				"define" => Token::Define,
+				"do" => Token::Do,
 				_ => Token::Identifier(ret)
 			}
 		}
