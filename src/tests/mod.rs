@@ -16,7 +16,7 @@ use crate::Rule;
 use crate::pest::Parser;
 use crate::environment::Environment;
 use crate::eval::{eval as eval_psil, eval_expr};
-use crate::parser::{parse as parse_psil, parse_expr};
+use crate::parser_pest::{parse as parse_psil, parse_expr};
 use crate::val::Val;
 
 #[macro_export]

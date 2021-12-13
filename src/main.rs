@@ -9,13 +9,14 @@ use pest::Parser;
 
 use environment::Environment;
 use eval::{eval, eval_expr};
-use parser::{parse, parse_expr};
+use parser_pest::{parse, parse_expr};
 
 pub mod ast;
 pub mod environment;
 pub mod eval;
 pub mod native;
-pub mod parser;
+pub mod parser_new;
+pub mod parser_pest;
 pub mod scanner;
 pub mod val;
 
