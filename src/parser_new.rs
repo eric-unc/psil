@@ -4,7 +4,7 @@ use std::str::Chars;
 use crate::ast::*;
 use crate::scanner::*;
 
-pub fn parse(str: String) -> ProgramAst {
+/*pub fn parse(str: String) -> ProgramAst {
 	let mut scanner = str.chars().peekable();
 	parse_program(&mut scanner)
 }
@@ -28,6 +28,6 @@ fn parse_expr_list(scanner: &mut Peekable<Chars>) -> ExprListAst {
 }
 
 // expr ::= atom | special_form | invocation
-/*pub fn parse_expr(scanner: &mut Peekable<Chars>) -> ExprAst {
+pub fn parse_expr(scanner: &mut Peekable<Chars>) -> ExprAst {
 
 }*/
