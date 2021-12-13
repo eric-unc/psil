@@ -17,7 +17,7 @@ pub enum Token {
 	// literals
 	Number(f64),
 	Boolean(bool),
-	String(String),
+	StringT(String),
 	Symbol(String),
 
 	// Special forms/keywords
@@ -28,12 +28,14 @@ pub enum Token {
 	And,
 	Or
 }
+use Token::*;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum ScannerError {
 	IncompleteString,
 	UnknownEscapeChar(char)
 }
+use ScannerError::*;
 
 pub struct Scanner<'a> {
 	peek_token: Option<Result<Token, ScannerError>>,
@@ -42,7 +44,7 @@ pub struct Scanner<'a> {
 }
 
 impl<'a> Scanner<'a> {
-	pub fn new_scanner(text: &'a str) -> Self {
+	pub fn new(text: &'a str) -> Self {
 		let iter = text.chars().peekable();
 
 		Self {
@@ -70,21 +72,21 @@ impl<'a> Scanner<'a> {
 		let mut str = String::from("");
 		while self.iter.peek().is_some() {
 			match self.iter.next().unwrap() {
-				'"' => return Ok(Token::String(str)),
+				'"' => return Ok(StringT(str)),
 				'\\' => match self.iter.next() {
-					None => return Err(ScannerError::IncompleteString),
+					None => return Err(IncompleteString),
 					Some('\\') => str.push('\\'),
 					Some('n') => str.push('\n'),
 					Some('r') => str.push('\r'),
 					Some('t') => str.push('\t'),
 					Some('"') => str.push('"'),
-					Some(c) => return Err(ScannerError::UnknownEscapeChar(c))
+					Some(c) => return Err(UnknownEscapeChar(c))
 				}
 				c => str.push(c) // and continue;
 			}
 		}
 
-		Err(ScannerError::IncompleteString)
+		Err(IncompleteString)
 	}
 
 	fn read_word(&mut self) -> Result<Token, ScannerError> {
@@ -97,23 +99,23 @@ impl<'a> Scanner<'a> {
 		Ok(match ret.chars().nth(0).unwrap() {
 			'-' | '.' | '0'..='9' =>
 				match ret.parse::<f64>() { // TODO: this will be improved in the big number update
-					Ok(n) => Token::Number(n),
-					Err(_) => Token::Identifier(ret)
+					Ok(n) => Number(n),
+					Err(_) => Identifier(ret)
 				}
 			'#' => {
 				let ret = &ret[1..];
-				Token::Symbol(ret.to_string())
+				Symbol(ret.to_string())
 			}
 			_ => match ret.as_str() {
-				"true" => Token::Boolean(true),
-				"false" => Token::Boolean(false),
-				"if" => Token::If,
-				"cond" => Token::Cond,
-				"define" => Token::Define,
-				"do" => Token::Do,
-				"and" => Token::And,
-				"or" => Token::Or,
-				_ => Token::Identifier(ret)
+				"true" => Boolean(true),
+				"false" => Boolean(false),
+				"if" => If,
+				"cond" => Cond,
+				"define" => Define,
+				"do" => Do,
+				"and" => And,
+				"or" => Or,
+				_ => Identifier(ret)
 			}
 		})
 	}
@@ -127,30 +129,30 @@ impl<'a> Scanner<'a> {
 
 		self.remove_whitespace();
 		let token = match self.iter.peek() {
-			None => Ok(Token::End),
+			None => Ok(End),
 			Some(';') => {
 				self.remove_sl_comment();
 				self.scan()
 			}
 			Some('(') => {
 				self.iter.next();
-				Ok(Token::LeftParen)
+				Ok(LeftParen)
 			}
 			Some(')') => {
 				self.iter.next();
-				Ok(Token::RightParen)
+				Ok(RightParen)
 			}
 			Some('{') => {
 				self.iter.next();
-				Ok(Token::LeftBracket)
+				Ok(LeftBracket)
 			}
 			Some('}') => {
 				self.iter.next();
-				Ok(Token::RightBracket)
+				Ok(RightBracket)
 			}
 			Some('|') => {
 				self.iter.next();
-				Ok(Token::Bar)
+				Ok(Bar)
 			}
 			Some('"') => self.read_string(),
 			Some(_) => self.read_word()
