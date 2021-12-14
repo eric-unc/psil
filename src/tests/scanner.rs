@@ -5,7 +5,7 @@ macro_rules! test_scanner {
 	($name:ident, $src:expr, $( $expected:expr ),*) => {
         #[test]
         fn $name() {
-			let mut scanner = Scanner::new_scanner($src);
+			let mut scanner = Scanner::new($src);
 
 			$(
 				let token = scanner.scan();

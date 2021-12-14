@@ -1,6 +1,7 @@
 use std::string::String;
 
 use crate::ast::*;
+use crate::{check_arity_at_least, check_arity_is};
 use crate::environment::Environment;
 use crate::val::{ProcedureType, Val, void};
 use crate::val::Val::{Boolean, Number, Procedure, String as StringVal, Symbol};
@@ -31,7 +32,8 @@ pub fn eval_expr(expr: ExprAst, env: &mut Environment) -> Result<Val, String> {
 	match expr {
 		ExprAst::Atom(a) => eval_atom(*a, env),
 		ExprAst::SpecialForm(s) => eval_special_form(*s, env),
-		ExprAst::Invocation(i) => eval_invocation(i, env)
+		ExprAst::Invocation(i) => eval_invocation(i, env),
+		ExprAst::NewInvocation(i) => eval_new_invocation(i, env)
 	}
 }
 
@@ -105,12 +107,78 @@ fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Result<V
 	}
 }
 
+fn eval_new_invocation(invocation: NewInvocationAst, env: &mut Environment) -> Result<Val, String> {
+	match invocation.proc {
+		PossibleProc::Name(i) => {
+			let proc_fetch = env.get_binding(i.clone())?;
+
+			match proc_fetch {
+				Procedure(p) => {
+					let mut rands = Vec::new();
+
+					for expr in invocation.expr_list.into_iter() {
+						let val = eval_expr(expr, env)?;
+						rands.push(val);
+					}
+
+					match p {
+						ProcedureType::Native(n) => n(rands),
+						ProcedureType::Pure(p) => {
+							if p.params.names.len() != rands.len() {
+								return match p.params.names.len() {
+									0 => Err(format!("Proc '{}' expected no rands! Given {}.", i, rands.len())),
+									1 => Err(format!("Proc '{}' expected 1 rand! Given {}.", i, rands.len())),
+									_ => Err(format!("Proc '{}' expected {} rands! Given {}.", i, p.params.names.len(), rands.len()))
+								}
+							}
+
+							env.add_scope();
+
+							for (name, rand_val) in p.params.names.into_iter().zip(rands) {
+								env.add_binding(name, rand_val);
+							}
+
+							let ret = eval_expr(p.expr, env);
+
+							env.close_scope();
+
+							ret
+						}
+					}
+				}
+				_ => Err(format!("Binding {} is not a procedure!", i))
+			}
+		}
+		PossibleProc::SpecialForm(s) => {
+			match s {
+				SpecialForms::If => eval_new_if(invocation.expr_list, env),
+				SpecialForms::Cond => eval_new_cond(invocation.expr_list, env),
+				SpecialForms::Define => eval_new_define(invocation.expr_list, env),
+				SpecialForms::Do => eval_new_do(invocation.expr_list, env),
+				SpecialForms::And => eval_new_and(invocation.expr_list, env),
+				SpecialForms::Or => eval_new_or(invocation.expr_list, env)
+			}
+		}
+	}
+}
+
 // if ::= ( if expr expr expr )
 fn eval_if(if_form: IfAst, env: &mut Environment) -> Result<Val, String> {
 	match eval_expr(if_form.cond, env) {
 		Ok(Boolean(b)) => eval_expr(if b { if_form.if_true } else { if_form.if_false }, env),
 		Ok(_)=> Err("Special form 'if' expected a boolean!".to_string()),
 		Err(e) => Err(e)
+	}
+}
+
+fn eval_new_if(expr_list: ExprListAst, env: &mut Environment) -> Result<Val, String> {
+	check_arity_is!("if", 3, expr_list);
+
+	let cond = expr_list.get(0).unwrap().clone();
+
+	match eval_expr(cond, env)? {
+		Boolean(b) => eval_expr(if b { expr_list.get(1).unwrap().clone() } else { expr_list.get(2).unwrap().clone() }, env),
+		_ => Err("Special form 'if' expected a boolean!".to_string())
 	}
 }
 
@@ -129,6 +197,32 @@ fn eval_cond(cond_form: CondAst, env: &mut Environment) -> Result<Val, String> {
 	Ok(void())
 }
 
+fn eval_new_cond(expr_list: ExprListAst, env: &mut Environment) -> Result<Val, String> {
+	if expr_list.len() % 2 != 0 {
+		return Err("Special form 'cond' expected an even amount of args!".to_string());
+	}
+
+	/*for [cond, possible_ret] in expr_list.chunks_exact(2) {
+		match eval_expr(cond.clone(), env)? {
+			Boolean(false) => continue,
+			Boolean(true) => return eval_expr(possible_ret.clone(), env),
+			_ => return Err("Special form 'cond' expected a boolean!".to_string())
+		}
+	}*/
+	for i in 0..(expr_list.len()/2) {
+		let cond = 2 * i;
+		let possible_v = 2 * i + 1;
+
+		match eval_expr(expr_list[cond].clone(), env)? {
+			Boolean(false) => continue,
+			Boolean(true) => return eval_expr(expr_list[possible_v].clone(), env),
+			_ => return Err("Special form 'cond' expected a boolean!".to_string())
+		}
+	}
+
+	Ok(void())
+}
+
 // define ::= ( define name expr )
 fn eval_define(define: DefineAst, env: &mut Environment) -> Result<Val, String> {
 	let val = eval_expr(define.value, env)?;
@@ -136,9 +230,35 @@ fn eval_define(define: DefineAst, env: &mut Environment) -> Result<Val, String> 
 	Ok(void())
 }
 
+fn eval_new_define(expr_list: ExprListAst, env: &mut Environment) -> Result<Val, String> {
+	check_arity_is!("define", 2, expr_list);
+	let binding = match expr_list[0].clone() {
+		ExprAst::Atom(a) => {
+			match *a {
+				AtomAst::Name(n) => n,
+				_ => return Err("Unexpected binding!".to_string())
+			}
+		}
+		_ => return Err("Unexpected binding!".to_string())
+	};
+
+	let val = eval_expr(expr_list[1].clone(), env)?;
+
+	env.add_binding(binding, val);
+	Ok(void())
+}
+
 // do ::= ( do expr_list? )
 fn eval_do(do_ast: DoAst, env: &mut Environment) -> Result<Val, String> {
 	for expr in do_ast.expr_list {
+		eval_expr(expr, env)?;
+	}
+
+	Ok(void())
+}
+
+fn eval_new_do(expr_list: ExprListAst, env: &mut Environment) -> Result<Val, String> {
+	for expr in expr_list {
 		eval_expr(expr, env)?;
 	}
 
@@ -163,6 +283,20 @@ fn eval_and(and_ast: AndAst, env: &mut Environment) -> Result<Val, String> {
 	Ok(Boolean(true))
 }
 
+fn eval_new_and(expr_list: ExprListAst, env: &mut Environment) -> Result<Val, String> {
+	check_arity_at_least!("and", 2, expr_list);
+
+	for expr in expr_list {
+		match eval_expr(expr, env)? {
+			Boolean(false) => return Ok(Boolean(false)),
+			Boolean(true) => continue,
+			_ => return Err("Special form 'and' expected a boolean!".to_string())
+		}
+	}
+
+	Ok(Boolean(true))
+}
+
 // or ::= ( or expr_list )
 fn eval_or(or_ast: OrAst, env: &mut Environment) -> Result<Val, String> {
 	if or_ast.expr_list.len() < 2 {
@@ -175,6 +309,20 @@ fn eval_or(or_ast: OrAst, env: &mut Environment) -> Result<Val, String> {
 			Ok(Boolean(true)) => return Ok(Boolean(true)),
 			Ok(_) => return Err("Special form 'or' expected a boolean!".to_string()),
 			Err(e) => return Err(e)
+		}
+	}
+
+	Ok(Boolean(false))
+}
+
+fn eval_new_or(expr_list: ExprListAst, env: &mut Environment) -> Result<Val, String> {
+	check_arity_at_least!("and", 2, expr_list);
+
+	for expr in expr_list {
+		match eval_expr(expr, env)? {
+			Boolean(false) => continue,
+			Boolean(true) => return Ok(Boolean(true)),
+			_ => return Err("Special form 'or' expected a boolean!".to_string())
 		}
 	}
 

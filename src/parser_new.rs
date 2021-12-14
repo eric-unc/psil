@@ -1,6 +1,3 @@
-use std::iter::Peekable;
-use std::str::Chars;
-
 use crate::ast::*;
 use crate::scanner::*;
 use crate::scanner::Token::*;
