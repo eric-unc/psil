@@ -11,9 +11,7 @@ pub type ExprListAst = Vec<ExprAst>;
 #[derive(Clone, Debug, PartialEq)]
 pub enum ExprAst {
 	Atom(Box<AtomAst>),
-	SpecialForm(Box<SpecialFormAst>),
-	Invocation(InvocationAst),
-	NewInvocation(NewInvocationAst)
+	Invocation(InvocationAst)
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -23,7 +21,7 @@ pub enum AtomAst {
 	String(String),
 	Symbol(String),
 	Lambda(LambdaAst),
-	Name(String)
+	Name(Name)
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -33,30 +31,14 @@ pub struct LambdaAst {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-pub enum SpecialFormAst {
-	If(IfAst),
-	Cond(CondAst),
-	Define(DefineAst),
-	Do(DoAst),
-	And(AndAst),
-	Or(OrAst)
-}
-
-#[derive(Clone, Debug, PartialEq)]
 pub struct InvocationAst {
-	pub proc: NameAst,
-	pub expr_list: ExprListAst,
-}
-
-#[derive(Clone, Debug, PartialEq)]
-pub struct NewInvocationAst {
 	pub proc: PossibleProc,
 	pub expr_list: ExprListAst
 }
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum PossibleProc {
-	Name(NameAst),
+	Name(Name),
 	SpecialForm(SpecialForms)
 }
 
@@ -70,45 +52,10 @@ pub enum SpecialForms {
 	Or
 }
 
-// Special forms
-#[derive(Clone, Debug, PartialEq)]
-pub struct IfAst {
-	pub cond: ExprAst,
-	pub if_true: ExprAst,
-	pub if_false: ExprAst
-}
-
-#[derive(Clone, Debug, PartialEq)]
-pub struct CondAst {
-	pub conds: ExprListAst,
-	pub expr_list: ExprListAst
-}
-
-#[derive(Clone, Debug, PartialEq)]
-pub struct DefineAst {
-	pub name: NameAst,
-	pub value: ExprAst
-}
-
-#[derive(Clone, Debug, PartialEq)]
-pub struct DoAst {
-	pub expr_list: ExprListAst
-}
-
-#[derive(Clone, Debug, PartialEq)]
-pub struct AndAst {
-	pub expr_list: ExprListAst
-}
-
-#[derive(Clone, Debug, PartialEq)]
-pub struct OrAst {
-	pub expr_list: ExprListAst
-}
-
 // Support
 #[derive(Clone, Debug, PartialEq)]
 pub struct ParamsAst {
-	pub names: Vec<NameAst>
+	pub names: Vec<Name>
 }
 
-pub type NameAst = String;
+pub type Name = String;

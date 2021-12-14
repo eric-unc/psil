@@ -9,10 +9,10 @@ mod scanner;
 mod str;
 mod symb;
 
-use crate::ast::{ExprAst, ProgramAst};
+use crate::ast::ExprAst;
 use crate::environment::Environment;
-use crate::eval::{eval as eval_psil, eval_expr};
-use crate::parser::{parse as parse_psil, parse_expr_entry, ParserError};
+use crate::eval::{eval_expr};
+use crate::parser::{parse_expr_entry, ParserError};
 use crate::val::Val;
 
 #[macro_export]
@@ -58,12 +58,4 @@ pub fn eval_with_env(src: &str, env: &mut Environment) -> Result<Val, String> {
 	let parse_tree = parse_expr_entry(src.to_string()).unwrap();
 
 	eval_expr(parse_tree, env)
-}
-
-pub fn eval_tree(expr_tree: ExprAst) -> Result<Val, String> {
-	eval_tree_with_env(expr_tree, &mut Environment::new())
-}
-
-pub fn eval_tree_with_env(expr_tree: ExprAst, env: &mut Environment) -> Result<Val, String> {
-	eval_expr(expr_tree, env)
 }

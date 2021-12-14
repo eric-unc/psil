@@ -39,7 +39,6 @@ use ScannerError::*;
 
 pub struct Scanner<'a> {
 	peek_token: Option<Result<Token, ScannerError>>,
-	text: &'a str,
 	iter: Peekable<Chars<'a>>
 }
 
@@ -49,7 +48,6 @@ impl<'a> Scanner<'a> {
 
 		Self {
 			peek_token: None,
-			text,
 			iter
 		}
 	}

@@ -61,7 +61,7 @@ fn parse_expr(scanner: &mut Scanner) -> Result<ExprAst, ParserError> {
 	if scanner.peek()? != LeftParen {
 		Ok(ExprAst::Atom(Box::from(parse_atom(scanner)?)))
 	} else {
-		Ok(ExprAst::NewInvocation(parse_invocation(scanner)?))
+		Ok(ExprAst::Invocation(parse_invocation(scanner)?))
 	}
 }
 
@@ -79,7 +79,7 @@ fn parse_atom(scanner: &mut Scanner) -> Result<AtomAst, ParserError> {
 }
 
 // invocation ::= ( identifier expr_list? )
-fn parse_invocation(scanner: &mut Scanner) -> Result<NewInvocationAst, ParserError> {
+fn parse_invocation(scanner: &mut Scanner) -> Result<InvocationAst, ParserError> {
 	expect(scanner, LeftParen)?;
 
 	let proc = match scanner.scan()? {
@@ -95,11 +95,11 @@ fn parse_invocation(scanner: &mut Scanner) -> Result<NewInvocationAst, ParserErr
 
 	if scanner.peek()? == RightParen {
 		scanner.scan()?;
-		Ok(NewInvocationAst { proc, expr_list: vec![] })
+		Ok(InvocationAst { proc, expr_list: vec![] })
 	} else {
 		let expr_list = parse_expr_list(scanner)?;
 		expect(scanner, RightParen)?;
-		Ok(NewInvocationAst { proc, expr_list })
+		Ok(InvocationAst { proc, expr_list })
 	}
 }
 

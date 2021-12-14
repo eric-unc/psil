@@ -51,6 +51,10 @@ macro_rules! check_arity_is {
 #[macro_export]
 macro_rules! check_arity_between {
 	( $proc_name:literal, $low_arity:literal, $high_arity:literal, $rands:expr ) => {
+		// So basically, the line after returns a warning when low_arity is 0.
+		// So we want to ignore that, so 0..1 is accepted
+		// TODO: if I was really good at macros, I probably wouldn't need to do this.
+		#[allow(unused_comparisons)]
 		if $rands.len() < $low_arity || $rands.len() > $high_arity {
 			return Err(format!("Native proc '{}' expected {} to {} rands! Given {}.", $proc_name, $low_arity, $high_arity, $rands.len()))
 		}
