@@ -9,14 +9,13 @@ use pest::Parser;
 
 use environment::Environment;
 use eval::{eval, eval_expr};
-use parser_pest::{parse, parse_expr};
+use parser::{parse, parse_expr_entry};
 
 pub mod ast;
 pub mod environment;
 pub mod eval;
 pub mod native;
-pub mod parser_new;
-pub mod parser_pest;
+pub mod parser;
 pub mod scanner;
 pub mod val;
 
@@ -42,8 +41,8 @@ fn load_and_interpret(file_name: &String) {
 
 	match script {
 		Ok(s) => {
-			let parse_tree = PsilPestParser::parse(Rule::program, &s).unwrap();
-			match eval(parse(parse_tree)) {
+			let parse_tree = parse(s).unwrap();
+			match eval(parse_tree) {
 				Ok(_) => {}
 				Err(e) => eprintln!("{}", e)
 			}
@@ -67,17 +66,15 @@ fn repl() {
 			continue
 		}
 
-		let parse_tree = PsilPestParser::parse(Rule::expr, &line);
+		let parse_tree = parse_expr_entry(line);
 
 		match parse_tree {
 			Ok(tree) =>
-				for pair in tree {
-					match eval_expr(parse_expr(pair), &mut env) {
-						Ok(val) => println!("{}", val),
-						Err(e) => eprintln!("{}", e)
-					}
+				match eval_expr(tree, &mut env) {
+					Ok(val) => println!("{}", val),
+					Err(e) => eprintln!("{}", e)
 				}
-			Err(e) => eprintln!("{}", e)
+			Err(e) => eprintln!("{:?}", e)
 		}
 
 		io::stdout().flush().unwrap();

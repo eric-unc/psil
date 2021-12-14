@@ -1,5 +1,5 @@
 use crate::ast::*;
-use crate::parser_new::*;
+use crate::parser::*;
 use crate::scanner::Scanner;
 
 #[test]
