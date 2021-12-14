@@ -202,13 +202,6 @@ fn eval_new_cond(expr_list: ExprListAst, env: &mut Environment) -> Result<Val, S
 		return Err("Special form 'cond' expected an even amount of args!".to_string());
 	}
 
-	/*for [cond, possible_ret] in expr_list.chunks_exact(2) {
-		match eval_expr(cond.clone(), env)? {
-			Boolean(false) => continue,
-			Boolean(true) => return eval_expr(possible_ret.clone(), env),
-			_ => return Err("Special form 'cond' expected a boolean!".to_string())
-		}
-	}*/
 	for i in 0..(expr_list.len()/2) {
 		let cond = 2 * i;
 		let possible_v = 2 * i + 1;

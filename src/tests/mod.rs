@@ -3,20 +3,23 @@ mod control;
 mod io;
 mod math;
 mod number;
+mod parser;
 mod proc;
 mod scanner;
 mod str;
 mod symb;
 
-use pest::error::Error;
-use pest::iterators::{Pair, Pairs};
+//use pest::error::Error;
+//use pest::iterators::{Pair, Pairs};
 
+use crate::ast::{ExprAst, ProgramAst};
 use crate::PsilPestParser;
 use crate::Rule;
 use crate::pest::Parser;
 use crate::environment::Environment;
 use crate::eval::{eval as eval_psil, eval_expr};
-use crate::parser_pest::{parse as parse_psil, parse_expr};
+//use crate::parser_pest::{parse as parse_psil, parse_expr};
+use crate::parser_new::{parse as parse_psil, parse_expr_entry, ParserError};
 use crate::val::Val;
 
 #[macro_export]
@@ -50,28 +53,24 @@ macro_rules! fails_eval {
 	}
 }
 
-pub fn parse(src: &str) -> Result<Pairs<Rule>, Error<Rule>> {
-	PsilPestParser::parse(Rule::expr, src)
+pub fn parse(src: &str) -> Result<ExprAst, ParserError> {
+	parse_expr_entry(src.to_string())
 }
 
-pub fn eval(src: &str)  -> Result<Val, String> {
+pub fn eval(src: &str) -> Result<Val, String> {
 	eval_with_env(src, &mut Environment::new())
 }
 
 pub fn eval_with_env(src: &str, env: &mut Environment) -> Result<Val, String> {
-	let parse_tree = parse(src).unwrap();
+	let parse_tree = parse_expr_entry(src.to_string()).unwrap();
 
-	for pair in parse_tree {
-		return eval_expr(parse_expr(pair), env);
-	}
-
-	unreachable!();
+	eval_expr(parse_tree, env)
 }
 
-pub fn eval_tree(expr_tree: Pair<Rule>) -> Result<Val, String> {
+pub fn eval_tree(expr_tree: ExprAst) -> Result<Val, String> {
 	eval_tree_with_env(expr_tree, &mut Environment::new())
 }
 
-pub fn eval_tree_with_env(expr_tree: Pair<Rule>, env: &mut Environment) -> Result<Val, String> {
-	eval_expr(parse_expr(expr_tree), env)
+pub fn eval_tree_with_env(expr_tree: ExprAst, env: &mut Environment) -> Result<Val, String> {
+	eval_expr(expr_tree, env)
 }

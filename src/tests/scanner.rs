@@ -99,7 +99,7 @@ fn peek() {
 	assert!(scanner.peek().is_ok());
 	assert_eq!(scanner.peek().unwrap(), Number(500.0));
 	assert_eq!(scanner.peek().unwrap(), Number(500.0));
-	scanner.scan();
+	assert!(scanner.scan().is_ok());
 	let token = scanner.scan();
 	assert!(token.is_ok());
 	assert_eq!(token.unwrap(), Number(100.0));

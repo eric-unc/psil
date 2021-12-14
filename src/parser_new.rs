@@ -2,6 +2,7 @@ use crate::ast::*;
 use crate::scanner::*;
 use crate::scanner::Token::*;
 
+#[derive(Debug)]
 pub enum ParserError {
 	PScannerError(ScannerError),
 	UnexpectedToken(Token)
@@ -19,8 +20,13 @@ pub fn parse(str: String) -> Result<ProgramAst, ParserError> {
 	parse_program(&mut scanner)
 }
 
+pub fn parse_expr_entry(str: String) -> Result<ExprAst, ParserError> {
+	let mut scanner = Scanner::new(str.as_str());
+	parse_expr(&mut scanner)
+}
+
 // program ::= expr_list?
-pub fn parse_program(scanner: &mut Scanner) -> Result<ProgramAst, ParserError> {
+fn parse_program(scanner: &mut Scanner) -> Result<ProgramAst, ParserError> {
 	let mut list = vec![];
 
 	if scanner.peek()? != Token::End {
@@ -44,7 +50,6 @@ fn parse_expr_list(scanner: &mut Scanner) -> Result<ExprListAst, ParserError> {
 }
 
 fn is_expr_start(token: Token) -> bool {
-	/*token == Identifier(_) || token == LeftParen || token == LeftBracket || token == Number(_) || token == Boolean(_) || token == StringT(_) || token == Symbol(_) || token == If || token == Cond || token == Define || token == Do || token == And || token == Or*/
 	match token {
 		Identifier(_) | LeftParen | LeftBracket | Number(_) | Boolean(_) | StringT(_) | Symbol(_) | If | Cond | Define | Do | And | Or => true,
 		_ => false
@@ -52,7 +57,7 @@ fn is_expr_start(token: Token) -> bool {
 }
 
 // expr ::= atom | invocation
-pub fn parse_expr(scanner: &mut Scanner) -> Result<ExprAst, ParserError> {
+fn parse_expr(scanner: &mut Scanner) -> Result<ExprAst, ParserError> {
 	if scanner.peek()? != LeftParen {
 		Ok(ExprAst::Atom(Box::from(parse_atom(scanner)?)))
 	} else {
@@ -60,13 +65,15 @@ pub fn parse_expr(scanner: &mut Scanner) -> Result<ExprAst, ParserError> {
 	}
 }
 
-// atom ::= number | boolean | string | lambda | name
+// atom ::= number | boolean | string | symbol | lambda | name
 fn parse_atom(scanner: &mut Scanner) -> Result<AtomAst, ParserError> {
 	match scanner.peek()? {
-		Number(n) => Ok(AtomAst::Number(n)),
-		Boolean(b) => Ok(AtomAst::Boolean(b)),
-		StringT(s) => Ok(AtomAst::String(s)),
+		Number(n) => {scanner.scan()?; Ok(AtomAst::Number(n))},
+		Boolean(b) => {scanner.scan()?; Ok(AtomAst::Boolean(b))},
+		StringT(s) => {scanner.scan()?; Ok(AtomAst::String(s))},
+		Symbol(s)=> {scanner.scan()?; Ok(AtomAst::Symbol(s))},
 		LeftBracket => Ok(AtomAst::Lambda(parse_lambda(scanner)?)),
+		Identifier(i) => {scanner.scan()?; Ok(AtomAst::Name(i))},
 		o => Err(UnexpectedToken(o))
 	}
 }
