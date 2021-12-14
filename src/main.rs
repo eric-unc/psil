@@ -1,11 +1,5 @@
-extern crate pest;
-#[macro_use]
-extern crate pest_derive;
-
 use std::{env, fs};
 use std::io::{self, Write};
-
-use pest::Parser;
 
 use environment::Environment;
 use eval::{eval, eval_expr};
@@ -21,10 +15,6 @@ pub mod val;
 
 #[cfg(test)]
 mod tests;
-
-#[derive(Parser)]
-#[grammar = "grammar.pest"]
-pub struct PsilPestParser;
 
 fn main() {
 	let args: Vec<String> = env::args().collect();

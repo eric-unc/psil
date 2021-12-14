@@ -135,7 +135,8 @@ Special forms are marked with a `*` next to their names. They are similar to pro
 ## Technologies used
 * [Rust](https://github.com/rust-lang/rust)
     * [Cargo](https://github.com/rust-lang/cargo)
-    * [pest](https://github.com/pest-parser/pest)
+
+Early versions of Psil used [pest](https://github.com/pest-parser/pest).
 
 ## Authors
 1. Eric Schneider (main author)

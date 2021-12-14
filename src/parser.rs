@@ -1,4 +1,3 @@
-use std::fmt::{Display, Formatter};
 use crate::ast::*;
 use crate::scanner::*;
 use crate::scanner::Token::*;

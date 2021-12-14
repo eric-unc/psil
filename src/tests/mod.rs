@@ -9,16 +9,9 @@ mod scanner;
 mod str;
 mod symb;
 
-//use pest::error::Error;
-//use pest::iterators::{Pair, Pairs};
-
 use crate::ast::{ExprAst, ProgramAst};
-use crate::PsilPestParser;
-use crate::Rule;
-use crate::pest::Parser;
 use crate::environment::Environment;
 use crate::eval::{eval as eval_psil, eval_expr};
-//use crate::parser_pest::{parse as parse_psil, parse_expr};
 use crate::parser::{parse as parse_psil, parse_expr_entry, ParserError};
 use crate::val::Val;
 
