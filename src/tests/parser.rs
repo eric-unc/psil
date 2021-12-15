@@ -30,3 +30,22 @@ fn simple_program() {
 			   ] }
 	);
 }
+
+#[test]
+fn weird_test() { // see https://github.com/eric-unc/psil/issues/4
+	let res = parse_expr_entry("(definesin {|x| x})".to_string());
+	assert!(res.is_ok());
+	assert_eq!(res.unwrap(),
+		ExprAst::Invocation(InvocationAst {
+			proc: PossibleProc::Name("definesin".to_string()),
+			expr_list: vec![
+				ExprAst::Atom(Box::from(AtomAst::Lambda(
+					LambdaAst {
+						params: ParamsAst { names: vec!["x".to_string()] },
+						expr: ExprAst::Atom(Box::from(AtomAst::Identifier("x".to_string())))
+					}
+				)))
+			]
+		})
+	);
+}
