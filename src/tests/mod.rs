@@ -1,6 +1,7 @@
 mod boolean;
 mod control;
 mod io;
+mod list;
 mod math;
 mod number;
 mod parser;
