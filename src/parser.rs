@@ -25,7 +25,7 @@ pub fn parse_expr_entry(str: String) -> Result<ExprAst, ParserError> {
 	parse_expr(&mut scanner)
 }
 
-// program ::= expr_list?
+// program ::= expr_list? end
 fn parse_program(scanner: &mut Scanner) -> Result<ProgramAst, ParserError> {
 	let mut list = vec![];
 
@@ -65,7 +65,7 @@ fn parse_expr(scanner: &mut Scanner) -> Result<ExprAst, ParserError> {
 	}
 }
 
-// atom ::= number | boolean | string | symbol | lambda | name
+// atom ::= number | boolean | string | symbol | lambda | identifier
 fn parse_atom(scanner: &mut Scanner) -> Result<AtomAst, ParserError> {
 	match scanner.peek()? {
 		Number(n) => {scanner.scan()?; Ok(AtomAst::Number(n))},
@@ -73,7 +73,7 @@ fn parse_atom(scanner: &mut Scanner) -> Result<AtomAst, ParserError> {
 		StringT(s) => {scanner.scan()?; Ok(AtomAst::String(s))},
 		Symbol(s)=> {scanner.scan()?; Ok(AtomAst::Symbol(s))},
 		LeftBracket => Ok(AtomAst::Lambda(parse_lambda(scanner)?)),
-		Identifier(i) => {scanner.scan()?; Ok(AtomAst::Name(i))},
+		Identifier(i) => {scanner.scan()?; Ok(AtomAst::Identifier(i))},
 		o => Err(UnexpectedToken(o))
 	}
 }

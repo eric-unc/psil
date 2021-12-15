@@ -40,7 +40,7 @@ fn eval_atom(atom: AtomAst, env: &mut Environment) -> Result<Val, String> {
 		AtomAst::String(s) => Ok(StringVal(s)),
 		AtomAst::Symbol(s) => Ok(Symbol(s)),
 		AtomAst::Lambda(l) => Ok(Procedure(ProcedureType::Pure(l))),
-		AtomAst::Name(n) => env.get_binding(n)
+		AtomAst::Identifier(n) => env.get_binding(n)
 	}
 }
 
@@ -134,7 +134,7 @@ fn eval_define(expr_list: ExprListAst, env: &mut Environment) -> Result<Val, Str
 	let binding = match expr_list[0].clone() {
 		ExprAst::Atom(a) => {
 			match *a {
-				AtomAst::Name(n) => n,
+				AtomAst::Identifier(n) => n,
 				_ => return Err("Unexpected binding!".to_string())
 			}
 		}

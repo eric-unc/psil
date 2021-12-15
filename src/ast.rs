@@ -21,7 +21,7 @@ pub enum AtomAst {
 	String(String),
 	Symbol(String),
 	Lambda(LambdaAst),
-	Name(Name)
+	Identifier(String)
 }
 
 #[derive(Clone, Debug, PartialEq)]
