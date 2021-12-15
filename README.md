@@ -55,7 +55,7 @@ Yay, sin(0) is 0!
 | procedure | A procedure (or "proc") is a block that returns an atom with optional arguments. See `procs.lisp` in the `samples` directory for examples. Procedures can be invoked easily if defined. |
 
 ### Built-in procedures
-Special forms are marked with a `*` next to their names. They are similar to procedures, but with special evaluation rules that don't allow them to be implemented as regular procedures.
+This lists all procedures built into the standard library. Special forms are marked with a `*` next to their names. Special forms are procedures too, but with special evaluation rules that don't allow them to be implemented as regular procedures.
 
 #### Control
 | Name | Rands | Returns | Description |

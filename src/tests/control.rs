@@ -10,18 +10,25 @@ fn if_test() {
 	evals_and_eq!("(if true true false)", Boolean(true));
 	evals_and_eq!("(if true 5 (/ 10 0))", Number(5.0));
 	fails_eval!("(if false 5 (/ 10 0))");
+	fails_eval!("(if 5 true false)");
+	fails_eval!("(if)");
+	fails_eval!("(if true)");
+	fails_eval!("(if true true)");
+	fails_eval!("(if true true false false)");
 }
 
 #[test]
 fn cond() {
-	// TODO: test failure conditions
 	evals_and_eq!("(cond false 1.0 false 2.0 true 3.0)", Number(3.0));
 	evals_and_eq!("(cond false 1.0 false 2.0 true 3.0 true (/ 4.0 0))", Number(3.0));
+	fails_eval!("(cond 5 1.0 false 2.0 true 3.0)");
+	fails_eval!("(cond)");
+	fails_eval!("(cond false)");
+	fails_eval!("(cond false 1.0 false 2.0 true)");
 }
 
 #[test]
 fn define() {
-	// TODO: test failure conditions
 	let mut env = Environment::new();
 	evals_and_eq_with_env!("(define x 5)", void(), env);
 	evals_and_eq_with_env!("x", Number(5.0), env);
@@ -29,6 +36,12 @@ fn define() {
 	let mut env2= Environment::new();
 	evals_and_eq_with_env!("(define add {|a b| (+ a b)})", void(), env2);
 	evals_and_eq_with_env!("(add 3 2)", Number(5.0), env2);
+
+	fails_eval!("(define)");
+	fails_eval!("(define x)");
+	fails_eval!("(define x 5 5)");
+	fails_eval!("(define \"x\" 5)");
+	fails_eval!("(define define 5)");
 }
 
 #[test]

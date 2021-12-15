@@ -7,7 +7,7 @@ The actual parser may do something slightly different (but equivalent) than this
 * program ::= expr_list? _end_
 * expr_list ::= expr+
 * expr ::= atom | invocation
-* atom ::= _number_ | _boolean_ | _string_ | _symbol_ | lambda | _identifier_
+* atom ::= _number_ | _boolean_ | _string_ | _symbol_ | lambda | _identifier_ | special_form
 * invocation ::= **(** (_identifier_ | special_form) expr_list? **)**
 * lambda ::= **{** params? expr **}**
 * params ::= **|** identifier+ **|**

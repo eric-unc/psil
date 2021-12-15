@@ -65,7 +65,7 @@ fn parse_expr(scanner: &mut Scanner) -> Result<ExprAst, ParserError> {
 	}
 }
 
-// atom ::= number | boolean | string | symbol | lambda | identifier
+// atom ::= number | boolean | string | symbol | lambda | identifier | special_form
 fn parse_atom(scanner: &mut Scanner) -> Result<AtomAst, ParserError> {
 	match scanner.peek()? {
 		Number(n) => {scanner.scan()?; Ok(AtomAst::Number(n))},
@@ -74,6 +74,12 @@ fn parse_atom(scanner: &mut Scanner) -> Result<AtomAst, ParserError> {
 		Symbol(s)=> {scanner.scan()?; Ok(AtomAst::Symbol(s))},
 		LeftBracket => Ok(AtomAst::Lambda(parse_lambda(scanner)?)),
 		Identifier(i) => {scanner.scan()?; Ok(AtomAst::Identifier(i))},
+		If => {scanner.scan()?; Ok(AtomAst::SpecialForm(SpecialForms::If))},
+		Cond => {scanner.scan()?; Ok(AtomAst::SpecialForm(SpecialForms::Cond))},
+		Define => {scanner.scan()?; Ok(AtomAst::SpecialForm(SpecialForms::Define))},
+		Do => {scanner.scan()?; Ok(AtomAst::SpecialForm(SpecialForms::Do))},
+		And => {scanner.scan()?; Ok(AtomAst::SpecialForm(SpecialForms::And))},
+		Or => {scanner.scan()?; Ok(AtomAst::SpecialForm(SpecialForms::Or))},
 		o => Err(UnexpectedToken(o))
 	}
 }

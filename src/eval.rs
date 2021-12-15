@@ -40,27 +40,39 @@ fn eval_atom(atom: AtomAst, env: &mut Environment) -> Result<Val, String> {
 		AtomAst::String(s) => Ok(StringVal(s)),
 		AtomAst::Symbol(s) => Ok(Symbol(s)),
 		AtomAst::Lambda(l) => Ok(Procedure(ProcedureType::Pure(l))),
-		AtomAst::Identifier(n) => env.get_binding(n)
+		AtomAst::Identifier(n) => env.get_binding(n),
+		AtomAst::SpecialForm(s) => Ok(Procedure(ProcedureType::SpecialForm(s)))
 	}
 }
 
 fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Result<Val, String> {
+	// TODO: I don't think all of this is necessary, exactly...
+	// There's definitely a way to simplify the AST, but that's a problem for later.
 	match invocation.proc {
 		PossibleProc::Name(i) => {
 			let proc_fetch = env.get_binding(i.clone())?;
 
 			match proc_fetch {
 				Procedure(p) => {
-					let mut rands = Vec::new();
-
-					for expr in invocation.expr_list.into_iter() {
-						let val = eval_expr(expr, env)?;
-						rands.push(val);
-					}
-
 					match p {
-						ProcedureType::Native(n) => n(rands),
+						ProcedureType::Native(n) => {
+							let mut rands = Vec::new();
+
+							for expr in invocation.expr_list.into_iter() {
+								let val = eval_expr(expr, env)?;
+								rands.push(val);
+							}
+
+							n(rands)
+						},
 						ProcedureType::Pure(p) => {
+							let mut rands = Vec::new();
+
+							for expr in invocation.expr_list.into_iter() {
+								let val = eval_expr(expr, env)?;
+								rands.push(val);
+							}
+
 							if p.params.names.len() != rands.len() {
 								return match p.params.names.len() {
 									0 => Err(format!("Proc '{}' expected no rands! Given {}.", i, rands.len())),
@@ -80,6 +92,16 @@ fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Result<V
 							env.close_scope();
 
 							ret
+						},
+						ProcedureType::SpecialForm(s) => {
+							match s {
+								SpecialForms::If => eval_if(invocation.expr_list, env),
+								SpecialForms::Cond => eval_cond(invocation.expr_list, env),
+								SpecialForms::Define => eval_define(invocation.expr_list, env),
+								SpecialForms::Do => eval_do(invocation.expr_list, env),
+								SpecialForms::And => eval_and(invocation.expr_list, env),
+								SpecialForms::Or => eval_or(invocation.expr_list, env)
+							}
 						}
 					}
 				}
@@ -111,6 +133,7 @@ fn eval_if(expr_list: ExprListAst, env: &mut Environment) -> Result<Val, String>
 }
 
 fn eval_cond(expr_list: ExprListAst, env: &mut Environment) -> Result<Val, String> {
+	check_arity_at_least!("cond", 2, expr_list);
 	if expr_list.len() % 2 != 0 {
 		return Err("Special form 'cond' expected an even amount of args!".to_string());
 	}

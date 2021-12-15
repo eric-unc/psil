@@ -1,6 +1,6 @@
 use std::fmt::{Display, Formatter, Result as ResultFmt};
 
-use crate::ast::LambdaAst;
+use crate::ast::{LambdaAst, SpecialForms};
 use crate::val::Val::{Boolean, Number, Procedure, String as StringVal, Symbol};
 
 #[derive(Clone, Debug)]
@@ -61,7 +61,8 @@ impl PartialEq for Val {
 #[derive(Clone, Debug)]
 pub enum ProcedureType {
 	Native(NativeProcedure),
-	Pure(LambdaAst)
+	Pure(LambdaAst),
+	SpecialForm(SpecialForms)
 }
 
 pub type NativeProcedure = fn(ValList) -> Result<Val, String>;
