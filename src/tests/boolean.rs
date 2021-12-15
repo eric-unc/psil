@@ -11,20 +11,24 @@ fn boolean_literals() {
 
 #[test]
 fn and() {
-	// TODO: could be expanded
 	evals_and_eq!("(and true true)", Boolean(true));
 	evals_and_eq!("(and true false)", Boolean(false));
 	evals_and_eq!("(and true true true)", Boolean(true));
 	evals_and_eq!("(and false (/ 1 0))", Boolean(false));
+
+	fails_eval!("(and)");
+	fails_eval!("(and true)");
 }
 
 #[test]
 fn or() {
-	// TODO: could be expanded
 	evals_and_eq!("(or false true)", Boolean(true));
 	evals_and_eq!("(or false false)", Boolean(false));
 	evals_and_eq!("(or false false true)", Boolean(true));
 	evals_and_eq!("(or true (/ 1 0))", Boolean(true));
+
+	fails_eval!("(or)");
+	fails_eval!("(or true)");
 }
 
 #[test]
