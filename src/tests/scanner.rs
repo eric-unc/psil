@@ -87,6 +87,7 @@ test_scanner!(whitespace_numbers, "  \r\t\n 9  \t \n \r 10", Number(9.0), Number
 test_scanner!(put, "(put)", LeftParen, Identifier("put".to_string()), RightParen, End);
 test_scanner!(hello_world, "(put \"Hello World\")", LeftParen, Identifier("put".to_string()), StringT("Hello World".to_string()), RightParen, End);
 test_scanner!(sin_approx, "(define sin {|x| x})", LeftParen, Define, Identifier("sin".to_string()), LeftBracket, Bar, Identifier("x".to_string()), Bar, Identifier("x".to_string()), RightBracket, RightParen, End);
+test_scanner!(weird_call, "(2str 2str)", LeftParen, Identifier("2str".to_string()), Identifier("2str".to_string()), RightParen, End); // See https://github.com/eric-unc/psil/issues/25
 
 // Peek testing
 #[test]
