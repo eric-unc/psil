@@ -1,7 +1,7 @@
 use crate::{evals_and_eq, fails_eval};
 use crate::val::void;
 
-use crate::tests::{eval, eval_with_env, parse};
+use crate::tests::{eval, parse};
 
 // TODO: kind of a pain to test these properly
 

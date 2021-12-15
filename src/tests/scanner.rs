@@ -5,10 +5,10 @@ macro_rules! test_scanner {
 	($name:ident, $src:expr, $( $expected:expr ),*) => {
         #[test]
         fn $name() {
-			let mut scanner = $src.chars().peekable();
+			let mut scanner = Scanner::new($src);
 
 			$(
-				let token = scan(&mut scanner);
+				let token = scanner.scan();
 				assert!(token.is_ok(), "{} does not lex!", $src);
 				assert_eq!(token.unwrap(), $expected);
 			)*
@@ -39,29 +39,29 @@ test_scanner!(negative_decimal_num, "-0.399", Number(-0.399), End);
 test_scanner!(num_starting_with_dot, ".56", Number(0.56), End);
 
 // Strings
-test_scanner!(string, "\"I like Pizza!\"", String("I like Pizza!".to_string()), End);
-test_scanner!(string_escapes, "\"I...\\\\ \\n \\r \\t \\\" \"", String("I...\\ \n \r \t \" ".to_string()), End);
+test_scanner!(string, "\"I like Pizza!\"", StringT("I like Pizza!".to_string()), End);
+test_scanner!(string_escapes, "\"I...\\\\ \\n \\r \\t \\\" \"", StringT("I...\\ \n \r \t \" ".to_string()), End);
 
 #[test]
 fn incomplete_string() {
-	let mut scanner = "\"I like".chars().peekable();
-	let token = scan(&mut scanner);
+	let mut scanner = Scanner::new("\"I like");
+	let token = scanner.scan();
 	assert!(token.is_err());
 	assert_eq!(token.unwrap_err(), ScannerError::IncompleteString);
 }
 
 #[test]
 fn unknown_escape_char() {
-	let mut scanner = "\" \\z \"".chars().peekable();
-	let token = scan(&mut scanner);
+	let mut scanner = Scanner::new("\" \\z \"");
+	let token = scanner.scan();
 	assert!(token.is_err());
 	assert_eq!(token.unwrap_err(), ScannerError::UnknownEscapeChar('z'));
 }
 
 #[test]
 fn incomplete_string_through_escape_char() {
-	let mut scanner = "\"I like \\".chars().peekable();
-	let token = scan(&mut scanner);
+	let mut scanner = Scanner::new("\"I like \\");
+	let token = scanner.scan();
 	assert!(token.is_err());
 	assert_eq!(token.unwrap_err(), ScannerError::IncompleteString);
 }
@@ -85,5 +85,25 @@ test_scanner!(whitespace_numbers, "  \r\t\n 9  \t \n \r 10", Number(9.0), Number
 
 // Composite tokens
 test_scanner!(put, "(put)", LeftParen, Identifier("put".to_string()), RightParen, End);
-test_scanner!(hello_world, "(put \"Hello World\")", LeftParen, Identifier("put".to_string()), String("Hello World".to_string()), RightParen, End);
+test_scanner!(hello_world, "(put \"Hello World\")", LeftParen, Identifier("put".to_string()), StringT("Hello World".to_string()), RightParen, End);
 test_scanner!(sin_approx, "(define sin {|x| x})", LeftParen, Define, Identifier("sin".to_string()), LeftBracket, Bar, Identifier("x".to_string()), Bar, Identifier("x".to_string()), RightBracket, RightParen, End);
+
+// Peek testing
+#[test]
+fn peek() {
+	let mut scanner = Scanner::new("300 500 100");
+	assert!(scanner.peek().is_ok());
+	assert_eq!(scanner.peek().unwrap(), Number(300.0));
+	assert_eq!(scanner.peek().unwrap(), Number(300.0));
+	assert!(scanner.scan().is_ok());
+	assert!(scanner.peek().is_ok());
+	assert_eq!(scanner.peek().unwrap(), Number(500.0));
+	assert_eq!(scanner.peek().unwrap(), Number(500.0));
+	assert!(scanner.scan().is_ok());
+	let token = scanner.scan();
+	assert!(token.is_ok());
+	assert_eq!(token.unwrap(), Number(100.0));
+	let token = scanner.scan();
+	assert!(token.is_ok());
+	assert_eq!(token.unwrap(), End);
+}
