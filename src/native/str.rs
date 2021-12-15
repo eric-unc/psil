@@ -2,7 +2,7 @@ use std::borrow::Borrow;
 use crate::{check_arity_at_least, check_arity_is, fail_on_bad_type};
 use crate::environment::Environment;
 use crate::val::{Val, ValList};
-use crate::val::Val::{Boolean, Number, String as StringVal};
+use crate::val::Val::{Boolean, Number, StringV as StringVal};
 
 pub fn add_str_procs(env: &mut Environment) {
 	env.add_proc("2str".to_string(), to_str);

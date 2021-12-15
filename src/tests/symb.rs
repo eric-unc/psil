@@ -1,5 +1,5 @@
 use crate::{evals_and_eq, fails_eval};
-use crate::val::Val::{Boolean, String, Symbol};
+use crate::val::Val::{Boolean, StringV, Symbol};
 
 use crate::tests::{eval, parse};
 
@@ -20,7 +20,7 @@ fn str_to_symb() {
 
 #[test]
 fn symb_to_str() {
-	evals_and_eq!("(symb2str #left)", String("left".to_string()));
+	evals_and_eq!("(symb2str #left)", StringV("left".to_string()));
 
 	fails_eval!("(symb2str)");
 	fails_eval!("(symb2str #left #left)");

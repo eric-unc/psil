@@ -1,5 +1,6 @@
 mod control;
 mod io;
+mod list;
 mod str;
 mod math;
 mod boolean;
@@ -12,6 +13,7 @@ use crate::environment::Environment;
 pub fn add_native_library(env: &mut Environment) {
 	control::add_control_procs(env);
 	io::add_io_procs(env);
+	list::add_list_procs(env);
 	str::add_str_procs(env);
 	math::add_math_procs(env);
 	boolean::add_boolean_procs(env);

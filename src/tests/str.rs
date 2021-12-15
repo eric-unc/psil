@@ -1,16 +1,16 @@
 use crate::{evals_and_eq, fails_eval};
-use crate::val::Val::{Boolean, Number, String};
+use crate::val::Val::{Boolean, Number, StringV};
 
 use crate::tests::{eval, parse};
 
 #[test]
 fn to_str() {
-	evals_and_eq!("(2str 5)", String("5".to_string()));
-	evals_and_eq!("(2str true)", String("true".to_string()));
-	evals_and_eq!("(2str false)", String("false".to_string()));
-	evals_and_eq!("(2str \"string\")", String("string".to_string()));
-	evals_and_eq!("(2str #sym)", String("#sym".to_string()));
-	evals_and_eq!("(2str put)", String("<procedure>".to_string()));
+	evals_and_eq!("(2str 5)", StringV("5".to_string()));
+	evals_and_eq!("(2str true)", StringV("true".to_string()));
+	evals_and_eq!("(2str false)", StringV("false".to_string()));
+	evals_and_eq!("(2str \"string\")", StringV("string".to_string()));
+	evals_and_eq!("(2str #sym)", StringV("#sym".to_string()));
+	evals_and_eq!("(2str put)", StringV("<procedure>".to_string()));
 
 	fails_eval!("(2str)");
 	fails_eval!("(2str 5 5)");
@@ -27,8 +27,8 @@ fn is_str() {
 
 #[test]
 fn str_cat() {
-	evals_and_eq!("(str-cat 5 5)", String("55".to_string()));
-	evals_and_eq!("(str-cat true \"hi\")", String("truehi".to_string()));
+	evals_and_eq!("(str-cat 5 5)", StringV("55".to_string()));
+	evals_and_eq!("(str-cat true \"hi\")", StringV("truehi".to_string()));
 
 	fails_eval!("(str-cat)");
 	fails_eval!("(str-cat 5)");
@@ -72,8 +72,8 @@ fn str_len() {
 
 #[test]
 fn str_low() {
-	evals_and_eq!("(str-low \"HELLO\")", String("hello".to_string()));
-	evals_and_eq!("(str-low \"HeLLo5\")", String("hello5".to_string()));
+	evals_and_eq!("(str-low \"HELLO\")", StringV("hello".to_string()));
+	evals_and_eq!("(str-low \"HeLLo5\")", StringV("hello5".to_string()));
 
 	fails_eval!("(str-low)");
 	fails_eval!("(str-low \"\" \"\")");
@@ -82,7 +82,7 @@ fn str_low() {
 
 #[test]
 fn str_repeat() {
-	evals_and_eq!("(str-repeat \"hello\" 3)", String("hellohellohello".to_string()));
+	evals_and_eq!("(str-repeat \"hello\" 3)", StringV("hellohellohello".to_string()));
 
 	fails_eval!("(str-repeat \"hello\" -1)");
 	fails_eval!("(str-repeat \"hello\" 0.5)");
@@ -94,7 +94,7 @@ fn str_repeat() {
 
 #[test]
 fn str_replace() {
-	evals_and_eq!("(str-replace \"hello old\" \"old\" \"new\")", String("hello new".to_string()));
+	evals_and_eq!("(str-replace \"hello old\" \"old\" \"new\")", StringV("hello new".to_string()));
 
 	fails_eval!("(str-replace)");
 	fails_eval!("(str-replace \"hello old\")");
@@ -114,8 +114,8 @@ fn str_starts_with() {
 
 #[test]
 fn str_strip() {
-	evals_and_eq!("(str-strip \"    helloyes \")", String("helloyes".to_string()));
-	evals_and_eq!("(str-strip \"helloyes\")", String("helloyes".to_string()));
+	evals_and_eq!("(str-strip \"    helloyes \")", StringV("helloyes".to_string()));
+	evals_and_eq!("(str-strip \"helloyes\")", StringV("helloyes".to_string()));
 
 	fails_eval!("(str-strip)");
 	fails_eval!("(str-strip 5)");
@@ -123,7 +123,7 @@ fn str_strip() {
 
 #[test]
 fn str_trunc() {
-	evals_and_eq!("(str-trunc \"hello\" 3)", String("hel".to_string()));
+	evals_and_eq!("(str-trunc \"hello\" 3)", StringV("hel".to_string()));
 
 	fails_eval!("(str-trunc)");
 	fails_eval!("(str-trunc \"hello\")");
@@ -133,8 +133,8 @@ fn str_trunc() {
 
 #[test]
 fn str_up() {
-	evals_and_eq!("(str-up \"hello\")", String("HELLO".to_string()));
-	evals_and_eq!("(str-up \"HeLLo5\")", String("HELLO5".to_string()));
+	evals_and_eq!("(str-up \"hello\")", StringV("HELLO".to_string()));
+	evals_and_eq!("(str-up \"HeLLo5\")", StringV("HELLO5".to_string()));
 
 	fails_eval!("(str-up)");
 	fails_eval!("(str-up \"\" \"\")");
