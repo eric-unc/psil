@@ -60,9 +60,9 @@ This lists all procedures built into the standard library. Special forms are mar
 
 #### Control
 | Name | Rands | Returns | Description |
-| :------ | :------ |:--------| :------ |
-| `if`* | boolean, any, any | any     | Returns one expression if the given condition is true, and the other if false. The other expression within will not be evaluated. Requires three rands (one boolean, two of any type). |
-| `cond`* | (boolean, any)+ | any     | Returns expression associated with the true condition, or `void` if none are true. See `cond.lisp` or `fizzbuzz.lisp` in the `samples` folder for examples. |
+| :------ | :------ | :------ | :------ |
+| `if`* | boolean, any, any | any | Returns one expression if the given condition is true, and the other if false. The other expression within will not be evaluated. Requires three rands (one boolean, two of any type). |
+| `cond`* | (boolean, any)+ | any | Returns expression associated with the true condition, or `void` if none are true. See `cond.lisp` or `fizzbuzz.lisp` in the `samples` folder for examples. |
 | `define`* | name, any | `#void` | Creates a binding with the name given in the current scope. |
 | `do`* | any+ | `#void` | Executes each invocation given. |
 | `fail` | string? | `#void` | Generates an error, with an optional error message. In REPL mode, Psil will just output the error message to standard error, and continue to accept input, while in load mode, Psil will terminate execution of the given script after the error message is printed. |
