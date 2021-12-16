@@ -18,36 +18,44 @@ fn range(rands: ValList) -> Result<Val, String> {
 	let n1 = match rands[0] {
 		Number(n) => n,
 		_ => fail_on_bad_type!("exit", "number", rands)
-	};
+	} as u64;
 
 	let n2 = match rands[1] {
 		Number(n) => n,
 		_ => fail_on_bad_type!("exit", "number", rands)
-	};
+	} as u64;
+
+	// TODO: some kind of integer checks
 
 	if rands.len() == 2 {
 		if n2 < n1 {
 			return Err("First number is bigger than second!".to_string());
 		}
 
+
 		/*if n1 % 1 != 0 || n2 % 1 != 0 {
 			return Err("Arg is not an integer!".to_string());
 		}*/
 
-		let (n1, n2) = (n1 as u64, n2 as u64);
+		//let (n1, n2) = (n1 as u64, n2 as u64);
 
 		let mut ret = ValList::with_capacity((n2 - n1) as usize);
 		for i in n1..=n2 {
 			ret.push(Number(i as f64));
 		}
 
-		return Ok(List(ret));
+		Ok(List(ret))
 	} else { // 3
 		let step = match rands[2] {
 			Number(n) => n,
 			_ => fail_on_bad_type!("exit", "number", rands)
-		};
-	}
+		} as u64;
 
-	Err("Arg is not an integer!".to_string())
+		let mut ret = ValList::with_capacity(((n2 - n1) / step) as usize);
+		for i in (n1..=n2).step_by(step as usize) {
+			ret.push(Number(i as f64));
+		}
+
+		Ok(List(ret))
+	}
 }
