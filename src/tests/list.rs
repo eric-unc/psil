@@ -1,10 +1,11 @@
 use crate::{evals_and_eq, fails_eval};
-use crate::val::Val::{Number};
+use crate::val::Val::{Number, List};
+use crate::tests::{eval, parse};
 
 #[test]
 fn list() {
-	evals_and_eq!("(list)", vec![]);
-	evals_and_eq!("(list 1)", vec![Number(1)]);
+	evals_and_eq!("(list)", List(vec![]));
+	evals_and_eq!("(list 1)", List(vec![Number(1.0)]));
 }
 
 #[test]

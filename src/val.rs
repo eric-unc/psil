@@ -62,6 +62,7 @@ impl PartialEq for Val {
 			(Boolean(b), Boolean(o)) => *b == *o,
 			(StringV(s), StringV(o)) => s.eq(o),
 			(Symbol(s), Symbol(o)) => s.eq(o),
+			(List(l), List(o)) => l.eq(o),
 			_ => false
 		}
 	}
