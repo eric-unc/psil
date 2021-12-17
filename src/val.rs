@@ -44,11 +44,11 @@ impl Display for Val {
 				let mut ret = String::from("(list");
 
 				for v in l {
-					ret.push_str(" ");
+					ret.push(' ');
 					ret.push_str(v.to_string().as_str());
 				}
 
-				ret.push_str(")");
+				ret.push(')');
 				ret
 			}
 		})
@@ -65,10 +65,6 @@ impl PartialEq for Val {
 			(List(l), List(o)) => l.eq(o),
 			_ => false
 		}
-	}
-
-	fn ne(&self, other: &Self) -> bool {
-		!self.eq(other)
 	}
 }
 

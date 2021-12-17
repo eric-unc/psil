@@ -165,7 +165,7 @@ impl<'a> Scanner<'a> {
 		} else {
 			let ret = self.scan();
 			self.peek_token = Some(ret.clone());
-			ret.clone()
+			ret
 		}
 	}
 }

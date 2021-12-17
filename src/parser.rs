@@ -38,9 +38,7 @@ fn parse_program(scanner: &mut Scanner) -> Result<ProgramAst, ParserError> {
 
 // expr_list ::= expr+
 fn parse_expr_list(scanner: &mut Scanner) -> Result<ExprListAst, ParserError> {
-	let mut list = vec![];
-
-	list.push(parse_expr(scanner)?);
+	let mut list = vec![parse_expr(scanner)?];
 
 	while is_expr_start(scanner.peek()?) {
 		list.push(parse_expr(scanner)?);
@@ -50,10 +48,7 @@ fn parse_expr_list(scanner: &mut Scanner) -> Result<ExprListAst, ParserError> {
 }
 
 fn is_expr_start(token: Token) -> bool {
-	match token {
-		Identifier(_) | LeftParen | LeftBracket | Number(_) | Boolean(_) | StringT(_) | Symbol(_) | If | Cond | Define | Do | And | Or => true,
-		_ => false
-	}
+	matches!(token, Identifier(_) | LeftParen | LeftBracket | Number(_) | Boolean(_) | StringT(_) | Symbol(_) | If | Cond | Define | Do | And | Or)
 }
 
 // expr ::= atom | invocation
