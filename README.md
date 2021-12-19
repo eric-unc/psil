@@ -137,7 +137,8 @@ This lists all procedures built into the standard library. Special forms are mar
 | Name | Rands | Returns | Description |
 | :------ | :------ | :------ | :------ |
 | `list` | any* | list | Creates a list from the given rands. |
-| `range` | number{2,3} | list | Creates a list of numbers from a given range, with an optional step-size. |
+| `list-len` | list | number | Returns the length of the list. | 
+| `list-range` | number{2,3} | list | Creates a list of numbers from a given range, with an optional step-size. |
 
 ## Technologies used
 * [Rust](https://github.com/rust-lang/rust)
