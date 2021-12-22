@@ -10,6 +10,14 @@ fn list() {
 }
 
 #[test]
+fn list_append() {
+	evals_and_eq!("(list-append (list) 1)", List(vec![Number(1.0)]));
+	evals_and_eq!("(list-append (list false) 1)", List(vec![Boolean(false), Number(1.0)]));
+	evals_and_eq!("(list-append (list false) 1 2)", List(vec![Boolean(false), Number(1.0), Number(2.0)]));
+	fails_eval!("(list-append 1 3)");
+}
+
+#[test]
 fn list_get() {
 	evals_and_eq!("(list-get (list 1 false \"pee\") 0)", Number(1.0));
 	evals_and_eq!("(list-get (list 1 false \"pee\") 1)", Boolean(false));

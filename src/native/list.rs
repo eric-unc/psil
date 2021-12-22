@@ -1,10 +1,11 @@
-use crate::{check_arity_between, check_arity_is, fail_on_bad_type};
+use crate::{check_arity_at_least, check_arity_between, check_arity_is, fail_on_bad_type};
 use crate::environment::Environment;
 use crate::val::{Val, ValList};
 use crate::val::Val::{Number, List};
 
 pub fn add_list_procs(env: &mut Environment) {
 	env.add_proc("list".to_string(), list);
+	env.add_proc("list-append".to_string(), list_append);
 	env.add_proc("list-get".to_string(), list_get);
 	env.add_proc("list-len".to_string(), list_len);
 	env.add_proc("list-range".to_string(), list_range);
@@ -15,12 +16,30 @@ fn list(rands: ValList) -> Result<Val, String> {
 	Ok(List(rands))
 }
 
+fn list_append(rands: ValList) -> Result<Val, String> {
+	check_arity_at_least!("list-append", 2, rands);
+
+	let list = match &rands[0] {
+		List(l) => l,
+		_ => fail_on_bad_type!("list-append", "list", rands)
+	};
+
+	let mut new_list = list.clone();
+
+	for i in 1..rands.len() {
+		new_list.push(rands[i].clone());
+	}
+
+
+	Ok(List(new_list))
+}
+
 fn list_get(rands: ValList) -> Result<Val, String> {
 	check_arity_is!("list-get", 2, rands);
 
 	let list = match &rands[0] {
 		List(l) => l,
-		_ => fail_on_bad_type!("list-get", "number", rands)
+		_ => fail_on_bad_type!("list-get", "list", rands)
 	};
 
 	let index = match &rands[1] {
@@ -100,6 +119,6 @@ fn list_reverse(rands: ValList) -> Result<Val, String> {
 			new_list.reverse();
 			List(new_list)
 		}),
-		_ => fail_on_bad_type!("list-reverse", "number", rands)
+		_ => fail_on_bad_type!("list-reverse", "list", rands)
 	}
 }
