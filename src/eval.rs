@@ -3,8 +3,8 @@ use std::string::String;
 use crate::ast::*;
 use crate::{check_arity_at_least, check_arity_is};
 use crate::environment::Environment;
-use crate::val::{ProcedureType, Val, void};
-use crate::val::Val::{Boolean, Number, Procedure, StringV as StringVal, Symbol};
+use crate::val::{Procedure, Val, void};
+use crate::val::Val::{Boolean, Number, ProcedureV, StringV, Symbol};
 
 pub fn eval(program: ProgramAst) -> Result<Vec<Val>, String> {
 	eval_program(program, &mut Environment::new())
@@ -37,11 +37,11 @@ fn eval_atom(atom: AtomAst, env: &mut Environment) -> Result<Val, String> {
 	match atom {
 		AtomAst::Number(n) => Ok(Number(n)),
 		AtomAst::Boolean(b) => Ok(Boolean(b)),
-		AtomAst::String(s) => Ok(StringVal(s)),
+		AtomAst::String(s) => Ok(StringV(s)),
 		AtomAst::Symbol(s) => Ok(Symbol(s)),
-		AtomAst::Lambda(l) => Ok(Procedure(ProcedureType::Pure(l))),
+		AtomAst::Lambda(l) => Ok(ProcedureV(Procedure::Pure(l))),
 		AtomAst::Identifier(n) => env.get_binding(n),
-		AtomAst::SpecialForm(s) => Ok(Procedure(ProcedureType::SpecialForm(s)))
+		AtomAst::SpecialForm(s) => Ok(ProcedureV(Procedure::SpecialForm(s)))
 	}
 }
 
@@ -53,9 +53,9 @@ fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Result<V
 			let proc_fetch = env.get_binding(i.clone())?;
 
 			match proc_fetch {
-				Procedure(p) => {
+				ProcedureV(p) => {
 					match p {
-						ProcedureType::Native(n) => {
+						Procedure::Native(n) => {
 							let mut rands = Vec::new();
 
 							for expr in invocation.expr_list.into_iter() {
@@ -65,7 +65,7 @@ fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Result<V
 
 							n(rands, env)
 						},
-						ProcedureType::Pure(p) => {
+						Procedure::Pure(p) => {
 							let mut rands = Vec::new();
 
 							for expr in invocation.expr_list.into_iter() {
@@ -93,7 +93,7 @@ fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Result<V
 
 							ret
 						},
-						ProcedureType::SpecialForm(s) => {
+						Procedure::SpecialForm(s) => {
 							match s {
 								SpecialForms::If => eval_if(invocation.expr_list, env),
 								SpecialForms::Cond => eval_cond(invocation.expr_list, env),

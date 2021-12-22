@@ -1,7 +1,7 @@
 use crate::{check_arity_at_least, check_arity_between, check_arity_is, fail_on_bad_type};
 use crate::environment::Environment;
 use crate::val::{Val, ValList};
-use crate::val::Val::{Number, List, Procedure};
+use crate::val::Val::{Number, List, ProcedureV};
 
 pub fn add_list_procs(env: &mut Environment) {
 	env.add_proc("list".to_string(), list);
@@ -72,7 +72,7 @@ fn list_len(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	};
 
 	let proc = match &rands[1] {
-		Procedure(p) => p,
+		ProcedureV(p) => p,
 		_ => fail_on_bad_type!("list-get", "list", rands)
 	};
 

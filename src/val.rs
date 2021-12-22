@@ -9,7 +9,7 @@ pub enum Val {
 	Boolean(bool),
 	StringV(String),
 	Symbol(String),
-	Procedure(ProcedureType),
+	ProcedureV(Procedure),
 	List(ValList)
 }
 use Val::*;
@@ -23,7 +23,7 @@ impl Val {
 			Boolean(_) => "boolean",
 			StringV(_) => "string",
 			Symbol(_) => "symbol",
-			Procedure(_) => "procedure",
+			ProcedureV(_) => "procedure",
 			List(_) => "list"
 		}
 	}
@@ -40,7 +40,7 @@ impl Display for Val {
 				ret.push_str(s);
 				ret
 			}
-			Procedure(_) => "<procedure>".to_string(), // TODO: https://github.com/eric-unc/psil/issues/3
+			ProcedureV(_) => "<procedure>".to_string(), // TODO: https://github.com/eric-unc/psil/issues/3
 			List(l) => {
 				let mut ret = String::from("(list");
 
@@ -70,7 +70,7 @@ impl PartialEq for Val {
 }
 
 #[derive(Clone)]
-pub enum ProcedureType {
+pub enum Procedure {
 	Native(NativeProcedure),
 	Pure(LambdaAst),
 	SpecialForm(SpecialForms)
@@ -78,12 +78,12 @@ pub enum ProcedureType {
 
 pub type NativeProcedure = fn(ValList, &mut Environment) -> Result<Val, String>;
 
-impl Debug for ProcedureType {
+impl Debug for Procedure {
 	fn fmt(&self, f: &mut Formatter<'_>) -> ResultFmt {
 		write!(f, "{}", match self {
-			ProcedureType::Native(_) => "<native procedure>",
-			ProcedureType::Pure(_) => "<pure procedure>",
-			ProcedureType::SpecialForm(_) => "<special form>"
+			Procedure::Native(_) => "<native procedure>",
+			Procedure::Pure(_) => "<pure procedure>",
+			Procedure::SpecialForm(_) => "<special form>"
 		})
 	}
 }

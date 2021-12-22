@@ -2,8 +2,8 @@ use std::collections::HashMap;
 
 use crate::ast::Name;
 use crate::native::add_native_library;
-use crate::val::{NativeProcedure, ProcedureType, Val};
-use crate::val::Val::Procedure;
+use crate::val::{NativeProcedure, Procedure, Val};
+use crate::val::Val::ProcedureV;
 
 pub type Scope = HashMap<String, Val>;
 pub type Bindings = Vec<Scope>;
@@ -45,7 +45,7 @@ impl Environment {
 	pub fn add_proc(&mut self, name: Name, val: NativeProcedure) {
 		let len = self.bindings.len();
 
-		self.bindings[len - 1].insert(name, Procedure(ProcedureType::Native(val)));
+		self.bindings[len - 1].insert(name, ProcedureV(Procedure::Native(val)));
 	}
 
 	pub fn get_binding(&self, name: Name) -> Result<Val, String> {
