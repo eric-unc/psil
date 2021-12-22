@@ -21,13 +21,13 @@ pub fn add_str_procs(env: &mut Environment) {
 	env.add_proc("str-up".to_string(), str_up);
 }
 
-fn to_str(rands: ValList) -> Result<Val, String> {
+fn to_str(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("2str", 1, rands);
 
 	Ok(StringVal(rands[0].to_string()))
 }
 
-fn is_str(rands: ValList) -> Result<Val, String> {
+fn is_str(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("is-str?", 1, rands);
 
 	match rands[0] {
@@ -36,7 +36,7 @@ fn is_str(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn str_cat(rands: ValList) -> Result<Val, String> {
+fn str_cat(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_at_least!("str-cat", 2, rands);
 
 	let mut ret = String::from("");
@@ -48,7 +48,7 @@ fn str_cat(rands: ValList) -> Result<Val, String> {
 	Ok(StringVal(ret))
 }
 
-fn str_contains(rands: ValList) -> Result<Val, String> {
+fn str_contains(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-contains?", 2, rands);
 
 	match rands[0].borrow() {
@@ -61,7 +61,7 @@ fn str_contains(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn str_empty(rands: ValList) -> Result<Val, String> {
+fn str_empty(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-empty?", 1, rands);
 
 	match rands[0].borrow() {
@@ -70,7 +70,7 @@ fn str_empty(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn str_insert(rands: ValList) -> Result<Val, String> {
+fn str_insert(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-insert", 3, rands);
 
 	match rands[0].borrow() {
@@ -91,7 +91,7 @@ fn str_insert(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn str_len(rands: ValList) -> Result<Val, String> {
+fn str_len(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-len", 1, rands);
 
 	match rands[0].borrow() {
@@ -100,7 +100,7 @@ fn str_len(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn str_low(rands: ValList) -> Result<Val, String> {
+fn str_low(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-low", 1, rands);
 
 	match rands[0].borrow() {
@@ -109,7 +109,7 @@ fn str_low(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn str_repeat(rands: ValList) -> Result<Val, String> {
+fn str_repeat(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-repeat", 2, rands);
 
 	match rands[0].borrow() {
@@ -127,7 +127,7 @@ fn str_repeat(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn str_replace(rands: ValList) -> Result<Val, String> {
+fn str_replace(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-replace", 3, rands);
 
 	match rands[0].borrow() {
@@ -144,7 +144,7 @@ fn str_replace(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn str_starts_with(rands: ValList) -> Result<Val, String> {
+fn str_starts_with(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-starts-with?", 2, rands);
 
 	match rands[0].borrow() {
@@ -157,7 +157,7 @@ fn str_starts_with(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn str_strip(rands: ValList) -> Result<Val, String> {
+fn str_strip(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-strip", 1, rands);
 
 	match rands[0].borrow() {
@@ -166,7 +166,7 @@ fn str_strip(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn str_trunc(rands: ValList) -> Result<Val, String> {
+fn str_trunc(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-trunc", 2, rands);
 
 	match rands[0].borrow() {
@@ -187,7 +187,7 @@ fn str_trunc(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn str_up(rands: ValList) -> Result<Val, String> {
+fn str_up(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-up", 1, rands);
 
 	match rands[0].borrow() {

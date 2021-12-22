@@ -11,7 +11,7 @@ pub fn add_symbol_procs(env: &mut Environment) {
 	env.add_proc("is-void?".to_string(), is_void);
 }
 
-fn str_to_symb(rands: ValList) -> Result<Val, String> {
+fn str_to_symb(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str2symb", 1, rands);
 
 	match rands[0].borrow() {
@@ -20,7 +20,7 @@ fn str_to_symb(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn symb_to_str(rands: ValList) -> Result<Val, String> {
+fn symb_to_str(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("symb2str", 1, rands);
 
 	match rands[0].borrow() {
@@ -29,7 +29,7 @@ fn symb_to_str(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn is_symb(rands: ValList) -> Result<Val, String> {
+fn is_symb(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("is-symb?", 1, rands);
 
 	match rands[0] {
@@ -38,7 +38,7 @@ fn is_symb(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn is_void(rands: ValList) -> Result<Val, String> {
+fn is_void(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("is-void?", 1, rands);
 
 	match rands[0].borrow() {

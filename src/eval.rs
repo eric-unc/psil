@@ -63,7 +63,7 @@ fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Result<V
 								rands.push(val);
 							}
 
-							n(rands)
+							n(rands, env)
 						},
 						ProcedureType::Pure(p) => {
 							let mut rands = Vec::new();

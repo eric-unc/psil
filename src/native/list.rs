@@ -13,11 +13,11 @@ pub fn add_list_procs(env: &mut Environment) {
 	env.add_proc("list-reverse".to_string(), list_reverse);
 }
 
-fn list(rands: ValList) -> Result<Val, String> {
+fn list(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	Ok(List(rands))
 }
 
-fn list_append(rands: ValList) -> Result<Val, String> {
+fn list_append(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_at_least!("list-append", 2, rands);
 
 	let list = match &rands[0] {
@@ -35,7 +35,7 @@ fn list_append(rands: ValList) -> Result<Val, String> {
 	Ok(List(new_list))
 }
 
-fn list_get(rands: ValList) -> Result<Val, String> {
+fn list_get(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("list-get", 2, rands);
 
 	let list = match &rands[0] {
@@ -54,7 +54,7 @@ fn list_get(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn list_len(rands: ValList) -> Result<Val, String> {
+fn list_len(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("list-len", 1, rands);
 
 	match &rands[0] {
@@ -63,7 +63,7 @@ fn list_len(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-/*fn list_map(rands: ValList) -> Result<Val, String> {
+/*fn list_map(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("list-len", 2, rands);
 
 	let list = match &rands[0] {
@@ -79,7 +79,7 @@ fn list_len(rands: ValList) -> Result<Val, String> {
 
 }*/
 
-fn list_range(rands: ValList) -> Result<Val, String> {
+fn list_range(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_between!("list-range", 2, 3, rands);
 
 	let n1 = match rands[0] {
@@ -127,7 +127,7 @@ fn list_range(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn list_reverse(rands: ValList) -> Result<Val, String> {
+fn list_reverse(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("list-reverse", 1, rands);
 
 	match &rands[0] {

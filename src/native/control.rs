@@ -9,7 +9,7 @@ pub fn add_control_procs(env: &mut Environment) {
 	env.add_proc("type".to_string(), _type);
 }
 
-fn exit(rands: ValList) -> Result<Val, String> {
+fn exit(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_between!("exit", 0, 1, rands);
 
 	match rands.len() {
@@ -22,7 +22,7 @@ fn exit(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn fail(rands: ValList) -> Result<Val, String> {
+fn fail(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_between!("fail", 0, 1, rands);
 
 	match rands.len() {
@@ -35,7 +35,7 @@ fn fail(rands: ValList) -> Result<Val, String> {
 	}
 }
 
-fn _type(rands: ValList) -> Result<Val, String> {
+fn _type(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("type", 1, rands);
 
 	Ok(Symbol(rands[0].get_type_name().to_string()))

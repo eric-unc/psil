@@ -7,7 +7,7 @@ pub fn add_procedure_procs(env: &mut Environment) {
 	env.add_proc("is-proc?".to_string(), is_proc);
 }
 
-fn is_proc(rands: ValList) -> Result<Val, String> {
+fn is_proc(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("is-proc?", 1, rands);
 
 	match rands[0] {

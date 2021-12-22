@@ -1,6 +1,7 @@
-use std::fmt::{Display, Formatter, Result as ResultFmt};
+use std::fmt::{Debug, Display, Formatter, Result as ResultFmt};
 
 use crate::ast::{LambdaAst, SpecialForms};
+use crate::Environment;
 
 #[derive(Clone, Debug)]
 pub enum Val {
@@ -68,14 +69,24 @@ impl PartialEq for Val {
 	}
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub enum ProcedureType {
 	Native(NativeProcedure),
 	Pure(LambdaAst),
 	SpecialForm(SpecialForms)
 }
 
-pub type NativeProcedure = fn(ValList) -> Result<Val, String>;
+pub type NativeProcedure = fn(ValList, &mut Environment) -> Result<Val, String>;
+
+impl Debug for ProcedureType {
+	fn fmt(&self, f: &mut Formatter<'_>) -> ResultFmt {
+		write!(f, "{}", match self {
+			ProcedureType::Native(_) => "<native procedure>",
+			ProcedureType::Pure(_) => "<pure procedure>",
+			ProcedureType::SpecialForm(_) => "<special form>"
+		})
+	}
+}
 
 pub fn void() -> Val {
 	Symbol("void".to_string())
