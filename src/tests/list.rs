@@ -37,3 +37,11 @@ fn list_range() {
 	fails_eval!("(list-range 1)");
 	fails_eval!("(list-range 1 1 1 1)");
 }
+
+#[test]
+fn list_reverse() {
+	evals_and_eq!("(list-reverse (list))", List(vec![]));
+	evals_and_eq!("(list-reverse (list 1 false \"pee\"))", List(vec![StringV("pee".to_string()), Boolean(false), Number(1.0)]));
+	fails_eval!("(list-reverse (list) (list))");
+	fails_eval!("(list-reverse 1)");
+}

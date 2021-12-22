@@ -8,6 +8,7 @@ pub fn add_list_procs(env: &mut Environment) {
 	env.add_proc("list-get".to_string(), list_get);
 	env.add_proc("list-len".to_string(), list_len);
 	env.add_proc("list-range".to_string(), list_range);
+	env.add_proc("list-reverse".to_string(), list_reverse);
 }
 
 fn list(rands: ValList) -> Result<Val, String> {
@@ -87,5 +88,18 @@ fn list_range(rands: ValList) -> Result<Val, String> {
 		}
 
 		Ok(List(ret))
+	}
+}
+
+fn list_reverse(rands: ValList) -> Result<Val, String> {
+	check_arity_is!("list-reverse", 1, rands);
+
+	match &rands[0] {
+		List(l) => Ok({
+			let mut new_list = l.clone();
+			new_list.reverse();
+			List(new_list)
+		}),
+		_ => fail_on_bad_type!("list-reverse", "number", rands)
 	}
 }
