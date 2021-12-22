@@ -138,6 +138,8 @@ This lists all procedures built into the standard library. Special forms are mar
 | :------ | :------ | :------ | :------ |
 | `list` | any* | list | Creates a list from the given rands. |
 | `list-append` | list, any+ | list | Returns a list with given rands appended |
+| `list-each` | list, proc | list | Applies the value to the given procedure. Effectively the same as `list-map`, but ignores return values. |
+| `list-filter` | list, proc | list | Returns a new list filtered by the given procedure (which must return a boolean). |
 | `list-get` | list, number | any | Gets an element from the list at a specific index. |
 | `list-len` | list | number | Returns the length of the list. |
 | `list-map` | list, proc | list | Returns a new list with values transformed by the given procedure. |

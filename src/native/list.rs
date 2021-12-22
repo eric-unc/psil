@@ -1,12 +1,14 @@
 use crate::{check_arity_at_least, check_arity_between, check_arity_is, fail_on_bad_type};
 use crate::environment::Environment;
 use crate::eval::eval_proc_with_rands;
-use crate::val::{Val, ValList};
-use crate::val::Val::{Number, List, ProcedureV};
+use crate::val::{Val, ValList, void};
+use crate::val::Val::{Boolean, Number, List, ProcedureV};
 
 pub fn add_list_procs(env: &mut Environment) {
 	env.add_proc("list".to_string(), list);
 	env.add_proc("list-append".to_string(), list_append);
+	env.add_proc("list-each".to_string(), list_each);
+	env.add_proc("list-filter".to_string(), list_filter);
 	env.add_proc("list-get".to_string(), list_get);
 	env.add_proc("list-len".to_string(), list_len);
 	env.add_proc("list-map".to_string(), list_map);
@@ -32,6 +34,53 @@ fn list_append(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 		new_list.push(rands[i].clone());
 	}
 
+
+	Ok(List(new_list))
+}
+
+fn list_each(rands: ValList, env: &mut Environment) -> Result<Val, String> {
+	check_arity_is!("list-each", 2, rands);
+
+	let list = match &rands[0] {
+		List(l) => l,
+		_ => fail_on_bad_type!("list-each", "list", rands)
+	};
+
+	let proc = match &rands[1] {
+		ProcedureV(p) => p,
+		_ => fail_on_bad_type!("list-map", "proc", rands)
+	};
+
+	for item in list {
+		eval_proc_with_rands(proc.clone(), vec![item.clone()], "anonymous".to_string(), env)?;
+	}
+
+	Ok(void())
+}
+
+fn list_filter(rands: ValList, env: &mut Environment) -> Result<Val, String> {
+	check_arity_is!("list-filter", 2, rands);
+
+	let list = match &rands[0] {
+		List(l) => l,
+		_ => fail_on_bad_type!("list-filter", "list", rands)
+	};
+
+	let proc = match &rands[1] {
+		ProcedureV(p) => p,
+		_ => fail_on_bad_type!("list-filter", "proc", rands)
+	};
+
+	let mut new_list = vec![];
+
+	for item in list {
+		let bool = eval_proc_with_rands(proc.clone(), vec![item.clone()], "anonymous".to_string(), env)?;
+
+		match bool {
+			Boolean(b) => if b { new_list.push(item.clone()); }
+			_ => return Err("Procedure in list_filter returned non-boolean!".to_string())
+		}
+	}
 
 	Ok(List(new_list))
 }
@@ -74,7 +123,7 @@ fn list_map(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 
 	let proc = match &rands[1] {
 		ProcedureV(p) => p,
-		_ => fail_on_bad_type!("list-map", "list", rands)
+		_ => fail_on_bad_type!("list-map", "proc", rands)
 	};
 
 	let mut new_list = vec![];

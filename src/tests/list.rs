@@ -18,6 +18,15 @@ fn list_append() {
 }
 
 #[test]
+fn list_filter() {
+	evals_and_eq!("(list-filter (list 1 false \"pee\") is-num?)", List(vec![Number(1.0)]));
+	evals_and_eq!("(list-filter (list 1 2 3 4 5 6) {|n| (== (% n 2) 0)})", List(vec![Number(2.0), Number(4.0), Number(6.0)]));
+	fails_eval!("(list-filter (list 1 false \"pee\"))");
+	fails_eval!("(list-filter (list 1 false \"pee\") is-num? is-num?)");
+	fails_eval!("(list-filter (list 1 5 6) put)");
+}
+
+#[test]
 fn list_get() {
 	evals_and_eq!("(list-get (list 1 false \"pee\") 0)", Number(1.0));
 	evals_and_eq!("(list-get (list 1 false \"pee\") 1)", Boolean(false));
