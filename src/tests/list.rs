@@ -10,6 +10,16 @@ fn list() {
 }
 
 #[test]
+fn list_get() {
+	evals_and_eq!("(list-get (list 1 false \"pee\") 0)", Number(1.0));
+	evals_and_eq!("(list-get (list 1 false \"pee\") 1)", Boolean(false));
+	evals_and_eq!("(list-get (list 1 false \"pee\") 2)", StringV("pee".to_string()));
+	fails_eval!("(list-get (list 1 false \"pee\") 3)");
+	fails_eval!("(list-get 1 3)");
+	fails_eval!("(list-get (list 1 false \"pee\") 2 2)");
+}
+
+#[test]
 fn list_len() {
 	evals_and_eq!("(list-len (list))", Number(0.0));
 	evals_and_eq!("(list-len (list 5))", Number(1.0));

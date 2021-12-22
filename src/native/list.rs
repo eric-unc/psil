@@ -5,6 +5,7 @@ use crate::val::Val::{Number, List};
 
 pub fn add_list_procs(env: &mut Environment) {
 	env.add_proc("list".to_string(), list);
+	env.add_proc("list-get".to_string(), list_get);
 	env.add_proc("list-len".to_string(), list_len);
 	env.add_proc("list-range".to_string(), list_range);
 }
@@ -13,12 +14,31 @@ fn list(rands: ValList) -> Result<Val, String> {
 	Ok(List(rands))
 }
 
+fn list_get(rands: ValList) -> Result<Val, String> {
+	check_arity_is!("list-get", 2, rands);
+
+	let list = match &rands[0] {
+		List(l) => l,
+		_ => fail_on_bad_type!("list-get", "number", rands)
+	};
+
+	let index = match &rands[1] {
+		Number(n) => *n as usize,
+		_ => fail_on_bad_type!("list-get", "number", rands)
+	};
+
+	match list.get(index) {
+		Some(v) => Ok(v.clone()),
+		None => Err(format!("Attempted to access list index {} which does not exist!", index))
+	}
+}
+
 fn list_len(rands: ValList) -> Result<Val, String> {
 	check_arity_is!("list-len", 1, rands);
 
 	match &rands[0] {
 		List(l) => Ok(Number(l.len() as f64)),
-		_ => fail_on_bad_type!("exit", "number", rands)
+		_ => fail_on_bad_type!("list_len", "number", rands)
 	}
 }
 
