@@ -1,13 +1,14 @@
 use crate::{check_arity_at_least, check_arity_between, check_arity_is, fail_on_bad_type};
 use crate::environment::Environment;
 use crate::val::{Val, ValList};
-use crate::val::Val::{Number, List};
+use crate::val::Val::{Number, List, Procedure};
 
 pub fn add_list_procs(env: &mut Environment) {
 	env.add_proc("list".to_string(), list);
 	env.add_proc("list-append".to_string(), list_append);
 	env.add_proc("list-get".to_string(), list_get);
 	env.add_proc("list-len".to_string(), list_len);
+	//env.add_proc("list-map".to_string(), list_map);
 	env.add_proc("list-range".to_string(), list_range);
 	env.add_proc("list-reverse".to_string(), list_reverse);
 }
@@ -61,6 +62,22 @@ fn list_len(rands: ValList) -> Result<Val, String> {
 		_ => fail_on_bad_type!("list_len", "number", rands)
 	}
 }
+
+/*fn list_map(rands: ValList) -> Result<Val, String> {
+	check_arity_is!("list-len", 2, rands);
+
+	let list = match &rands[0] {
+		List(l) => l,
+		_ => fail_on_bad_type!("list-get", "list", rands)
+	};
+
+	let proc = match &rands[1] {
+		Procedure(p) => p,
+		_ => fail_on_bad_type!("list-get", "list", rands)
+	};
+
+
+}*/
 
 fn list_range(rands: ValList) -> Result<Val, String> {
 	check_arity_between!("list-range", 2, 3, rands);

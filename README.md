@@ -138,7 +138,7 @@ This lists all procedures built into the standard library. Special forms are mar
 | :------ | :------ | :------ | :------ |
 | `list` | any* | list | Creates a list from the given rands. |
 | `list-append` | list, any+ | list | Returns a list with given rands appended |
-| `list-get` | list, number | any | Gets an element from the list at a specific index.
+| `list-get` | list, number | any | Gets an element from the list at a specific index. |
 | `list-len` | list | number | Returns the length of the list. | 
 | `list-range` | number{2,3} | list | Creates a list of numbers from a given range, with an optional step-size. |
 | `list-reverse` | list | list | Returns a reversed the list. |
