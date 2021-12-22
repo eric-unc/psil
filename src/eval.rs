@@ -4,7 +4,7 @@ use crate::ast::*;
 use crate::{check_arity_at_least, check_arity_is};
 use crate::environment::Environment;
 use crate::val::{ProcedureType, Val, void};
-use crate::val::Val::{Boolean, Number, Procedure, String as StringVal, Symbol};
+use crate::val::Val::{Boolean, Number, Procedure, StringV as StringVal, Symbol};
 
 pub fn eval(program: ProgramAst) -> Result<Vec<Val>, String> {
 	eval_program(program, &mut Environment::new())

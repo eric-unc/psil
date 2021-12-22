@@ -53,6 +53,7 @@ Yay, sin(0) is 0!
 | string | Strings are a series of characters, like `"Ahhh!"` or `"545"`. |
 | symbol | Symbols are similar to strings, but more for internal use as human-readable identifiers. They can be used like enums, like `#north`, `#south`, `#east`, `#west`. One important symbol is `#void`, a singleton returned from functions that don't return anything interesting. |
 | procedure | A procedure (or "proc") is a block that returns an atom with optional arguments. See `procs.lisp` in the `samples` directory for examples. Procedures can be invoked easily if defined. |
+| list | A list is a composite value of values. It can be created through the `list` procedure. |
 
 ### Built-in procedures
 This lists all procedures built into the standard library. Special forms are marked with a `*` next to their names. Special forms are procedures too, but with special evaluation rules that don't allow them to be implemented as regular procedures.
@@ -62,18 +63,18 @@ This lists all procedures built into the standard library. Special forms are mar
 | :------ | :------ | :------ | :------ |
 | `if`* | boolean, any, any | any | Returns one expression if the given condition is true, and the other if false. The other expression within will not be evaluated. Requires three rands (one boolean, two of any type). |
 | `cond`* | (boolean, any)+ | any | Returns expression associated with the true condition, or `void` if none are true. See `cond.lisp` or `fizzbuzz.lisp` in the `samples` folder for examples. |
-| `define`* | name, any | void | Creates a binding with the name given in the current scope. |
-| `do`* | any+ | void | Executes each invocation given. |
-| `fail` | string? | void | Generates an error, with an optional error message. In REPL mode, Psil will just output the error message to standard error, and continue to accept input, while in load mode, Psil will terminate execution of the given script after the error message is printed. |
-| `exit` | number? | void | Exits the program with an status code (without a rand, the status code is `0`). |
+| `define`* | name, any | `#void` | Creates a binding with the name given in the current scope. |
+| `do`* | any+ | `#void` | Executes each invocation given. |
+| `fail` | string? | `#void` | Generates an error, with an optional error message. In REPL mode, Psil will just output the error message to standard error, and continue to accept input, while in load mode, Psil will terminate execution of the given script after the error message is printed. |
+| `exit` | number? | N/A | Exits the program with an status code (without a rand, the status code is `0`). |
 | `type` | any | symbol | Returns the type of the given rand. |
 
 #### Input/output
 | Name | Rands | Returns | Description |
 | :------ | :------ | :------ | :------ |
-| `put` | any* | void | Prints each rand concatenated, followed by a new line. |
-| `put-each` | any+ | void | Puts each rand, each on a new line. |
-| `print` | any+ | void | Prints each rand without any new lines. |
+| `put` | any* | `#void` | Prints each rand concatenated, followed by a new line. |
+| `put-each` | any+ | `#void` | Puts each rand, each on a new line. |
+| `print` | any+ | `#void` | Prints each rand without any new lines. |
 | `input` | _none_ | string | Takes input from console. |
 
 #### String
@@ -131,6 +132,16 @@ This lists all procedures built into the standard library. Special forms are mar
 | Name | Rands | Returns | Description |
 | :------ | :------ | :------ | :------ |
 | `is-proc?` | any | boolean | Checks if the rand is a procedure. |
+
+#### List
+| Name | Rands | Returns | Description |
+| :------ | :------ | :------ | :------ |
+| `list` | any* | list | Creates a list from the given rands. |
+| `list-append` | list, any+ | list | Returns a list with given rands appended |
+| `list-get` | list, number | any | Gets an element from the list at a specific index. |
+| `list-len` | list | number | Returns the length of the list. | 
+| `list-range` | number{2,3} | list | Creates a list of numbers from a given range, with an optional step-size. |
+| `list-reverse` | list | list | Returns a reversed the list. |
 
 ## Technologies used
 * [Rust](https://github.com/rust-lang/rust)

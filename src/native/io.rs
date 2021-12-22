@@ -3,7 +3,7 @@ use std::io;
 use crate::{check_arity_at_least, check_arity_is};
 use crate::environment::Environment;
 use crate::val::{Val, ValList, void};
-use crate::val::Val::String as StringVal;
+use crate::val::Val::StringV as StringVal;
 
 pub fn add_io_procs(env: &mut Environment) {
 	env.add_proc("print".to_string(), print);

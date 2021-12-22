@@ -2,7 +2,7 @@ use std::borrow::Borrow;
 use crate::{check_arity_is, fail_on_bad_type};
 use crate::environment::Environment;
 use crate::val::{Val, ValList};
-use crate::val::Val::{Boolean, String as StringVal, Symbol};
+use crate::val::Val::{Boolean, StringV as StringVal, Symbol};
 
 pub fn add_symbol_procs(env: &mut Environment) {
 	env.add_proc("str2symb".to_string(), str_to_symb);
