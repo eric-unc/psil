@@ -3,7 +3,7 @@ use std::string::String;
 use crate::ast::*;
 use crate::{check_arity_at_least, check_arity_is};
 use crate::environment::Environment;
-use crate::val::{Procedure, Val, void};
+use crate::val::{Procedure, Val, ValList, void};
 use crate::val::Val::{Boolean, Number, ProcedureV, StringV, Symbol};
 
 pub fn eval(program: ProgramAst) -> Result<Vec<Val>, String> {
@@ -120,6 +120,34 @@ pub fn eval_proc(p: Procedure, expr_list: ExprListAst, name: Name, env: &mut Env
 				SpecialForms::Or => eval_or(expr_list, env)
 			}
 		}
+	}
+}
+
+pub fn eval_proc_with_rands(p: Procedure, rands: ValList, name: Name, env: &mut Environment) -> Result<Val, String> {
+	match p {
+		Procedure::Native(n) => n(rands, env),
+		Procedure::Pure(p) => {
+			if p.params.names.len() != rands.len() {
+				return match p.params.names.len() {
+					0 => Err(format!("Proc '{}' expected no rands! Given {}.", name, rands.len())),
+					1 => Err(format!("Proc '{}' expected 1 rand! Given {}.", name, rands.len())),
+					_ => Err(format!("Proc '{}' expected {} rands! Given {}.", name, p.params.names.len(), rands.len()))
+				}
+			}
+
+			env.add_scope();
+
+			for (name, rand_val) in p.params.names.into_iter().zip(rands) {
+				env.add_binding(name, rand_val);
+			}
+
+			let ret = eval_expr(p.expr, env);
+
+			env.close_scope();
+
+			ret
+		},
+		Procedure::SpecialForm(_) => Err("Cannot execute special forms with rands already evaluated!".to_string())
 	}
 }
 

@@ -37,6 +37,15 @@ fn list_len() {
 }
 
 #[test]
+fn list_map() {
+	evals_and_eq!("(list-map (list) {|n| (+ n 3)})", List(vec![]));
+	evals_and_eq!("(list-map (list 12 22) {|n| (+ n 3)})", List(vec![Number(15.0), Number(25.0)]));
+	fails_eval!("(list-map (list 12 22))");
+	fails_eval!("(list-map (list 12 22) +)");
+	fails_eval!("(list-map 22 {|n| (+ n 3)})");
+}
+
+#[test]
 fn list_range() {
 	evals_and_eq!("(list-range 1 2)", List(vec![Number(1.0), Number(2.0)]));
 	evals_and_eq!("(list-range 2 5)", List(vec![Number(2.0), Number(3.0), Number(4.0), Number(5.0)]));

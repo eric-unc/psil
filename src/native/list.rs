@@ -1,5 +1,6 @@
 use crate::{check_arity_at_least, check_arity_between, check_arity_is, fail_on_bad_type};
 use crate::environment::Environment;
+use crate::eval::eval_proc_with_rands;
 use crate::val::{Val, ValList};
 use crate::val::Val::{Number, List, ProcedureV};
 
@@ -8,7 +9,7 @@ pub fn add_list_procs(env: &mut Environment) {
 	env.add_proc("list-append".to_string(), list_append);
 	env.add_proc("list-get".to_string(), list_get);
 	env.add_proc("list-len".to_string(), list_len);
-	//env.add_proc("list-map".to_string(), list_map);
+	env.add_proc("list-map".to_string(), list_map);
 	env.add_proc("list-range".to_string(), list_range);
 	env.add_proc("list-reverse".to_string(), list_reverse);
 }
@@ -63,21 +64,27 @@ fn list_len(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	}
 }
 
-/*fn list_map(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
-	check_arity_is!("list-len", 2, rands);
+fn list_map(rands: ValList, env: &mut Environment) -> Result<Val, String> {
+	check_arity_is!("list-map", 2, rands);
 
 	let list = match &rands[0] {
 		List(l) => l,
-		_ => fail_on_bad_type!("list-get", "list", rands)
+		_ => fail_on_bad_type!("list-map", "list", rands)
 	};
 
 	let proc = match &rands[1] {
 		ProcedureV(p) => p,
-		_ => fail_on_bad_type!("list-get", "list", rands)
+		_ => fail_on_bad_type!("list-map", "list", rands)
 	};
 
+	let mut new_list = vec![];
 
-}*/
+	for item in list {
+		new_list.push(eval_proc_with_rands(proc.clone(), vec![item.clone()], "anonymous".to_string(), env)?);
+	}
+
+	Ok(List(new_list))
+}
 
 fn list_range(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_between!("list-range", 2, 3, rands);
