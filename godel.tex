@@ -1,0 +1,219 @@
+% ****** Start of file apssamp.tex ******
+%
+%   This file is part of the APS files in the REVTeX 4.2 distribution.
+%   Version 4.2a of REVTeX, December 2014
+%
+%   Copyright (c) 2014 The American Physical Society.
+%
+%   See the REVTeX 4 README file for restrictions and more information.
+%
+% TeX'ing this file requires that you have AMS-LaTeX 2.0 installed
+% as well as the rest of the prerequisites for REVTeX 4.2
+%
+% See the REVTeX 4 README file
+% It also requires running BibTeX. The commands are as follows:
+%
+%  1)  latex apssamp.tex
+%  2)  bibtex apssamp
+%  3)  latex apssamp.tex
+%  4)  latex apssamp.tex
+%
+\documentclass[%
+ reprint,
+%superscriptaddress,
+%groupedaddress,
+%unsortedaddress,
+%runinaddress,
+%frontmatterverbose, 
+%preprint,
+%preprintnumbers,
+%nofootinbib,
+%nobibnotes,
+%bibnotes,
+ amsmath,amssymb,
+ aps,
+%pra,
+%prb,
+%rmp,
+%prstab,
+%prstper,
+%floatfix,
+]{revtex4-2}
+
+\usepackage{graphicx}% Include figure files
+\usepackage{dcolumn}% Align table columns on decimal point
+\usepackage{bm}% bold math
+\usepackage{physics}
+\usepackage{wasysym}
+\usepackage{float}
+%\usepackage{hyperref}% add hypertext capabilities
+%\usepackage[mathlines]{lineno}% Enable numbering of text and display math
+%\linenumbers\relax % Commence numbering lines
+
+%\usepackage[showframe,%Uncomment any one of the following lines to test 
+%%scale=0.7, marginratio={1:1, 2:3}, ignoreall,% default settings
+%%text={7in,10in},centering,
+%%margin=1.5in,
+%%total={6.5in,8.75in}, top=1.2in, left=0.9in, includefoot,
+%%height=10in,a5paper,hmargin={3cm,0.8in},
+%]{geometry}
+
+\begin{document}
+
+\preprint{APS/123-QED}
+
+\title{Godel's First Incompleteness Theorem and Completeness Theorem}% Force line breaks with \\
+%
+
+\author{Anand Hande}
+\author{Suraj Pendyala}
+
+
+
+
+\date{\today}% It is always \today, today,
+             %  but any date may be explicitly specified
+
+\begin{abstract}
+In this paper we provide details of the proofs of Godel's First Incompleteness Theorem and Godel's Completeness Theorem.  We also explore implications of these theorems.  
+\end{abstract}
+
+%\keywords{Suggested keywords}%Use showkeys class option if keyword
+                              %display desired
+\maketitle
+
+%\tableofcontents
+
+\section{\label{Intro}Introduction}
+The history of mathematics has not always been motivated by the pursuit of rigor and absolute truth. Many mathematicians were satisfied with approximations and were not concerned with absolutes. Numerous theories, such as Newton's and Leibniz's notions of calculus, were not presented in the rigorous formulation of epsilons and deltas known today.  As the field of mathematics expanded, mathematicians realized the need for formal proofs and rigorous foundations.  Truth is a common word in modern language, and it is associated to a state which is in accordance with fact or reality. Mathematics was always assumed to come from a place of pure objectivity. This premise was never questioned and it was always assumed by some of the greatest mathematicians.  From a mathematical sense, these words have no meaning since neither fact nor reality have been defined. Mathematics required a philosophical basis to ensure commonly understood ground rules. Thus, mathematicians of the 20th century saw the need for axioms as a framework upon which statements could be proven.  David Hilbert, a German mathematician of the early 20th century, sought to ground various branches of mathematics with a finite set of axioms from which all of mathematics would follow.  Mathematicians were attempting to prove Hilbert right because this statement seems to make sense at first glance. The Austrian logician and mathematician Kurt Godel questioned that premise and believed the opposite to be the case. In 1931, Godel produced his first incompleteness theorem, a constructive proof showing that math cannot follow from a finite set of axioms, as a contradiction to Hilbert's proposal.
+
+\section{Godel's First Incompleteness Theorem}
+
+Godel's first incompleteness theorem states that in any consistent formal system with finitely many axioms, there are statements which cannot be proved nor disproved.  The proof below is based from the version of Godels first incompletness theorem by Raatkainen. \footnote{\label{note1} Raatkaienen, P., 2013: Gödel’s Incompleteness Theorems, \textit{Stanford Encyclopedia of Philosophy} 6-14,
+https://plato.stanford.edu/entries/goedel-incompleteness/#Bib }.
+
+David Hilbert wanted to have a finite set of axioms, whose proof system was complete and consistent.  Complete, in this context, mean that any statement could be proven as true or false using the underlying axioms.  Consistency, in this context, meaning that a statement could not be proven to be both true and false, or in other words, would not lead to a logical contradiction.  Many at the time desired a formal system satisfying both of these properties, but Godel proved that this was not possible.
+
+The motivation behind this proof was to allow mathematics to talk about itself, being the source of many contradictions.  One example of a contradiction arising from self-referential statements is Bertrand Russell's paradox.  He considered the set of all sets that do not contain themselves.  Sets were allowed to be arbitrarily defined, so such a definition should make sense.  However, letting K denote the set Russell defined above, the question arises, "Does K belong to this set?  If K belongs to this set, then K does not contain itself, so by definition of K, K does not belong to K.  But this yields a contradiction.  Similarly, if K does not belong to this set, then K does not contain itself, so K cannot belong to this set.  Such contradictions arise when one allows self-referential definitions.  As Godel proved, any formal system with a sufficient amount of arithmetic can be allowed to reference itself in an indirect way.  
+
+\begin{figure}[H]
+\centering
+\includegraphics{godel.png}
+\caption{Example mapping of symbols}
+\label{fig:1}
+\end{figure}
+The goal of the proof is to produce a statement which cannot be proved nor disproved.  The primary concern of Hilbert was to use such a system for many branches of mathematics, so such a system would have needed to express meaningful information regarding the natural numbers, denoted $\mathbb{N}$.  Such a system would possess a precise syntax to describe mathematical statements.  One can associate a number to each symbol in the manner described in \ref{fig:1}.  The number associated to the symbol is called the Godel number of the symbol.  The precise mapping is irrelevant for the proof, the point is that such a mapping exists and can be used to represent ideas in this formal system.  For example, to express $1 \in \mathbb{N}$, one can apply the successor function $$ s: \mathbb{N} \xrightarrow{} \mathbb{N}$$ $$ x \xrightarrow{} x + 1.$$ to 0.  Since any $k \in \mathbb{N}$ is equal to $s^{k}(0)$, any natural number can be expressed as a finite combination of the symbols in \ref{fig:1}.  Additional details need to be verified, but any statement from the formal system can be mapped to a j-tuple of  natural numbers with $j \in \mathbb{N}$.  To illustrate an example, the statement $0 + 0 = 0$ is translated to the 5-tuple $(1,3,1,5,1)$.  These tuples can be mapped into $\mathbb{N}$ by using the fact that any $k \in \mathbb{N}$ can be decomposed into its prime factors, and this decomposition is unique up to the ordering of the primes.  Let $\Gamma$ denote the set of formulas expressible in the system.  Then let $\phi: \Gamma \hookrightarrow \mathbb{N}$ be the function that first maps the formula to a $k-tuple$ in the manner above, and then map the corresponding tuple to $p_{1}^{a_1}p_2^{a_2}...p_{k}^{a_k}$.  Here $p_i$ represents the ith prime number; for example, $p_1 = 2$, $p_2 = 3$, and so on.  $a_i$ represents ith entry of the $k-tuple$.  To better illustrate this mapping, we see that $\phi(0 + 0 = 0) = 2^{1}3^{3}5^{1}7^{5}11^{1} =49916790$.  The important observation here is that $\phi$ is injective, since two positive integers are equal if and only if they have the same prime factorization.  By the definition of $\phi$, the same prime factorization corresponds to the same tuple, which corresponds to the same formula in $\Gamma$.  The important part here is that Godel has converted the problem from mathematical statements in an abstract formal system to distinct elements of $\mathbb{N}$.  For $\alpha \in \Gamma$, we shall call $\phi(\alpha)$ the Godel number associated with the formula $\alpha$.   
+
+A proof in a formal system is nothing but a finite sequence of statements, and these statements can also be assigned unique Godel numbers.  Given a sequence of formulas $\gamma_i \in \Gamma$, we can take the product of $p_i^{\phi(\gamma_i)}$ over all i values, resulting in an injective map from the set of proofs to $\mathbb{N}$.  Now proofs are uniquely identified to some natural number.  A statement about where a certain statement $\beta$ can be proved can be converted into a statement regarding the existence of a sequence of statements whose conclusion is $\beta$.  This can further be translated into a statement about the ordering of prime factors in the proofs corresponding Godel number.  Additional details need to be checked, but in short, Godel's translation mechanism described above allows for statements such as "The statement whose Godel number is $n$" can be proven to be part of the formal system and thus have their own Godel number.  The significant advantage of this translation between proofs and natural numbers is that it allows some statements to be self-referential which leads to issues regarding completeness.  
+
+To construct the statement that leads to contradiction, Godel considered the process of substituting a natural number $n$ into an existing formula.  The existing formula has Godel number $g$, and all instances of $a$ have been replaced with n, so we refer to the Godel number of this new formula by $substitute(g, a, n)$.  The notation states to take the formula with Godel number $g$, and replace all instances of of the symbol corresponding to $a$ with the symbol corresponding to Godel number $n$.  We apply this substitution technique to the statement,
+"There does not exist a proof for the statement with Godel number corresponding to $substitute(49916790, 5, 49916790)$."
+\footnote{Wolchover, N., 2020: How Gödel’s Proof Works. Accessed 5 December 2021, https://www.quantamagazine.org/how-godels-incompleteness-theorems-work-20200714/ }.  Note that this is a valid statement by the definition of $substitute$.  By the techniques described above, this statement can be mapped to a unique Godel number, call this number $n$.  By substituting $n$ into the above statement, replacing all occurrences of 49916790 with $n$, we get the statement "There does not exist a proof for the statement with Godel number $substitute(n, 5, n)$.".  This operation is valid since $n$ is some arbitrary natural number, so one can perform the substitution operation.  However, we have just taken the sentence with Godel number $n$, and replaced all occurrences of $49916790$ with $n$.  Thus the Godel number of this sentence is $substitute(n, 5, n)$, by definition of $substitute$.  We have just constructed a statement that is logically equivalent to "This statement has  no proof".  By consistency of the formal system assumed above, this statement must be either true or false.  Suppose this statement is false, then the statement does indeed have a proof which leads to contradiction since false statement cannot be proven true.  Thus, it must be true.  In other words, there does not exist a proof of a true statement.  Therefore, if consistency holds in the formal system, then completeness cannot hold.   
+
+\subsection{Implications of Incompleteness}
+
+One of Hilbert's primary goals for mathematics was to derive a set of axioms which would give a proof for any true statement in mathematics.  Godel shows that this quest for an all-encompassing list of axioms has no hope in a formal system which is consistent.  Godel's first incompleteness theorem directly constructs a mathematical statement for which there does not exist a proof.  Many mathematicians at the time argued that such statements which cannot be proven could be made into axioms.  In this new system of axioms, clearly the Godel statement would have a proof since its proof would be the newly added axiom.  However, even if the statement Godel constructed in the proof above were made into an axiom, the same construction Godel performed could be repeated to form another statement which cannot be proven.  Therefore, no matter how many axioms are added to mathematics, there will always statements which cannot be proven in a consistent formal system.   
+
+At the time, mathematicians hoped that such statements would only be self-referential statements that did not interact with modern areas of mathematics in which research was being done. However, concrete examples of true statements without proof do exist, other than those constructed in the proof of Godel's incompleteness theorem.  One of these examples is the Paris-Harrington theorem.  The Paris-Harrington theorem concerns the provability of finite Ramsey theory.  Ramsey theory pertains to the different colorings obtainable on finite subset of the natural numbers, commonly referred to as finite Ramsey theory.  Paris and Harrington were able to show that while the theorem was provable in Zermelo-Fraenkel set theory, such a proof cannot exist in Peano arithmetic.  These claims were exhibited and proved in a paper by Paris and Harrington in 1977 \footnote{Paris, J., Harrington, L., 1977: A Mathematical Incompletneness in Peano Arithmetic, \textit{in Handbook for Mathematical Logic} Amsterdam, Netherlands: North-Holland}.  If such a proof did exist, then it would imply the consistency of Peano arithmetic.  One of the consequences of Godels first incompleteness theorem is Godel's second incompleteness theorem which states that
+if a formal system is consistent and can carry out the arithmetic of the natural numbers, then this formal system cannot prove its own consistency.
+Godel's second incompleteness theorem implies that the consistency of Peano arithmetic cannot be proved within Peano arithmetic.  Thus, finite Ramsey theory cannot be proved within Peano arithmetic.  Such a proof does exist once one expands to the larger axiom space of Zermelo-Fraenkel set theory, so the theorem does hold.  Peano arithmetic is built upon simple axioms for how natural numbers should behave, while Zermelo-Fraenkel set theory concerns how one can rigorously define and manipulate mathematical sets.  This is a concrete instance of Godel's incompleteness theorems impacting research-level mathematics.  
+
+Although Godel's incompleteness theorems put limits on proofs for math, the idea of having an unprovable statement can be useful in determining whether a theorem is true or false.  For example, the Riemann Hypothesis claims that there are no non-trivial zeroes of the Riemann zeta function outside of a certain strip of the complex plane.  If one could prove that there does not exist a proof that confirms nor refutes the Riemann Hypothesis, then this would prove that the Riemann Hypothesis is true.  Suppose for sake of contradiction that the Riemann Hypothesis were false.  In that case, there does exist a non-trivial zero of the Riemann zeta function.  But in this case, finding the non-trivial zero would constitute as a proof, contradicting the claim that the Riemann Hypothesis does not have a proof.  Therefore, showing that a statement does not have a proof can give insight into the claims of the statement itself.  
+
+\subsection{Systems with Completeness or Incompleteness}
+
+Given the implications of Godel's Incompleteness Theorem, it is natural to consider which axiom systems satisfy certain properties such as completeness and consistency.  Basic arithmetic is core to human history, and people had been using arithmetic prior to any axiomization of this basic concept.  During the 19th century, the Italian mathematician Giuseppe Peano devised the following axioms for addition and multiplication on $\mathbb{N}$:
+\begin{itemize}
+    \item $0 \in \mathbb{N}$
+    \item $\forall x \in \mathbb{N}$, $S(x) \in \mathbb{N}$
+    \item $x = y$ if and only if $S(x) = S(y)$
+    \item There does not exist $x \in \mathbb{N}$ such that $S(x) = 0$
+    \item $\forall K \subset \mathbb{N}$, ($0 \in K \land (((x \in K) \implies (S(x) \in K))) \implies K = \mathbb{N}$
+\end{itemize}
+    Here $S(x)$ denotes the successor function described above acting on $x$.  This gives the inductive structure of the natural numbers that one is accustomed to.  There is also the usual additive structure which is formalized through the definition of a binary operation $+ : \mathbb{N} \cross \mathbb{N} \rightarrow \mathbb{N}$ satisfying 
+    \begin{itemize}
+        \item $\forall x \in \mathbb{N}$,  $x + 0 = x$
+        \item $\forall x,y \in \mathbb{N}$,  $x + S(y) = S(x+y)$
+    \end{itemize}
+    Finally, Peano specifies the multiplicative structure by defining a binary operation $\times : \mathbb{N} \cross \mathbb{N} \rightarrow \mathbb{N}$ satisfying 
+    \begin{itemize}
+        \item $\forall x \in \mathbb{N}$, $ x \times 0 = 0$
+        \item $\forall x,y \in \mathbb{N}$,  $x \times S(y) = x + (x \times y)$.  
+    \end{itemize}
+    
+    Some details need to be checked, but these axioms give the natural numbers the intuitive structure one would expect, and their formal system is referred to as Peano arithmetic.  This definition of multiplication yields the concept of divisibility and irreducibility, so the concept of prime numbers follows.  From Godel's first incompleteness theorem, one sees that Peano arithmetic is incomplete.  Furthermore, Godel's second incompleteness theorem shows that the consistency of Peano arithmetic cannot be proved within itself.  One cannot add more axioms to the formal system to amend this incomplete formal system.  However, one can instead pose the question whether certain axioms can be removed from the formal system to satisfy some of the properties Hilbert deemed desirable.  This is indeed doable, as there is a formal system known as Presburger arithmetic.  Presburger arithmetic is a weakened form of Peano arithmetic, in which only the additive structure of the natural numbers is axiomized.  In other words, there does not exist a notion of multiplication.  Presburger arithmetic has been proven to be consistent and complete; therefore, Godel's first incompleteness theorem does not apply to Presburger arithmetic.  The reason why is because the notion of being prime does not apply to the structure of the natural numbers under the Presburger arithmetic system.  The defining property of prime numbers that is used in Godel's first incompleteness theorem is the fact that any natural number can be uniquely written as a product of primes.  This is a property of Unique Factorization Domains, a specific type of ring; the natural numbers under addition are a monoid rather than a ring.  
+    
+    
+
+\section{Godel's Completeness Theorem}
+
+Godel's completeness theorem states that if a formula in first-order logic is valid, then there is a formal proof of the formula.  The proof below is based off Raatkaienen's version of the theorem [1]    
+
+Godel's completeness theorem predates Godel's incompleteness theorems by several years.  Similar to the setting in Godel's first incompleteness theorem, a formal proof is a finite sequence of statements whose conclusion is the formula in question.  
+
+\textit{Proof}:
+
+The key element of first-order logic is that it involves statements with quantifiers, specifically the existential and universal quantifiers.  A first-order logic formula can be converted into "normal" form where all the quantifiers appear at the beginning of the formula, in alternating blocks of universal quantifiers and existential quantifiers.  Thus, it suffices to prove the desired statement for formulas in normal form.  Moreover, Godel considered the degree of the normal formula to be the number of alternating universal quantifier, existential quantifier blocks.  As an example, the formula
+$$\eta = \forall x_1 \exists x_2 \gamma(x_1,x_2)$$
+is of degree one since there is only one block of universal quantifiers followed by existential quantifiers.  Furthermore, Godel was able to show that the completeness theorem could be proved by induction on the degree of the formula in normal form.  Since the completeness theorem holds for formulas of degree $k+1$ if it holds for formulas of degree $k$, it suffices to prove the completeness theorem for formulas of degree 1.  For convenience of notation, we use the example above in the proof, the same logic carries through for an arbitrary quantifier block and an arbitrary evaluation of the parameters.  In the example above, the propositional function $\gamma$ takes in as input a 2-tuple whose entries are constrained by the quantifier block.  Godel was able to define a total order on the set of all such tuples such that the set of all such tuples was well-ordered.  Therefore, we can enumerate through all such tuples and their evaluations as parameters to $\gamma$. Let $\beta$ denote the set of all such tuples.  By well-ordering of $\beta$, Godel proceeds to define $\eta_1 := \gamma(\beta_1)$, $\eta_2 := \gamma(\beta_1)  \land \gamma(\beta_2)$, $\eta_3 := \gamma(\beta_1)  \land \gamma(\beta_2) \land \gamma(\beta_3)$ where $\beta_i$ is the $ith$ smallest element of $\beta$.  Define $\eta_i$ in a similar manner, following the above pattern.  Each $\eta_i$ has no quantifiers; thus from results in propositional logic, each $\eta_i$ is either satisfiable or unsatisfiable.  There are 2 cases to consider:
+
+Case 1:
+$\eta_i$ is unsatisfiable for some $i$.  Then by the known completeness theorem from propositional logic, there exists a proof for $\neg \eta_i$.  This implies that there exists a proof for $\neg \eta$.  
+
+Case 2:
+$\eta_i$ is satisfiable for each $i$.  For each $\eta_i$, there is a model where $\eta_i$ is true.  By the construction of each $\eta_i$, the model corresponding to a true evaluation of $\eta_l$ is a submodel of the model corresponding to $\eta_{l+1}$.  Godel then constructed a directed graph, with each node  representing a model and edges representing the model-submodel relationship described above.  The resulting graph is a tree with infinitely many nodes but finitely many branches.  By Konig's Lemma, there is an infinite, ascending chain of nodes on a single branch.  Taking the union of the models corresponding to these nodes results in a model which satisfies $\eta$.  By work from propositional logic, there then exists a proof for $\eta$, as desired.   
+
+\subsection{Application of Godel's Completeness Theorem}
+
+Godel's completeness theorem has several interesting results.  The applications discussed are based from work from Call, B \footnote{Call, B., 2013: The Compactness Theorem and Applications, 4-6, https://math.uchicago.edu/~may/REU2013 /REUPapers/Call.pdf}.  Godel's completeness theorem can be restated in the following, more useful manner:
+
+Given a set of formulas $\Sigma$, if $\Sigma$ is consistent, then it has a model.
+
+From this rephrasing of Godel's completeness theorem, we obtain a proof of the compactness theorem:
+
+Let $\Sigma$ denote a set of sentences.  $\Sigma$ has a model if and only if there exists a model for every finite subset of $\Sigma$.  
+
+Given a model for $\Sigma$, that same model suffices for every finite subset of $\Sigma$, so the forward direction is immediate.  To obtain the converse, we strive for contradiction.  Assume for sake of contradiction that every finite subset of $\Sigma$ has a model, but $\Sigma$ does not have a model.  By taking the contrapositive of the restatement of Godel's completeness theorem, we obtain the statement, 
+
+"If $\Sigma$ does not have a model, then $\Sigma$ is inconsistent".
+
+Thus we have that $\Sigma$ is inconsistent.  By negating the definition of consistency, there must exist a formula $\gamma$ such that $\Sigma \vdash \gamma$ and $\Sigma \vdash \neg \gamma$. By definition of $\vdash$, there must exist a finite subset of $\Sigma$ whose logical conclusion is $\gamma$, and by symmetry, a finite subset of $\Sigma$ whose logical conclusion is $\neg \gamma$.  Call the respective subsets $\Sigma'$ and $\Sigma''$.  Then $\Sigma' \cup \Sigma''$ is a subset of $\Sigma$.  The union of 2 finite subsets is finite.  Since $\Sigma' \vdash \gamma$, $\Sigma' \cup \Sigma'' \vdash \gamma$ since the same statements present in $\Sigma'$ are present in $\Sigma' \cup \Sigma''$.  By parallel logic, $\Sigma' \cup \Sigma'' \vdash \neg \gamma$.  Thus we have a finite subset of $\Sigma$ which is inconsistent, which is a contradiction.  The desired implication now holds.  
+
+From the compactness theorem, and by extension from Godel's completeness theorem, one obtains several interesting consequences outside of the field of logic.  One such application is the existence of an ordered field $\mathbb{K}$ such that $\mathbb{K}$ does not have the Archimedean Property.  A field consists of a set $\mathbb{K}$ with 2 binary operations, addition and multiplication, whose elements satisfy the following properties:
+
+\begin{itemize}
+    \item $\forall a,b,c \in \mathbb{K}$, $(a+b)+c = a+(b+c)$
+    \item $\exists 0 \in \mathbb{K}:\forall a \in \mathbb{K}$, $a + 0 = 0 + a = a$
+    \item $\forall a \in \mathbb{K}$, $a + (-a) = (-a) + a = 0$
+    \item $\forall a,b \in \mathbb{K}$, $a + b = b + a$
+    \item $\forall a,b,c \in \mathbb{K}$, $(ab)c = a(bc)$
+    \item $\exists 1 \in \mathbb{K}:\forall a \in \mathbb{K}$, $1(a) = a(1) = a$
+    \item $\forall a,b,c \in \mathbb{K}$, $a(b+c) = ab + ac$
+    \item $\forall a,b \in \mathbb{K}$, $ab = ba$
+    \item $\forall a \in \mathbb{K} - \{0\}$, $\exists a^{-1} \in \mathbb{K}: aa^{-1} = 1$
+    
+\end{itemize}
+Thus an ordered field satisfies these rules above, and also has a total order on the underlying set $\mathbb{K}$.  A simple example of an ordered field is the real numbers, $\R$ with the usual less than or equal to relation.  An ordered field $\mathbb{F}$ is said to satisfy the Archimedean Property if and only if for any $a,b \in \mathbb{F}, \exists n \in \mathbb{N}$ such that $na \geq b$.  To construct the field $\mathbb{K}$ described above, we first consider $\Omega$ to be the set of all sentences that hold in the real numbers.  Let $\alpha$ be a symbol that is neither the additive identity nor the multiplicative identity.  Define $\Sigma$ as 
+$\Sigma := \Omega \cup \{0 < \alpha\ \cup \{1 \leq \alpha\} \cup \{2 \leq \alpha\} \cup ...$.  These constraints ensure that $\alpha$ is greater than the nth sum of the multiplicative identity for every $n \in \mathbb{N}$, so if we can satisfy these constraints, then the Archimedean Property does not hold.  It remains to prove that a model exists for $\Sigma$.  Consider any finite subset of $\Sigma$ and call it $\Sigma'$.  If we can show that $\Sigma'$ has a model, then by the compactness theorem, $\Sigma$ has a model.  The model $\Sigma' \cap \Omega$ has a model since this model is a subset of $\Omega$, and the real numbers serves as a model for $\Omega$.  Given any sentence $\gamma \in \Sigma' - \Omega$, $\gamma$ must be once of the sentences of the form $\{n \leq \alpha\}$ for some $n \in \mathbb{N}$.  $\gamma$ does not interact with the existing structure of $\Omega$, so $\gamma$ can be added and there will exist a model satisfying the original sentences in addition to $\gamma$.  By repeating this procedure for each $\gamma$, one obtains a model for $\Sigma'$.  We have shown that an arbitrary finite subset of $\Sigma$ has a model, thus $\Sigma$ must also have a model by the compactness theorem.  The existence of the model gives a field which does not satisfy the Archimedean Property, so the proof is complete. 
+This consequence is certainly unintuitive since the most familiar ordered field, the real numbers, does not have this property.  Through repeated addition of $1$, the multiplicative identity of the field, one will not obtain an element that is greater than $\alpha$. 
+\section{Conclusion}
+In conclusion, Godel's first incompleteness theorem revolutionized the way that mathematicians think about mathematics; there will always be a gap between what is true and what we can prove in a meaningful axiomatic system.  It put a dent in the goal of those in Hilbert's school of thought, who imagined an all powerful mathematics which had a solid foundation.  Godel's completeness theorem, on the other hand, gives a statement asserting the strength of first-order logic, which was to be expected.  It was unexpected that such a result in logic would have implications in other branches of mathematics, such as algebra.  Although the field of logic is seemingly disconnected from much of mathematics, it provides interesting links between what appear to be disjoint disciplines, and is thus worthwhile to pursue.  
+
+%It essentially generalizes the First Incompleteness Theorem because it involves the consistency of the system. Godel's great work led to Tarski's undefinability theorem and Turing's proof that there exists no algorithm for the halting problem in computing. This is a completely new topic, probably not the best thing to put in a conclusion.  
+
+
+
+
+
+
+% The \nocite command causes all entries in a bibliography to be printed out
+% whether or not they are actually referenced in the text. This is appropriate
+% for the sample file to show the different styles of references, but authors
+% most likely will not want to use it.
+%\nocite{*}
+
+%\bibliography{apssamp}% Produces the bibliography via BibTeX.
+
+\end{document}
+%
+% ****** End of file apssamp.tex ******
