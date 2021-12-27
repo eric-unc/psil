@@ -1,4 +1,4 @@
-use crate::{check_arity_at_least, check_arity_between, check_arity_is, fail_on_bad_type, get_list};
+use crate::{check_arity_at_least, check_arity_between, check_arity_is, fail_on_bad_type, get_integer, get_list, get_natural_number, get_proc};
 use crate::environment::Environment;
 use crate::eval::eval_proc_with_rands;
 use crate::val::{Val, ValList, void};
@@ -32,10 +32,7 @@ macro_rules! check_bounds {
 fn is_list(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("is-list?", 1, rands);
 
-	Ok(match rands[0] {
-		List(_) => Boolean(true),
-		_ => Boolean(false)
-	})
+	Ok(Boolean(matches!(rands[0], List(_))))
 }
 
 fn list(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
@@ -60,15 +57,8 @@ fn list_append(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 fn list_each(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("list-each", 2, rands);
 
-	let list = match &rands[0] {
-		List(l) => l,
-		_ => fail_on_bad_type!("list-each", "list", rands)
-	};
-
-	let proc = match &rands[1] {
-		ProcedureV(p) => p,
-		_ => fail_on_bad_type!("list-map", "proc", rands)
-	};
+	let list = get_list!("list-each", rands, 0);
+	let proc = get_proc!("list-each", rands, 1);
 
 	for item in list {
 		eval_proc_with_rands(proc.clone(), vec![item.clone()], "anonymous".to_string(), env)?;
@@ -80,10 +70,7 @@ fn list_each(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 fn list_empty(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("list-empty?", 1, rands);
 
-	let list = match &rands[0] {
-		List(l) => l,
-		_ => fail_on_bad_type!("list-empty?", "list", rands)
-	};
+	let list = get_list!("list-empty?", rands, 0);
 
 	Ok(Boolean(list.is_empty()))
 }
@@ -91,15 +78,8 @@ fn list_empty(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 fn list_filter(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("list-filter", 2, rands);
 
-	let list = match &rands[0] {
-		List(l) => l,
-		_ => fail_on_bad_type!("list-filter", "list", rands)
-	};
-
-	let proc = match &rands[1] {
-		ProcedureV(p) => p,
-		_ => fail_on_bad_type!("list-filter", "proc", rands)
-	};
+	let list = get_list!("list-filter", rands, 0);
+	let proc = get_proc!("list-filter", rands, 1);
 
 	let mut new_list = vec![];
 
@@ -118,15 +98,8 @@ fn list_filter(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 fn list_get(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("list-get", 2, rands);
 
-	let list = match &rands[0] {
-		List(l) => l,
-		_ => fail_on_bad_type!("list-get", "list", rands)
-	};
-
-	let index = match &rands[1] {
-		Number(n) => *n as usize,
-		_ => fail_on_bad_type!("list-get", "number", rands)
-	};
+	let list = get_list!("list-get", rands, 0);
+	let index = get_natural_number!("list-get", rands, 1) as usize;
 
 	check_bounds!(index, list);
 
@@ -136,18 +109,12 @@ fn list_get(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 fn list_join(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_at_least!("list-join", 2, rands);
 
-	let list = match &rands[0] {
-		List(l) => l,
-		_ => fail_on_bad_type!("list-join", "list", rands)
-	};
+	let list = get_list!("list-join", rands, 0);
 
 	let mut new_list = list.clone();
 
 	for i in 1..rands.len() {
-		let list = match &rands[i] {
-			List(l) => l,
-			_ => fail_on_bad_type!("list-join", "list", rands)
-		};
+		let list = get_list!("list-join", rands, i);
 
 		for i in 0..list.len() {
 			new_list.push(list[i].clone());
@@ -161,24 +128,15 @@ fn list_join(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 fn list_len(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("list-len", 1, rands);
 
-	match &rands[0] {
-		List(l) => Ok(Number(l.len() as f64)),
-		_ => fail_on_bad_type!("list_len", "number", rands)
-	}
+	let list = get_list!("list-len", rands, 0);
+	Ok(Number(list.len() as f64))
 }
 
 fn list_map(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("list-map", 2, rands);
 
-	let list = match &rands[0] {
-		List(l) => l,
-		_ => fail_on_bad_type!("list-map", "list", rands)
-	};
-
-	let proc = match &rands[1] {
-		ProcedureV(p) => p,
-		_ => fail_on_bad_type!("list-map", "proc", rands)
-	};
+	let list = get_list!("list-map", rands, 0);
+	let proc = get_proc!("list-map", rands, 1);
 
 	let mut new_list = vec![];
 
@@ -192,29 +150,13 @@ fn list_map(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 fn list_range(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_between!("list-range", 2, 3, rands);
 
-	let n1 = match rands[0] {
-		Number(n) => n,
-		_ => fail_on_bad_type!("list-range", "number", rands)
-	} as u64;
-
-	let n2 = match rands[1] {
-		Number(n) => n,
-		_ => fail_on_bad_type!("list-range", "number", rands)
-	} as u64;
-
-	// TODO: some kind of integer checks
+	let n1 = get_integer!("list-range", rands, 0);
+	let n2 = get_integer!("list-range", rands, 1);
 
 	if rands.len() == 2 {
 		if n2 < n1 {
 			return Err("First number is bigger than second!".to_string());
 		}
-
-
-		/*if n1 % 1 != 0 || n2 % 1 != 0 {
-			return Err("Arg is not an integer!".to_string());
-		}*/
-
-		//let (n1, n2) = (n1 as u64, n2 as u64);
 
 		let mut ret = ValList::with_capacity((n2 - n1) as usize);
 		for i in n1..=n2 {
@@ -223,10 +165,7 @@ fn list_range(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 
 		Ok(List(ret))
 	} else { // 3
-		let step = match rands[2] {
-			Number(n) => n,
-			_ => fail_on_bad_type!("list-range", "number", rands)
-		} as u64;
+		let step = get_integer!("list-range", rands, 2);
 
 		let mut ret = ValList::with_capacity(((n2 - n1) / step) as usize);
 		for i in (n1..=n2).step_by(step as usize) {
@@ -240,15 +179,8 @@ fn list_range(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 fn list_remove(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("list-remove", 2, rands);
 
-	let list = match &rands[0] {
-		List(l) => l,
-		_ => fail_on_bad_type!("list-remove", "list", rands)
-	};
-
-	let index = match &rands[1] {
-		Number(n) => *n as usize,
-		_ => fail_on_bad_type!("list-remove", "number", rands)
-	};
+	let list = get_list!("list-remove", rands, 0);
+	let index = get_natural_number!("list-remove", rands, 1) as usize;
 
 	check_bounds!(index, list);
 
@@ -260,33 +192,19 @@ fn list_remove(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 fn list_reverse(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("list-reverse", 1, rands);
 
-	match &rands[0] {
-		List(l) => Ok({
-			let mut new_list = l.clone();
-			new_list.reverse();
-			List(new_list)
-		}),
-		_ => fail_on_bad_type!("list-reverse", "list", rands)
-	}
+	let list = get_list!("list-reverse", rands, 0);
+
+	let mut new_list = list.clone();
+	new_list.reverse();
+	Ok(List(new_list))
 }
 
 fn list_swap(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("list-swap", 3, rands);
 
-	let list = match &rands[0] {
-		List(l) => l,
-		_ => fail_on_bad_type!("list-swap", "list", rands)
-	};
-
-	let index1 = match &rands[1] {
-		Number(n) => *n as usize,
-		_ => fail_on_bad_type!("list-swap", "number", rands)
-	};
-
-	let index2 = match &rands[2] {
-		Number(n) => *n as usize,
-		_ => fail_on_bad_type!("list-swap", "number", rands)
-	};
+	let list = get_list!("list-swap", rands, 0);
+	let index1 = get_natural_number!("list-swap", rands, 1) as usize;
+	let index2 = get_natural_number!("list-swap", rands, 2) as usize;
 
 	check_bounds!(index1, list);
 	check_bounds!(index2, list);

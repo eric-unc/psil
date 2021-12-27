@@ -119,8 +119,5 @@ fn remainder(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 fn is_num(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("is-num?", 1, rands);
 
-	match rands[0] {
-		Number(_) => Ok(Boolean(true)),
-		_ => Ok(Boolean(false))
-	}
+	Ok(Boolean(matches!(rands[0], Number(_))))
 }

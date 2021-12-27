@@ -10,8 +10,5 @@ pub fn add_procedure_procs(env: &mut Environment) {
 fn is_proc(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("is-proc?", 1, rands);
 
-	match rands[0] {
-		ProcedureV(_) => Ok(Boolean(true)),
-		_ => Ok(Boolean(false))
-	}
+	Ok(Boolean(matches!(rands[0], ProcedureV(_))))
 }

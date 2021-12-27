@@ -3,7 +3,7 @@ use std::io;
 use crate::{check_arity_at_least, check_arity_is};
 use crate::environment::Environment;
 use crate::val::{Val, ValList, void};
-use crate::val::Val::StringV as StringVal;
+use crate::val::Val::StringV;
 
 pub fn add_io_procs(env: &mut Environment) {
 	env.add_proc("print".to_string(), print);
@@ -49,5 +49,5 @@ fn input(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	io::stdin().read_line(&mut line).unwrap();
 	line = line.trim().to_string();
 
-	Ok(StringVal(line))
+	Ok(StringV(line))
 }

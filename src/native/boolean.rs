@@ -1,4 +1,4 @@
-use crate::{check_arity_at_least, check_arity_is, fail_on_bad_type};
+use crate::{check_arity_at_least, check_arity_is, fail_on_bad_type, get_boolean};
 use crate::environment::Environment;
 use crate::val::{Val, ValList};
 use crate::val::Val::{Boolean, Number};
@@ -18,10 +18,8 @@ pub fn add_boolean_procs(env: &mut Environment) {
 fn not(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("not", 1, rands);
 
-	match rands[0] {
-		Boolean(b) => Ok(Boolean(!b)),
-		_ => fail_on_bad_type!("not", "boolean", rands)
-	}
+	let bool = get_boolean!("not", rands, 0);
+	Ok(Boolean(!bool))
 }
 
 fn xor(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
@@ -147,8 +145,5 @@ fn lte(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 fn is_bool(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("is-bool?", 1, rands);
 
-	match rands[0] {
-		Boolean(_) => Ok(Boolean(true)),
-		_ => Ok(Boolean(false))
-	}
+	Ok(Boolean(matches!(rands[0], Boolean(_))))
 }

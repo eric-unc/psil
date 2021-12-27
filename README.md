@@ -48,7 +48,7 @@ Yay, sin(0) is 0!
 ### Types
 | Type | Description |
 | :------ | :------ |
-| number | Numbers are float-point values, such as `3`, `-55`, `0.55`. |
+| number | Numbers are float-point values, such as `3`, `-55`, `0.55`. Numbers can be "integer" or "natural number" subtypes. |
 | boolean | Booleans are truth values, which can either be `true` or `false`. |
 | string | Strings are a series of characters, like `"Ahhh!"` or `"545"`. |
 | symbol | Symbols are similar to strings, but more for internal use as human-readable identifiers. They can be used like enums, like `#north`, `#south`, `#east`, `#west`. One important symbol is `#void`, a singleton returned from functions that don't return anything interesting. |
@@ -66,7 +66,7 @@ This lists all procedures built into the standard library. Special forms are mar
 | `define`* | name, any | `#void` | Creates a binding with the name given in the current scope. |
 | `do`* | any+ | `#void` | Executes each invocation given. |
 | `fail` | string? | `#void` | Generates an error, with an optional error message. In REPL mode, Psil will just output the error message to standard error, and continue to accept input, while in load mode, Psil will terminate execution of the given script after the error message is printed. |
-| `exit` | number? | N/A | Exits the program with an status code (without a rand, the status code is `0`). |
+| `exit` | integer? | N/A | Exits the program with an status code (without a rand, the status code is `0`). |
 | `type` | any | symbol | Returns the type of the given rand. |
 
 #### Input/output
@@ -85,14 +85,14 @@ This lists all procedures built into the standard library. Special forms are mar
 | `str-cat` | any{2,} | string | Concatenates each rand. If a rand is not a string, it will be converted into one. |
 | `str-contains?` | string{2} | boolean | Checks if the second rand is contained in the first rand. |
 | `str-empty?` | string | boolean | Checks if the string is the empty string (`""`). |
-| `str-insert` | string, number, string | string | Inserts the second rand into the first at the given index. |
-| `str-len` | string | number | Returns the length of the string. |
+| `str-insert` | string, natural number, string | string | Inserts the second rand into the first at the given index. |
+| `str-len` | string | natural number | Returns the length of the string. |
 | `str-low` | string | string | Returns the lowercase version of the given string. |
-| `str-repeat` | string, number | string | Returns the string repeated as many times the second rand is. |
+| `str-repeat` | string, natural number | string | Returns the string repeated as many times the second rand is. |
 | `str-replace` | string{3} | string | Returns the first string with all instances of the second rand (the "old text") replaced by the third rand (the "new text"). |
 | `str-starts-with?` | string{2} | boolean | Checks if the first rand starts with the second rand. |
 | `str-strip` | string | string | Removes leading/trailing whitespace from the given string. |
-| `str-trunc` | string, number | string | Shortens the given string to the length of the second rand. |
+| `str-trunc` | string, natural number | string | Shortens the given string to the length of the second rand. |
 | `str-up` | string | string | Returns the uppercase version of the given string. |
 
 #### Math
@@ -142,14 +142,14 @@ This lists all procedures built into the standard library. Special forms are mar
 | `list-each` | list, proc | list | Applies the value to the given procedure. Effectively the same as `list-map`, but ignores return values. |
 | `list-empty?` | list | boolean | Returns true is list is empty. |
 | `list-filter` | list, proc | list | Returns a new list filtered by the given procedure (which must return a boolean). |
-| `list-get` | list, number | any | Gets an element from the list at a specific index. |
+| `list-get` | list, natural number | any | Gets an element from the list at a specific index. |
 | `list-join` | list, list+ | list | Combines two (or more) lists into one. |
-| `list-len` | list | number | Returns the length of the list. |
+| `list-len` | list | natural number | Returns the length of the list. |
 | `list-map` | list, proc | list | Returns a new list with values transformed by the given procedure. |
-| `list-range` | number{2,3} | list | Creates a list of numbers from a given range, with an optional step-size. |
-| `list-remove` | list, number | list | Removes an element from the list at a specific index. |
+| `list-range` | integer{2,3} | list | Creates a list of numbers from a given range, with an optional step-size. |
+| `list-remove` | list, natural number | list | Removes an element from the list at a specific index. |
 | `list-reverse` | list | list | Returns a reversed list. |
-| `list-swap` | list, number, number | Swaps two elements in the list. |
+| `list-swap` | list, natural number, natural number | Swaps two elements in the list. |
 
 ## Technologies used
 * [Rust](https://github.com/rust-lang/rust)
