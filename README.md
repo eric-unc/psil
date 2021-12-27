@@ -136,15 +136,20 @@ This lists all procedures built into the standard library. Special forms are mar
 #### List
 | Name | Rands | Returns | Description |
 | :------ | :------ | :------ | :------ |
+| `is-list?` | any | boolean | Checks if the rand is a list. |
 | `list` | any* | list | Creates a list from the given rands. |
 | `list-append` | list, any+ | list | Returns a list with given rands appended |
 | `list-each` | list, proc | list | Applies the value to the given procedure. Effectively the same as `list-map`, but ignores return values. |
+| `list-empty?` | list | boolean | Returns true is list is empty. |
 | `list-filter` | list, proc | list | Returns a new list filtered by the given procedure (which must return a boolean). |
 | `list-get` | list, number | any | Gets an element from the list at a specific index. |
+| `list-join` | list, list+ | list | Combines two (or more) lists into one. |
 | `list-len` | list | number | Returns the length of the list. |
 | `list-map` | list, proc | list | Returns a new list with values transformed by the given procedure. |
 | `list-range` | number{2,3} | list | Creates a list of numbers from a given range, with an optional step-size. |
-| `list-reverse` | list | list | Returns a reversed the list. |
+| `list-remove` | list, number | list | Removes an element from the list at a specific index. |
+| `list-reverse` | list | list | Returns a reversed list. |
+| `list-swap` | list, number, number | Swaps two elements in the list. |
 
 ## Technologies used
 * [Rust](https://github.com/rust-lang/rust)

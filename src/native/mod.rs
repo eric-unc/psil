@@ -69,3 +69,13 @@ macro_rules! fail_on_bad_type {
 		return Err(format!("Native proc '{}' expected a {}!", $proc_name, $expected_type))
 	}
 }
+
+#[macro_export]
+macro_rules! get_list {
+	( $proc_name:literal, $rands:expr, $index:literal ) => {
+		match &$rands[$index] {
+			List(l) => l,
+			_ => fail_on_bad_type!($proc_name, "list", $rands)
+		}
+	}
+}
