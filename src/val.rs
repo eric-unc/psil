@@ -1,6 +1,7 @@
-use std::fmt::{Display, Formatter, Result as ResultFmt};
+use std::fmt::{Debug, Display, Formatter, Result as ResultFmt};
 
 use crate::ast::{LambdaAst, SpecialForms};
+use crate::Environment;
 
 #[derive(Clone, Debug)]
 pub enum Val {
@@ -8,7 +9,7 @@ pub enum Val {
 	Boolean(bool),
 	StringV(String),
 	Symbol(String),
-	Procedure(ProcedureType),
+	ProcedureV(Procedure),
 	List(ValList)
 }
 use Val::*;
@@ -22,7 +23,7 @@ impl Val {
 			Boolean(_) => "boolean",
 			StringV(_) => "string",
 			Symbol(_) => "symbol",
-			Procedure(_) => "procedure",
+			ProcedureV(_) => "procedure",
 			List(_) => "list"
 		}
 	}
@@ -39,7 +40,7 @@ impl Display for Val {
 				ret.push_str(s);
 				ret
 			}
-			Procedure(_) => "<procedure>".to_string(), // TODO: https://github.com/eric-unc/psil/issues/3
+			ProcedureV(_) => "<procedure>".to_string(), // TODO: https://github.com/eric-unc/psil/issues/3
 			List(l) => {
 				let mut ret = String::from("(list");
 
@@ -68,14 +69,24 @@ impl PartialEq for Val {
 	}
 }
 
-#[derive(Clone, Debug)]
-pub enum ProcedureType {
+#[derive(Clone)]
+pub enum Procedure {
 	Native(NativeProcedure),
 	Pure(LambdaAst),
 	SpecialForm(SpecialForms)
 }
 
-pub type NativeProcedure = fn(ValList) -> Result<Val, String>;
+pub type NativeProcedure = fn(ValList, &mut Environment) -> Result<Val, String>;
+
+impl Debug for Procedure {
+	fn fmt(&self, f: &mut Formatter<'_>) -> ResultFmt {
+		write!(f, "{}", match self {
+			Procedure::Native(_) => "<native procedure>",
+			Procedure::Pure(_) => "<pure procedure>",
+			Procedure::SpecialForm(_) => "<special form>"
+		})
+	}
+}
 
 pub fn void() -> Val {
 	Symbol("void".to_string())

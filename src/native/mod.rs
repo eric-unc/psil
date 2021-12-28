@@ -69,3 +69,95 @@ macro_rules! fail_on_bad_type {
 		return Err(format!("Native proc '{}' expected a {}!", $proc_name, $expected_type))
 	}
 }
+
+#[macro_export]
+macro_rules! get_number {
+	( $proc_name:literal, $rands:expr, $index:expr ) => {
+		match &$rands[$index] {
+			Number(n) => *n,
+			_ => fail_on_bad_type!($proc_name, "number", $rands)
+		}
+	}
+}
+
+#[macro_export]
+macro_rules! get_integer {
+	( $proc_name:literal, $rands:expr, $index:expr ) => {
+		match &$rands[$index] {
+			Number(n) => {
+				if *n % 1.0 != 0.0 {
+					return Err(format!("Proc '{}' expected an integer!", $proc_name));
+				} else {
+					*n as i64
+				}
+			}
+			_ => fail_on_bad_type!($proc_name, "number", $rands)
+		}
+	}
+}
+
+#[macro_export]
+macro_rules! get_natural_number {
+	( $proc_name:literal, $rands:expr, $index:expr ) => {
+		match &$rands[$index] {
+			Number(n) => {
+				if *n < 0.0 || *n % 1.0 != 0.0 {
+					return Err(format!("Proc '{}' expected a natural number!", $proc_name));
+				} else {
+					*n as u64
+				}
+			}
+			_ => fail_on_bad_type!($proc_name, "number", $rands)
+		}
+	}
+}
+
+#[macro_export]
+macro_rules! get_boolean {
+	( $proc_name:literal, $rands:expr, $index:expr ) => {
+		match &$rands[$index] {
+			Boolean(b) => b,
+			_ => fail_on_bad_type!($proc_name, "boolean", $rands)
+		}
+	}
+}
+
+#[macro_export]
+macro_rules! get_string {
+	( $proc_name:literal, $rands:expr, $index:expr ) => {
+		match &$rands[$index] {
+			StringV(s) => s,
+			_ => fail_on_bad_type!($proc_name, "string", $rands)
+		}
+	}
+}
+
+#[macro_export]
+macro_rules! get_symbol {
+	( $proc_name:literal, $rands:expr, $index:expr ) => {
+		match &$rands[$index] {
+			Symbol(s) => s,
+			_ => fail_on_bad_type!($proc_name, "symbol", $rands)
+		}
+	}
+}
+
+#[macro_export]
+macro_rules! get_proc {
+	( $proc_name:literal, $rands:expr, $index:expr ) => {
+		match &$rands[$index] {
+			ProcedureV(p) => p,
+			_ => fail_on_bad_type!($proc_name, "procedure", $rands)
+		}
+	}
+}
+
+#[macro_export]
+macro_rules! get_list {
+	( $proc_name:literal, $rands:expr, $index:expr ) => {
+		match &$rands[$index] {
+			List(l) => l,
+			_ => fail_on_bad_type!($proc_name, "list", $rands)
+		}
+	}
+}

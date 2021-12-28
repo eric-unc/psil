@@ -1,8 +1,7 @@
-use std::borrow::Borrow;
-use crate::{check_arity_at_least, check_arity_is, fail_on_bad_type};
+use crate::{check_arity_at_least, check_arity_is, fail_on_bad_type, get_natural_number, get_string};
 use crate::environment::Environment;
 use crate::val::{Val, ValList};
-use crate::val::Val::{Boolean, Number, StringV as StringVal};
+use crate::val::Val::{Boolean, Number, StringV};
 
 pub fn add_str_procs(env: &mut Environment) {
 	env.add_proc("2str".to_string(), to_str);
@@ -21,22 +20,19 @@ pub fn add_str_procs(env: &mut Environment) {
 	env.add_proc("str-up".to_string(), str_up);
 }
 
-fn to_str(rands: ValList) -> Result<Val, String> {
+fn to_str(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("2str", 1, rands);
 
-	Ok(StringVal(rands[0].to_string()))
+	Ok(StringV(rands[0].to_string()))
 }
 
-fn is_str(rands: ValList) -> Result<Val, String> {
+fn is_str(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("is-str?", 1, rands);
-
-	match rands[0] {
-		StringVal(_) => Ok(Boolean(true)),
-		_ => Ok(Boolean(false))
-	}
+	
+	Ok(Boolean(matches!(rands[0], StringV(_))))
 }
 
-fn str_cat(rands: ValList) -> Result<Val, String> {
+fn str_cat(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_at_least!("str-cat", 2, rands);
 
 	let mut ret = String::from("");
@@ -45,153 +41,98 @@ fn str_cat(rands: ValList) -> Result<Val, String> {
 		ret.push_str(val.to_string().as_str())
 	}
 
-	Ok(StringVal(ret))
+	Ok(StringV(ret))
 }
 
-fn str_contains(rands: ValList) -> Result<Val, String> {
+fn str_contains(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-contains?", 2, rands);
 
-	match rands[0].borrow() {
-		StringVal(s) =>
-			match rands[1].borrow() {
-				StringVal(sub) => Ok(Boolean(s.contains(sub))),
-				_ => fail_on_bad_type!("str-contains?", "string", rands)
-			}
-		_ => fail_on_bad_type!("str-contains?", "string", rands)
-	}
+	let str = get_string!("str-contains?", rands, 0);
+	let possible_sub = get_string!("str-contains?", rands, 1);
+
+	Ok(Boolean(str.contains(possible_sub)))
 }
 
-fn str_empty(rands: ValList) -> Result<Val, String> {
+fn str_empty(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-empty?", 1, rands);
 
-	match rands[0].borrow() {
-		StringVal(s) => Ok(Boolean(s.is_empty())),
-		_ => fail_on_bad_type!("str-empty?", "string", rands)
-	}
+	let s = get_string!("str-empty?", rands, 0);
+	Ok(Boolean(s.is_empty()))
 }
 
-fn str_insert(rands: ValList) -> Result<Val, String> {
+fn str_insert(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-insert", 3, rands);
 
-	match rands[0].borrow() {
-		StringVal(s1) =>
-			match rands[1] {
-				Number(i) =>
-					match rands[2].borrow() {
-						StringVal(s2) => {
-							let mut ret = s1.clone();
-							ret.insert_str(i as usize, s2.clone().as_str());
-							Ok(StringVal(ret))
-						}
-						_ => fail_on_bad_type!("str-insert", "string", rands)
-					}
-				_ => fail_on_bad_type!("str-insert", "number", rands)
-			}
-		_ => fail_on_bad_type!("str-insert", "string", rands)
-	}
+	let s1 = get_string!("str-insert", rands, 0);
+	let index = get_natural_number!("str-insert", rands, 1) as usize;
+	let s2 = get_string!("str-insert", rands, 2);
+
+	let mut ret = s1.clone();
+	ret.insert_str(index, s2.clone().as_str());
+	Ok(StringV(ret))
 }
 
-fn str_len(rands: ValList) -> Result<Val, String> {
+fn str_len(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-len", 1, rands);
 
-	match rands[0].borrow() {
-		StringVal(s) => Ok(Number(s.len() as f64)),
-		_ => fail_on_bad_type!("str-len", "string", rands)
-	}
+	let s = get_string!("str-len", rands, 0);
+	Ok(Number(s.len() as f64))
 }
 
-fn str_low(rands: ValList) -> Result<Val, String> {
+fn str_low(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-low", 1, rands);
 
-	match rands[0].borrow() {
-		StringVal(s) => Ok(StringVal(s.to_lowercase())),
-		_ => fail_on_bad_type!("str-low", "string", rands)
-	}
+	let s = get_string!("str-len", rands, 0);
+	Ok(StringV(s.to_lowercase()))
 }
 
-fn str_repeat(rands: ValList) -> Result<Val, String> {
+fn str_repeat(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-repeat", 2, rands);
 
-	match rands[0].borrow() {
-		StringVal(s) =>
-			match rands[1] {
-				Number(n) =>
-					if n < 0.0 || n % 1.0 != 0.0 {
-						Err("str-repeat expects integer value!".to_string())
-					} else {
-						Ok(StringVal(s.repeat(n as usize)))
-					}
-				_ => fail_on_bad_type!("str-repeat", "number", rands)
-			}
-		_ => fail_on_bad_type!("str-repeat", "string", rands)
-	}
+	let s = get_string!("str-repeat", rands, 0);
+	let n = get_natural_number!("str-repeat", rands, 1);
+
+	Ok(StringV(s.repeat(n as usize)))
 }
 
-fn str_replace(rands: ValList) -> Result<Val, String> {
+fn str_replace(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-replace", 3, rands);
 
-	match rands[0].borrow() {
-		StringVal(s) =>
-			match rands[1].borrow() {
-				StringVal(old) =>
-					match rands[2].borrow() {
-						StringVal(new) => Ok(StringVal(s.replace(old, new))),
-						_ => fail_on_bad_type!("str-replace", "string", rands)
-					}
-				_ => fail_on_bad_type!("str-replace", "string", rands)
-			}
-		_ => fail_on_bad_type!("str-replace", "string", rands)
-	}
+	let s = get_string!("str-replace", rands, 0);
+	let old = get_string!("str-replace", rands, 1);
+	let new = get_string!("str-replace", rands, 2);
+
+	Ok(StringV(s.replace(old, new)))
 }
 
-fn str_starts_with(rands: ValList) -> Result<Val, String> {
+fn str_starts_with(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-starts-with?", 2, rands);
 
-	match rands[0].borrow() {
-		StringVal(s1) =>
-			match rands[1].borrow() {
-				StringVal(s2) => Ok(Boolean(s1.starts_with(s2))),
-				_ => fail_on_bad_type!("str-starts-with?", "string", rands)
-			}
-		_ => fail_on_bad_type!("str-starts-with?", "string", rands)
-	}
+	let s1 = get_string!("str-starts-with?", rands, 0);
+	let s2 = get_string!("str-starts-with?", rands, 1);
+
+	Ok(Boolean(s1.starts_with(s2)))
 }
 
-fn str_strip(rands: ValList) -> Result<Val, String> {
+fn str_strip(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-strip", 1, rands);
 
-	match rands[0].borrow() {
-		StringVal(s) => Ok(StringVal(s.trim().to_string())),
-		_ => fail_on_bad_type!("str-strip", "string", rands)
-	}
+	Ok(StringV(get_string!("str-strip", rands, 0).trim().to_string()))
 }
 
-fn str_trunc(rands: ValList) -> Result<Val, String> {
+fn str_trunc(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-trunc", 2, rands);
 
-	match rands[0].borrow() {
-		StringVal(s) =>
-			match rands[1].borrow() {
-				Number(n) => {
-					if *n < 0.0 || *n % 1.0 != 0.0 {
-						Err("str-str_trunc expects integer value!".to_string())
-					} else {
-						let mut ret = s.clone();
-						ret.truncate(*n as usize);
-						Ok(StringVal(ret))
-					}
-				}
-				_ => fail_on_bad_type!("str-trunc", "number", rands)
-			}
-		_ => fail_on_bad_type!("str-trunc", "string", rands)
-	}
+	let s = get_string!("str-trunc", rands, 0);
+	let n = get_natural_number!("str-trunc", rands, 1);
+
+	let mut ret = s.clone();
+	ret.truncate(n as usize);
+	Ok(StringV(ret))
 }
 
-fn str_up(rands: ValList) -> Result<Val, String> {
+fn str_up(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("str-up", 1, rands);
 
-	match rands[0].borrow() {
-		StringVal(s) => Ok(StringVal(s.to_uppercase())),
-		_ => fail_on_bad_type!("str-up", "string", rands)
-	}
+	Ok(StringV(get_string!("str-trunc", rands, 0).to_uppercase()))
 }

@@ -12,7 +12,7 @@ pub fn add_math_procs(env: &mut Environment) {
 	env.add_proc("is-num?".to_string(), is_num);
 }
 
-fn add(rands: ValList) -> Result<Val, String> {
+fn add(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_at_least!("+", 2, rands);
 
 	let mut ret = 0.0;
@@ -27,7 +27,7 @@ fn add(rands: ValList) -> Result<Val, String> {
 	Ok(Number(ret))
 }
 
-fn subtract(rands: ValList) -> Result<Val, String> {
+fn subtract(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_at_least!("-", 2, rands);
 
 	let mut ret = 0.0;
@@ -49,7 +49,7 @@ fn subtract(rands: ValList) -> Result<Val, String> {
 	Ok(Number(ret))
 }
 
-fn multiply(rands: ValList) -> Result<Val, String> {
+fn multiply(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_at_least!("*", 2, rands);
 
 	let mut ret = 1.0;
@@ -64,7 +64,7 @@ fn multiply(rands: ValList) -> Result<Val, String> {
 	Ok(Number(ret))
 }
 
-fn divide(rands: ValList) -> Result<Val, String> {
+fn divide(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_at_least!("/", 2, rands);
 
 	let mut ret = 0.0;
@@ -90,7 +90,7 @@ fn divide(rands: ValList) -> Result<Val, String> {
 	Ok(Number(ret))
 }
 
-fn remainder(rands: ValList) -> Result<Val, String> {
+fn remainder(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_at_least!("%", 2, rands);
 
 	let mut ret = 0.0;
@@ -116,11 +116,8 @@ fn remainder(rands: ValList) -> Result<Val, String> {
 	Ok(Number(ret))
 }
 
-fn is_num(rands: ValList) -> Result<Val, String> {
+fn is_num(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("is-num?", 1, rands);
 
-	match rands[0] {
-		Number(_) => Ok(Boolean(true)),
-		_ => Ok(Boolean(false))
-	}
+	Ok(Boolean(matches!(rands[0], Number(_))))
 }

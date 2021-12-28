@@ -3,7 +3,7 @@ use std::io;
 use crate::{check_arity_at_least, check_arity_is};
 use crate::environment::Environment;
 use crate::val::{Val, ValList, void};
-use crate::val::Val::StringV as StringVal;
+use crate::val::Val::StringV;
 
 pub fn add_io_procs(env: &mut Environment) {
 	env.add_proc("print".to_string(), print);
@@ -12,7 +12,7 @@ pub fn add_io_procs(env: &mut Environment) {
 	env.add_proc("input".to_string(), input);
 }
 
-fn print(rands: ValList) -> Result<Val, String> {
+fn print(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_at_least!("print", 1, rands);
 
 	for arg in rands {
@@ -22,7 +22,7 @@ fn print(rands: ValList) -> Result<Val, String> {
 	Ok(void())
 }
 
-fn put(rands: ValList) -> Result<Val, String> {
+fn put(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	for arg in rands {
 		print!("{}", arg);
 	}
@@ -32,7 +32,7 @@ fn put(rands: ValList) -> Result<Val, String> {
 	Ok(void())
 }
 
-fn put_each(rands: ValList) -> Result<Val, String> {
+fn put_each(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_at_least!("put-each", 1, rands);
 
 	for arg in rands {
@@ -42,12 +42,12 @@ fn put_each(rands: ValList) -> Result<Val, String> {
 	Ok(void())
 }
 
-fn input(rands: ValList) -> Result<Val, String> {
+fn input(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("input", 0, rands);
 
 	let mut line = String::new();
 	io::stdin().read_line(&mut line).unwrap();
 	line = line.trim().to_string();
 
-	Ok(StringVal(line))
+	Ok(StringV(line))
 }

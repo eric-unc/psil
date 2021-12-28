@@ -3,8 +3,8 @@ use std::string::String;
 use crate::ast::*;
 use crate::{check_arity_at_least, check_arity_is};
 use crate::environment::Environment;
-use crate::val::{ProcedureType, Val, void};
-use crate::val::Val::{Boolean, Number, Procedure, StringV as StringVal, Symbol};
+use crate::val::{Procedure, Val, ValList, void};
+use crate::val::Val::{Boolean, Number, ProcedureV, StringV, Symbol};
 
 pub fn eval(program: ProgramAst) -> Result<Vec<Val>, String> {
 	eval_program(program, &mut Environment::new())
@@ -37,11 +37,11 @@ fn eval_atom(atom: AtomAst, env: &mut Environment) -> Result<Val, String> {
 	match atom {
 		AtomAst::Number(n) => Ok(Number(n)),
 		AtomAst::Boolean(b) => Ok(Boolean(b)),
-		AtomAst::String(s) => Ok(StringVal(s)),
+		AtomAst::String(s) => Ok(StringV(s)),
 		AtomAst::Symbol(s) => Ok(Symbol(s)),
-		AtomAst::Lambda(l) => Ok(Procedure(ProcedureType::Pure(l))),
+		AtomAst::Lambda(l) => Ok(ProcedureV(Procedure::Pure(l))),
 		AtomAst::Identifier(n) => env.get_binding(n),
-		AtomAst::SpecialForm(s) => Ok(Procedure(ProcedureType::SpecialForm(s)))
+		AtomAst::SpecialForm(s) => Ok(ProcedureV(Procedure::SpecialForm(s)))
 	}
 }
 
@@ -49,63 +49,12 @@ fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Result<V
 	// TODO: I don't think all of this is necessary, exactly...
 	// There's definitely a way to simplify the AST, but that's a problem for later.
 	match invocation.proc {
-		PossibleProc::Name(i) => {
-			let proc_fetch = env.get_binding(i.clone())?;
+		PossibleProc::Name(name) => {
+			let proc_fetch = env.get_binding(name.clone())?;
 
 			match proc_fetch {
-				Procedure(p) => {
-					match p {
-						ProcedureType::Native(n) => {
-							let mut rands = Vec::new();
-
-							for expr in invocation.expr_list.into_iter() {
-								let val = eval_expr(expr, env)?;
-								rands.push(val);
-							}
-
-							n(rands)
-						},
-						ProcedureType::Pure(p) => {
-							let mut rands = Vec::new();
-
-							for expr in invocation.expr_list.into_iter() {
-								let val = eval_expr(expr, env)?;
-								rands.push(val);
-							}
-
-							if p.params.names.len() != rands.len() {
-								return match p.params.names.len() {
-									0 => Err(format!("Proc '{}' expected no rands! Given {}.", i, rands.len())),
-									1 => Err(format!("Proc '{}' expected 1 rand! Given {}.", i, rands.len())),
-									_ => Err(format!("Proc '{}' expected {} rands! Given {}.", i, p.params.names.len(), rands.len()))
-								}
-							}
-
-							env.add_scope();
-
-							for (name, rand_val) in p.params.names.into_iter().zip(rands) {
-								env.add_binding(name, rand_val);
-							}
-
-							let ret = eval_expr(p.expr, env);
-
-							env.close_scope();
-
-							ret
-						},
-						ProcedureType::SpecialForm(s) => {
-							match s {
-								SpecialForms::If => eval_if(invocation.expr_list, env),
-								SpecialForms::Cond => eval_cond(invocation.expr_list, env),
-								SpecialForms::Define => eval_define(invocation.expr_list, env),
-								SpecialForms::Do => eval_do(invocation.expr_list, env),
-								SpecialForms::And => eval_and(invocation.expr_list, env),
-								SpecialForms::Or => eval_or(invocation.expr_list, env)
-							}
-						}
-					}
-				}
-				_ => Err(format!("Binding {} is not a procedure!", i))
+				ProcedureV(p) => eval_proc(p, invocation.expr_list, name, env),
+				_ => Err(format!("Binding {} is not a procedure!", name))
 			}
 		}
 		PossibleProc::SpecialForm(s) => {
@@ -118,6 +67,87 @@ fn eval_invocation(invocation: InvocationAst, env: &mut Environment) -> Result<V
 				SpecialForms::Or => eval_or(invocation.expr_list, env)
 			}
 		}
+	}
+}
+
+pub fn eval_proc(p: Procedure, expr_list: ExprListAst, name: Name, env: &mut Environment) -> Result<Val, String> {
+	match p {
+		Procedure::Native(n) => {
+			let mut rands = Vec::new();
+
+			for expr in expr_list.into_iter() {
+				let val = eval_expr(expr, env)?;
+				rands.push(val);
+			}
+
+			n(rands, env)
+		},
+		Procedure::Pure(p) => {
+			let mut rands = Vec::new();
+
+			for expr in expr_list.into_iter() {
+				let val = eval_expr(expr, env)?;
+				rands.push(val);
+			}
+
+			if p.params.names.len() != rands.len() {
+				return match p.params.names.len() {
+					0 => Err(format!("Proc '{}' expected no rands! Given {}.", name, rands.len())),
+					1 => Err(format!("Proc '{}' expected 1 rand! Given {}.", name, rands.len())),
+					_ => Err(format!("Proc '{}' expected {} rands! Given {}.", name, p.params.names.len(), rands.len()))
+				}
+			}
+
+			env.add_scope();
+
+			for (name, rand_val) in p.params.names.into_iter().zip(rands) {
+				env.add_binding(name, rand_val);
+			}
+
+			let ret = eval_expr(p.expr, env);
+
+			env.close_scope();
+
+			ret
+		},
+		Procedure::SpecialForm(s) => {
+			match s {
+				SpecialForms::If => eval_if(expr_list, env),
+				SpecialForms::Cond => eval_cond(expr_list, env),
+				SpecialForms::Define => eval_define(expr_list, env),
+				SpecialForms::Do => eval_do(expr_list, env),
+				SpecialForms::And => eval_and(expr_list, env),
+				SpecialForms::Or => eval_or(expr_list, env)
+			}
+		}
+	}
+}
+
+pub fn eval_proc_with_rands(p: Procedure, rands: ValList, name: Name, env: &mut Environment) -> Result<Val, String> {
+	match p {
+		Procedure::Native(n) => n(rands, env),
+		Procedure::Pure(p) => {
+			if p.params.names.len() != rands.len() {
+				return match p.params.names.len() {
+					0 => Err(format!("Proc '{}' expected no rands! Given {}.", name, rands.len())),
+					1 => Err(format!("Proc '{}' expected 1 rand! Given {}.", name, rands.len())),
+					_ => Err(format!("Proc '{}' expected {} rands! Given {}.", name, p.params.names.len(), rands.len()))
+				}
+			}
+
+			env.add_scope();
+
+			for (name, rand_val) in p.params.names.into_iter().zip(rands) {
+				env.add_binding(name, rand_val);
+			}
+
+			let ret = eval_expr(p.expr, env);
+
+			env.close_scope();
+
+			ret
+		},
+		Procedure::SpecialForm(_) => Err("Cannot execute special forms with rands already evaluated!".to_string())
 	}
 }
 
