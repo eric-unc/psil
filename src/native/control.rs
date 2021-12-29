@@ -42,7 +42,7 @@ fn load(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 		Ok(s) => {
 			let parse_tree = parse(s).unwrap();
 			match eval_program(parse_tree, env) {
-				Ok(e) => Ok(List(e)),
+				Ok(_) => Ok(void()),
 				Err(e) => Err(format!("{}", e))
 			}
 		}
