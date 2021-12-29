@@ -4,8 +4,11 @@ use std::io::{self, Write};
 use environment::Environment;
 use eval::{eval, eval_expr};
 use parser::{parse, parse_expr_entry};
+use crate::eval::eval_program;
+use crate::val::Val;
 
 pub mod ast;
+pub mod doc;
 pub mod environment;
 pub mod eval;
 pub mod native;
@@ -26,7 +29,22 @@ fn main() {
 	}
 }
 
-fn load_and_interpret(file_name: &String) {
+pub fn load_into(file_name: &str, env: &mut Environment) -> Result<Vec<Val>, String> {
+	let script = fs::read_to_string(file_name);
+
+	match script {
+		Ok(s) => {
+			let parse_tree = parse(s).unwrap();
+			match eval_program(parse_tree, env) {
+				Ok(o) => Ok(o),
+				Err(e) => Err(e)
+			}
+		}
+		Err(e) => Err(e.to_string())
+	}
+}
+
+fn load_and_interpret(file_name: &str) {
 	let script = fs::read_to_string(file_name);
 
 	match script {

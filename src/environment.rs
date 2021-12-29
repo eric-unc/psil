@@ -1,7 +1,8 @@
 use std::collections::HashMap;
 
 use crate::ast::Name;
-use crate::native::add_native_library;
+use crate::doc::{Documentation, Entry};
+use crate::native::add_standard_library;
 use crate::val::{NativeProcedure, Procedure, Val};
 use crate::val::Val::ProcedureV;
 
@@ -10,7 +11,8 @@ pub type Bindings = Vec<Scope>;
 
 #[derive(Clone)]
 pub struct Environment {
-	bindings: Bindings
+	bindings: Bindings,
+	doc: Documentation
 }
 
 impl Default for Environment {
@@ -21,9 +23,9 @@ impl Default for Environment {
 
 impl Environment {
 	pub fn new() -> Self {
-		let mut ret = Self { bindings: vec![Scope::new()], };
+		let mut ret = Self { bindings: vec![Scope::new()], doc: Documentation::new() };
 
-		add_native_library(&mut ret);
+		add_standard_library(&mut ret);
 
 		ret
 	}
@@ -42,10 +44,10 @@ impl Environment {
 		self.bindings[len - 1].insert(name, val);
 	}
 
-	pub fn add_proc(&mut self, name: Name, val: NativeProcedure) {
+	pub fn add_proc(&mut self, name: &str, val: NativeProcedure) {
 		let len = self.bindings.len();
 
-		self.bindings[len - 1].insert(name, ProcedureV(Procedure::Native(val)));
+		self.bindings[len - 1].insert(name.to_string(), ProcedureV(Procedure::Native(val)));
 	}
 
 	pub fn get_binding(&self, name: Name) -> Result<Val, String> {
@@ -57,5 +59,13 @@ impl Environment {
 		}
 
 		Err(format!("Binding {} does not exist!", name))
+	}
+
+	pub fn add_entry(&mut self, proc: String, entry: Entry) {
+		self.doc.add_entry(proc, entry);
+	}
+
+	pub fn get_entry(&mut self, proc: &str) -> Option<&Entry> {
+		self.doc.get_entry(proc)
 	}
 }

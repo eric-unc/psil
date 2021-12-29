@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fmt::{Debug, Display, Formatter, Result as ResultFmt};
 
 use crate::ast::{LambdaAst, SpecialForms};
@@ -10,7 +11,8 @@ pub enum Val {
 	StringV(String),
 	Symbol(String),
 	ProcedureV(Procedure),
-	List(ValList)
+	List(ValList),
+	Table(HashMap<Val, Val>)
 }
 use Val::*;
 
@@ -24,7 +26,8 @@ impl Val {
 			StringV(_) => "string",
 			Symbol(_) => "symbol",
 			ProcedureV(_) => "procedure",
-			List(_) => "list"
+			List(_) => "list",
+			Table(_) => "table"
 		}
 	}
 }
@@ -51,6 +54,19 @@ impl Display for Val {
 
 				ret.push(')');
 				ret
+			},
+			Table(t) => {
+				let mut ret = String::from("(table");
+
+				for (k, v) in t {
+					ret.push(' ');
+					ret.push_str(k.to_string().as_str());
+					ret.push(' ');
+					ret.push_str(v.to_string().as_str());
+				}
+
+				ret.push(')');
+				ret
 			}
 		})
 	}
@@ -64,6 +80,7 @@ impl PartialEq for Val {
 			(StringV(s), StringV(o)) => s.eq(o),
 			(Symbol(s), Symbol(o)) => s.eq(o),
 			(List(l), List(o)) => l.eq(o),
+			//(Table(t), Table(o)) => t.eq(&o), // TODO: table equality
 			_ => false
 		}
 	}

@@ -3,13 +3,13 @@ use crate::environment::Environment;
 use crate::val::{Val, ValList};
 use crate::val::Val::{Boolean, Number};
 
-pub fn add_math_procs(env: &mut Environment) {
-	env.add_proc("+".to_string(), add);
-	env.add_proc("-".to_string(), subtract);
-	env.add_proc("*".to_string(), multiply);
-	env.add_proc("/".to_string(), divide);
-	env.add_proc("%".to_string(), remainder);
-	env.add_proc("is-num?".to_string(), is_num);
+pub fn add_native(env: &mut Environment) {
+	env.add_proc("+", add);
+	env.add_proc("-", subtract);
+	env.add_proc("*", multiply);
+	env.add_proc("/", divide);
+	env.add_proc("%", remainder);
+	env.add_proc("is-num?", is_num);
 }
 
 fn add(rands: ValList, _env: &mut Environment) -> Result<Val, String> {

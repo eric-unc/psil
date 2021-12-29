@@ -5,11 +5,11 @@ use crate::environment::Environment;
 use crate::val::{Val, ValList, void};
 use crate::val::Val::StringV;
 
-pub fn add_io_procs(env: &mut Environment) {
-	env.add_proc("print".to_string(), print);
-	env.add_proc("put".to_string(), put);
-	env.add_proc("put-each".to_string(), put_each);
-	env.add_proc("input".to_string(), input);
+pub fn add_native(env: &mut Environment) {
+	env.add_proc("print", print);
+	env.add_proc("put", put);
+	env.add_proc("put-each", put_each);
+	env.add_proc("input", input);
 }
 
 fn print(rands: ValList, _env: &mut Environment) -> Result<Val, String> {

@@ -65,6 +65,7 @@ This lists all procedures built into the standard library. Special forms are mar
 | `cond`* | (boolean, any)+ | any | Returns expression associated with the true condition, or `void` if none are true. See `cond.lisp` or `fizzbuzz.lisp` in the `samples` folder for examples. |
 | `define`* | name, any | `#void` | Creates a binding with the name given in the current scope. |
 | `do`* | any+ | `#void` | Executes each invocation given. |
+| `load` | string | `#void` | Loads a Psil/Lisp file. |
 | `fail` | string? | `#void` | Generates an error, with an optional error message. In REPL mode, Psil will just output the error message to standard error, and continue to accept input, while in load mode, Psil will terminate execution of the given script after the error message is printed. |
 | `exit` | integer? | N/A | Exits the program with an status code (without a rand, the status code is `0`). |
 | `type` | any | symbol | Returns the type of the given rand. |

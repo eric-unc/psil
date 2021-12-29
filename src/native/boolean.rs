@@ -3,16 +3,16 @@ use crate::environment::Environment;
 use crate::val::{Val, ValList};
 use crate::val::Val::{Boolean, Number};
 
-pub fn add_boolean_procs(env: &mut Environment) {
-	env.add_proc("not".to_string(), not);
-	env.add_proc("xor".to_string(), xor);
-	env.add_proc("==".to_string(), equal);
-	env.add_proc("!=".to_string(), no_eq);
-	env.add_proc(">".to_string(), gt);
-	env.add_proc(">=".to_string(), gte);
-	env.add_proc("<".to_string(), lt);
-	env.add_proc("<=".to_string(), lte);
-	env.add_proc("is-bool?".to_string(), is_bool);
+pub fn add_native(env: &mut Environment) {
+	env.add_proc("not", not);
+	env.add_proc("xor", xor);
+	env.add_proc("==", equal);
+	env.add_proc("!=", no_eq);
+	env.add_proc(">", gt);
+	env.add_proc(">=", gte);
+	env.add_proc("<", lt);
+	env.add_proc("<=", lte);
+	env.add_proc("is-bool?", is_bool);
 }
 
 fn not(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
