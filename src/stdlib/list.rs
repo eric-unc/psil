@@ -22,7 +22,7 @@ pub fn add_native(env: &mut Environment) {
 }
 
 pub fn add_pure(env: &mut Environment) {
-	load_into("src/native/list.lisp", env).expect("Failure to load list.lisp!");
+	load_into("src/stdlib/list.lisp", env).expect("Failure to load list.lisp!");
 }
 
 macro_rules! check_bounds {

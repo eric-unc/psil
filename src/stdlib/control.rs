@@ -15,7 +15,7 @@ pub fn add_native(env: &mut Environment) {
 }
 
 pub fn add_pure(env: &mut Environment) {
-	load_into("src/native/control.lisp", env).expect("Failure to load control.lisp!");
+	load_into("src/stdlib/control.lisp", env).expect("Failure to load control.lisp!");
 }
 
 fn doc(rands: ValList, env: &mut Environment) -> Result<Val, String> {

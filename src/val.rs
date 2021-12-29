@@ -37,11 +37,12 @@ impl Display for Val {
 		write!(f, "{}", match self {
 			Number(n) => n.to_string(),
 			Boolean(b) => b.to_string(),
-			StringV(s) => {
-				let mut ret = String::from("\"");
-				ret.push_str(s);
-				ret.push('\"');
-				ret
+			StringV(s) => { // TODO: string output
+				//let mut ret = String::from("\"");
+				//ret.push_str(s);
+				//ret.push('\"');
+				//ret
+				s.to_string()
 			},
 			Symbol(s) => {
 				let mut ret = String::from("#");
