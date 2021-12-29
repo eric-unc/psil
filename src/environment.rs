@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::ast::Name;
 use crate::doc::{Documentation, Entry};
-use crate::native::add_standard_library;
+use crate::stdlib::add_standard_library;
 use crate::val::{NativeProcedure, Procedure, Val};
 use crate::val::Val::ProcedureV;
 

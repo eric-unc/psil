@@ -182,3 +182,13 @@ macro_rules! get_list {
 		}
 	}
 }
+
+#[macro_export]
+macro_rules! get_table {
+	( $proc_name:literal, $rands:expr, $index:expr ) => {
+		match &$rands[$index] {
+			Table(l) => l,
+			_ => fail_on_bad_type!($proc_name, "table", $rands)
+		}
+	}
+}

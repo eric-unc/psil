@@ -1,9 +1,9 @@
 use std::collections::BTreeMap;
-use crate::{check_arity_between, check_arity_is, fail_on_bad_type, get_integer, get_list, get_string, load_into};
+use crate::{check_arity_between, check_arity_is, fail_on_bad_type, get_integer, get_list, get_string, get_table, load_into};
 use crate::doc::Entry;
 use crate::environment::Environment;
 use crate::val::{Val, ValList, void};
-use crate::val::Val::{Number, StringV, Symbol, List};
+use crate::val::Val::{Number, StringV, Symbol, List, Table};
 
 pub fn add_native(env: &mut Environment) {
 	env.add_proc("doc", doc);
@@ -24,11 +24,7 @@ fn doc(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 	let proc = get_string!("doc", rands, 0);
 	let aliases = get_list!("doc", rands, 1);
 	let description = get_string!("doc", rands, 2);
-	let params = get_list!("doc", rands, 3);
-
-	if params.len() % 2 != 0 {
-		return Err("Expected even params for doc!".to_string());
-	}
+	let params = get_table!("doc", rands, 3);
 
 	let mut aliases2 = Vec::new();
 
@@ -41,13 +37,14 @@ fn doc(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 
 	let mut params2 = BTreeMap::new();
 
-	for i in 0..(params.len()/2) {
-		let param = get_string!("doc", params, 2 * i);
-		let param_description = get_string!("doc", params, 2 * i + 1);
-		params2.insert(param.clone(), param_description.clone());
+	for (k, v) in params {
+		match v {
+			StringV(s) => {params2.insert(k.clone(), s.clone());},
+			_ => fail_on_bad_type!("doc", "string", rands)
+		}
 	}
 
-	env.add_entry(proc.clone(), Entry::new_full(proc.clone(), aliases2, description.clone(), params2));
+	env.add_entry(proc.clone(), Entry::new(proc.clone(), aliases2, description.clone(), params2));
 
 	Ok(void())
 }
@@ -78,9 +75,11 @@ fn help(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 	let proc = get_string!("help", rands, 0);
 
 	match env.get_entry(proc) {
-		None => Err(format!("Missing doc for {}!", proc)),
-		Some(entry) => Ok(StringV(entry.to_string()))
+		None => eprintln!("Missing doc for {}!", proc),
+		Some(entry) => println!("{}", entry)
 	}
+
+	Ok(void())
 }
 
 fn load(rands: ValList, env: &mut Environment) -> Result<Val, String> {

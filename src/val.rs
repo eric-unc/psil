@@ -12,7 +12,7 @@ pub enum Val {
 	Symbol(String),
 	ProcedureV(Procedure),
 	List(ValList),
-	Table(HashMap<Val, Val>)
+	Table(HashMap<String, Val>)
 }
 use Val::*;
 
@@ -37,7 +37,12 @@ impl Display for Val {
 		write!(f, "{}", match self {
 			Number(n) => n.to_string(),
 			Boolean(b) => b.to_string(),
-			StringV(s) => s.to_string(),
+			StringV(s) => {
+				let mut ret = String::from("\"");
+				ret.push_str(s);
+				ret.push('\"');
+				ret
+			},
 			Symbol(s) => {
 				let mut ret = String::from("#");
 				ret.push_str(s);

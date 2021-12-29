@@ -30,11 +30,7 @@ pub struct Entry {
 }
 
 impl Entry {
-	pub fn new(proc: String) -> Self {
-		Self { proc, aliases: Vec::new(), description: String::new(), params: BTreeMap::new() }
-	}
-
-	pub fn new_full(proc: String, aliases: Vec<String>, description: String, params: BTreeMap<String, String>) -> Self {
+	pub fn new(proc: String, aliases: Vec<String>, description: String, params: BTreeMap<String, String>) -> Self {
 		Self { proc, aliases, description, params }
 	}
 }

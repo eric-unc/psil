@@ -11,7 +11,7 @@ pub mod ast;
 pub mod doc;
 pub mod environment;
 pub mod eval;
-pub mod native;
+pub mod stdlib;
 pub mod parser;
 pub mod scanner;
 pub mod val;
