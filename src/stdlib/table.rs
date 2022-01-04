@@ -1,9 +1,8 @@
 use std::collections::HashMap;
-use crate::{check_arity_at_least, check_arity_between, check_arity_even, check_arity_is, fail_on_bad_type, get_integer, get_list, get_natural_number, get_proc, load_into};
+use crate::{check_arity_even, check_arity_is};
 use crate::environment::Environment;
-use crate::eval::eval_proc_with_rands;
-use crate::val::{Val, ValList, void};
-use crate::val::Val::{Boolean, Number, List, ProcedureV, Table};
+use crate::val::{Val, ValList};
+use crate::val::Val::{Boolean, Table};
 
 pub fn add_native(env: &mut Environment) {
 	env.add_proc("is-table?", is_table);

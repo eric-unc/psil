@@ -1,7 +1,4 @@
 use std::{env, fs};
-use std::borrow::BorrowMut;
-use std::collections::HashMap;
-use std::fmt::Display;
 use std::fs::File;
 use std::io::{self, Write};
 use std::path::Path;
@@ -9,7 +6,6 @@ use std::path::Path;
 use environment::Environment;
 use eval::{eval, eval_expr};
 use parser::{parse, parse_expr_entry};
-use crate::doc::Entry;
 use crate::eval::eval_program;
 use crate::val::Val;
 
@@ -61,7 +57,7 @@ fn dump_docs() {
 	if docs.exists() {
 		fs::remove_dir_all(docs).expect(format!("Failed to delete previous docs!").as_str());
 	}
-	fs::create_dir(docs);
+	fs::create_dir(docs).unwrap();
 
 	// There's definitely a better ways to do this, but it's enough for now
 	for (_, entry) in env.get_doc().get_entries() {
@@ -72,7 +68,7 @@ fn dump_docs() {
 
 		if !Path::new(doc_path.as_str()).exists() {
 			let mut file = File::create(doc_path.as_str()).unwrap();
-			file.write_all(format!("This is the documentation for `{}`.\n\n", module).as_bytes()).unwrap();
+			file.write_all(format!("# {}\nThis is the documentation for the `{}` module.\n\n", module, module).as_bytes()).unwrap();
 			file.write_all(format!("---\n{}", entry).as_bytes()).unwrap();
 			file.flush().unwrap();
 		} else {

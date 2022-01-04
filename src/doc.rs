@@ -1,4 +1,4 @@
-use std::fmt::{Debug, Display, Formatter, Result as ResultFmt};
+use std::fmt::{Display, Formatter, Result as ResultFmt};
 
 use std::collections::{BTreeMap, HashMap};
 
@@ -42,7 +42,7 @@ impl Entry {
 
 impl Display for Entry {
 	fn fmt(&self, f: &mut Formatter) -> ResultFmt {
-		writeln!(f, "{}", self.proc)?;
+		writeln!(f, "## {}", self.proc)?;
 		writeln!(f)?;
 
 		writeln!(f, "{}", self.description)?;
@@ -51,10 +51,10 @@ impl Display for Entry {
 		writeln!(f, "Parameters:")?;
 
 		if self.params.is_empty() {
-			writeln!(f, "- None")?;
+			writeln!(f, "* None")?;
 		} else {
 			for (name, description) in &self.params {
-				writeln!(f, "- {}: {}", name, description)?;
+				writeln!(f, "* `{}`: {}", name, description)?;
 			}
 		}
 

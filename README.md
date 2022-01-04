@@ -3,6 +3,8 @@
 
 [Limp](https://github.com/eric-unc/limp) was the prototype for Psil and uses code from it.
 
+***NOTE: Psil is currently in a state of rapid transformation, so some information presented is not up-to-date!.***
+
 ## Installation
 Psil can be installed by doing the following:
 1. Cloning this repo (`git clone https://github.com/eric-unc/psil.git`).
