@@ -11,7 +11,6 @@ Parameters:
 - params: (list) A list of the param, with descriptions of each.
 - proc: (string) The procedure to be documented.
 
-
 ---
 exit
 

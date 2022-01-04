@@ -72,8 +72,8 @@ fn dump_docs() {
 
 		if !Path::new(doc_path.as_str()).exists() {
 			let mut file = File::create(doc_path.as_str()).unwrap();
-			file.write_all(format!("This is the documentation for `{}`.\n", module).as_bytes()).unwrap();
-			file.write_all(format!("\n---\n{}", entry).as_bytes()).unwrap();
+			file.write_all(format!("This is the documentation for `{}`.\n\n", module).as_bytes()).unwrap();
+			file.write_all(format!("---\n{}", entry).as_bytes()).unwrap();
 			file.flush().unwrap();
 		} else {
 			let mut file = fs::OpenOptions::new()
@@ -82,7 +82,7 @@ fn dump_docs() {
 				.open(doc_path.as_str())
 				.unwrap();
 
-			file.write_all(format!("\n---\n{}", entry).as_bytes()).unwrap();
+			file.write_all(format!("---\n{}", entry).as_bytes()).unwrap();
 			file.flush().unwrap();
 		}
 	}
