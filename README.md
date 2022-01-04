@@ -3,7 +3,14 @@
 
 [Limp](https://github.com/eric-unc/limp) was the prototype for Psil and uses code from it.
 
-***NOTE: Psil is currently in a state of rapid transformation, so some information presented is not up-to-date!.***
+***NOTE: Psil is currently in a state of rapid transformation, so some information presented is not up-to-date!***
+
+## Features
+* Variety of types: numbers, booleans, strings, symbols, procedures.
+* Composite types: lists, tables (WIP).
+* Bindings, control logic, mix of functional and procedural programming.
+* Native documentation generator (official documentation [here](https://eric-unc.tech/psil/)) (WIP).
+* Large standard library (always WIP...).
 
 ## Installation
 Psil can be installed by doing the following:
