@@ -1,24 +1,28 @@
-use crate::{check_arity_at_least, check_arity_between, check_arity_is, fail_on_bad_type, get_integer, get_list, get_natural_number, get_proc};
+use crate::{check_arity_at_least, check_arity_between, check_arity_is, fail_on_bad_type, get_integer, get_list, get_natural_number, get_proc, load_into};
 use crate::environment::Environment;
 use crate::eval::eval_proc_with_rands;
 use crate::val::{Val, ValList, void};
 use crate::val::Val::{Boolean, Number, List, ProcedureV};
 
-pub fn add_list_procs(env: &mut Environment) {
-	env.add_proc("is-list?".to_string(), is_list);
-	env.add_proc("list".to_string(), list);
-	env.add_proc("list-append".to_string(), list_append);
-	env.add_proc("list-each".to_string(), list_each);
-	env.add_proc("list-empty?".to_string(), list_empty);
-	env.add_proc("list-filter".to_string(), list_filter);
-	env.add_proc("list-get".to_string(), list_get);
-	env.add_proc("list-join".to_string(), list_join);
-	env.add_proc("list-len".to_string(), list_len);
-	env.add_proc("list-map".to_string(), list_map);
-	env.add_proc("list-range".to_string(), list_range);
-	env.add_proc("list-remove".to_string(), list_remove);
-	env.add_proc("list-reverse".to_string(), list_reverse);
-	env.add_proc("list-swap".to_string(), list_swap);
+pub fn add_native(env: &mut Environment) {
+	env.add_proc("is-list?", is_list);
+	env.add_proc("list", list);
+	env.add_proc("list-append", list_append);
+	env.add_proc("list-each", list_each);
+	env.add_proc("list-empty?", list_empty);
+	env.add_proc("list-filter", list_filter);
+	env.add_proc("list-get", list_get);
+	env.add_proc("list-join", list_join);
+	env.add_proc("list-len", list_len);
+	env.add_proc("list-map", list_map);
+	env.add_proc("list-range", list_range);
+	env.add_proc("list-remove", list_remove);
+	env.add_proc("list-reverse", list_reverse);
+	env.add_proc("list-swap", list_swap);
+}
+
+pub fn add_pure(env: &mut Environment) {
+	load_into("src/stdlib/list.lisp", env).expect("Failure to load list.lisp!");
 }
 
 macro_rules! check_bounds {

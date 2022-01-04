@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fmt::{Debug, Display, Formatter, Result as ResultFmt};
 
 use crate::ast::{LambdaAst, SpecialForms};
@@ -10,7 +11,8 @@ pub enum Val {
 	StringV(String),
 	Symbol(String),
 	ProcedureV(Procedure),
-	List(ValList)
+	List(ValList),
+	Table(HashMap<String, Val>)
 }
 use Val::*;
 
@@ -24,7 +26,8 @@ impl Val {
 			StringV(_) => "string",
 			Symbol(_) => "symbol",
 			ProcedureV(_) => "procedure",
-			List(_) => "list"
+			List(_) => "list",
+			Table(_) => "table"
 		}
 	}
 }
@@ -34,7 +37,13 @@ impl Display for Val {
 		write!(f, "{}", match self {
 			Number(n) => n.to_string(),
 			Boolean(b) => b.to_string(),
-			StringV(s) => s.to_string(),
+			StringV(s) => { // TODO: string output
+				//let mut ret = String::from("\"");
+				//ret.push_str(s);
+				//ret.push('\"');
+				//ret
+				s.to_string()
+			},
 			Symbol(s) => {
 				let mut ret = String::from("#");
 				ret.push_str(s);
@@ -45,6 +54,19 @@ impl Display for Val {
 				let mut ret = String::from("(list");
 
 				for v in l {
+					ret.push(' ');
+					ret.push_str(v.to_string().as_str());
+				}
+
+				ret.push(')');
+				ret
+			},
+			Table(t) => {
+				let mut ret = String::from("(table");
+
+				for (k, v) in t {
+					ret.push(' ');
+					ret.push_str(k.to_string().as_str());
 					ret.push(' ');
 					ret.push_str(v.to_string().as_str());
 				}
@@ -64,6 +86,7 @@ impl PartialEq for Val {
 			(StringV(s), StringV(o)) => s.eq(o),
 			(Symbol(s), Symbol(o)) => s.eq(o),
 			(List(l), List(o)) => l.eq(o),
+			//(Table(t), Table(o)) => t.eq(&o), // TODO: table equality
 			_ => false
 		}
 	}

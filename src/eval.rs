@@ -10,7 +10,7 @@ pub fn eval(program: ProgramAst) -> Result<Vec<Val>, String> {
 	eval_program(program, &mut Environment::new())
 }
 
-fn eval_program(program: ProgramAst, env: &mut Environment) -> Result<Vec<Val>, String> {
+pub fn eval_program(program: ProgramAst, env: &mut Environment) -> Result<Vec<Val>, String> {
 	eval_expr_list(program.expr_list, env)
 }
 

@@ -1,0 +1,1 @@
+(load "samples/define.lisp")

@@ -3,11 +3,11 @@ use crate::environment::Environment;
 use crate::val::{Val, ValList};
 use crate::val::Val::{Boolean, StringV, Symbol};
 
-pub fn add_symbol_procs(env: &mut Environment) {
-	env.add_proc("str2symb".to_string(), str_to_symb);
-	env.add_proc("symb2str".to_string(), symb_to_str);
-	env.add_proc("is-symb?".to_string(), is_symb);
-	env.add_proc("is-void?".to_string(), is_void);
+pub fn add_native(env: &mut Environment) {
+	env.add_proc("str2symb", str_to_symb);
+	env.add_proc("symb2str", symb_to_str);
+	env.add_proc("is-symb?", is_symb);
+	env.add_proc("is-void?", is_void);
 }
 
 fn str_to_symb(rands: ValList, _env: &mut Environment) -> Result<Val, String> {

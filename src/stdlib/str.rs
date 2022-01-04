@@ -3,21 +3,21 @@ use crate::environment::Environment;
 use crate::val::{Val, ValList};
 use crate::val::Val::{Boolean, Number, StringV};
 
-pub fn add_str_procs(env: &mut Environment) {
-	env.add_proc("2str".to_string(), to_str);
-	env.add_proc("is-str?".to_string(), is_str);
-	env.add_proc("str-cat".to_string(), str_cat);
-	env.add_proc("str-contains?".to_string(), str_contains);
-	env.add_proc("str-empty?".to_string(), str_empty);
-	env.add_proc("str-insert".to_string(), str_insert);
-	env.add_proc("str-len".to_string(), str_len);
-	env.add_proc("str-low".to_string(), str_low);
-	env.add_proc("str-repeat".to_string(), str_repeat);
-	env.add_proc("str-replace".to_string(), str_replace);
-	env.add_proc("str-starts-with?".to_string(), str_starts_with);
-	env.add_proc("str-strip".to_string(), str_strip);
-	env.add_proc("str-trunc".to_string(), str_trunc);
-	env.add_proc("str-up".to_string(), str_up);
+pub fn add_native(env: &mut Environment) {
+	env.add_proc("2str", to_str);
+	env.add_proc("is-str?", is_str);
+	env.add_proc("str-cat", str_cat);
+	env.add_proc("str-contains?", str_contains);
+	env.add_proc("str-empty?", str_empty);
+	env.add_proc("str-insert", str_insert);
+	env.add_proc("str-len", str_len);
+	env.add_proc("str-low", str_low);
+	env.add_proc("str-repeat", str_repeat);
+	env.add_proc("str-replace", str_replace);
+	env.add_proc("str-starts-with?", str_starts_with);
+	env.add_proc("str-strip", str_strip);
+	env.add_proc("str-trunc", str_trunc);
+	env.add_proc("str-up", str_up);
 }
 
 fn to_str(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
