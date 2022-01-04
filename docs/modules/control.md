@@ -1,4 +1,4 @@
-This is the documentation for `src/stdlib/control.lisp`.
+This is the documentation for `control`.
 
 ---
 doc
@@ -11,4 +11,12 @@ Parameters:
 - params: (list) A list of the param, with descriptions of each.
 - proc: (string) The procedure to be documented.
 
+
+---
+exit
+
+"exit" exits the program with a status code.
+
+Parameters:
+- code: (OPTIONAL) (integer) exit code. Defaults is 0.
 

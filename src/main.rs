@@ -57,39 +57,34 @@ pub fn load_into(file_name: &str, env: &mut Environment) -> Result<Vec<Val>, Str
 fn dump_docs() {
 	let env = Environment::new();
 
-	// There's definitely a better way to do this, but it probably involves fancy lifetimes
-	let mut docs: HashMap<&str, &mut Vec<&Entry>> = HashMap::new();
-
-	for (_, entry) in env.get_doc().get_entries() {
-		let module = entry.module.as_str();
-
-		if docs.contains_key(module) {
-			let entry_list = docs.get_mut(module).unwrap();
-			entry_list.push(entry);
-		} else {
-			/*let mut new_entries = vec![entry];
-			docs.insert(module, new_entries.borrow_mut());*/
-		}
-		//docs.insert(entry.module.clone(), entry);
+	let docs = Path::new("docs/modules");
+	if docs.exists() {
+		fs::remove_dir_all(docs).expect(format!("Failed to delete previous docs!").as_str());
 	}
+	fs::create_dir(docs);
 
-	for (module, entries) in docs {
-		let mut doc = format!("This is the documentation for `{}`.\n", module);
+	// There's definitely a better ways to do this, but it's enough for now
+	for (_, entry) in env.get_doc().get_entries() {
+		let module_path = entry.module.as_str();
 
-		for entry in entries {
-			doc.push_str(format!("\n---\n{}\n", entry).as_str());
+		let module = &module_path[11..(module_path.len() - 5)].to_string().clone();
+		let doc_path = format!("docs/modules/{}.md", module);
+
+		if !Path::new(doc_path.as_str()).exists() {
+			let mut file = File::create(doc_path.as_str()).unwrap();
+			file.write_all(format!("This is the documentation for `{}`.\n", module).as_bytes()).unwrap();
+			file.write_all(format!("\n---\n{}", entry).as_bytes()).unwrap();
+			file.flush().unwrap();
+		} else {
+			let mut file = fs::OpenOptions::new()
+				.write(true)
+				.append(true)
+				.open(doc_path.as_str())
+				.unwrap();
+
+			file.write_all(format!("\n---\n{}", entry).as_bytes()).unwrap();
+			file.flush().unwrap();
 		}
-
-		// TODO: this is incredibly hacky lol
-		let module = &module[11..(module.len() - 5)].to_string().clone();
-		let file_path = format!("docs/modules/{}.md", module);
-
-		if Path::new(file_path.as_str()).exists() {
-			fs::remove_file(file_path.as_str()).expect(format!("Failed to delete {}!", file_path).as_str());
-		}
-
-		let mut file = File::create(file_path.as_str()).expect(format!("Failed to create {}!", file_path).as_str());
-		file.write_all(doc.as_bytes()).expect(format!("Failed to write to {}!", file_path).as_str());
 	}
 }
 
