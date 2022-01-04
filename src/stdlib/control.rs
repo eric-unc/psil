@@ -44,7 +44,7 @@ fn doc(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 		}
 	}
 
-	env.add_entry(proc.clone(), Entry::new(proc.clone(), aliases2, description.clone(), params2));
+	env.add_entry(proc.clone(), Entry::new(proc.clone(), aliases2, description.clone(), params2, env.get_curr_module()));
 
 	Ok(void())
 }

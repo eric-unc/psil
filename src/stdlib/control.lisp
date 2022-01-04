@@ -9,6 +9,6 @@
 
 (doc "exit"
 	(list)
-	"\"exit\" exits the program with an status code."
+	"\"exit\" exits the program with a status code."
 	(table
 		"code" "(OPTIONAL) (integer) exit code. Defaults is 0."))

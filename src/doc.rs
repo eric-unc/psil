@@ -19,19 +19,24 @@ impl Documentation {
 	pub fn get_entry(&mut self, proc: &str) -> Option<&Entry> {
 		self.entries.get(proc)
 	}
+
+	pub fn get_entries(&self) -> &HashMap<String, Entry> {
+		&self.entries
+	}
 }
 
 #[derive(Clone)]
 pub struct Entry {
-	proc: String,
-	aliases: Vec<String>,
-	description: String,
-	params: BTreeMap<String, String>
+	pub proc: String,
+	pub aliases: Vec<String>,
+	pub description: String,
+	pub params: BTreeMap<String, String>,
+	pub module: String
 }
 
 impl Entry {
-	pub fn new(proc: String, aliases: Vec<String>, description: String, params: BTreeMap<String, String>) -> Self {
-		Self { proc, aliases, description, params }
+	pub fn new(proc: String, aliases: Vec<String>, description: String, params: BTreeMap<String, String>, module: &str) -> Self {
+		Self { proc, aliases, description, params, module: String::from(module) }
 	}
 }
 
