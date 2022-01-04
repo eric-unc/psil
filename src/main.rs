@@ -58,17 +58,17 @@ fn dump_docs() {
 	let env = Environment::new();
 
 	// There's definitely a better way to do this, but it probably involves fancy lifetimes
-	let mut docs: HashMap<&str, Vec<&Entry>> = HashMap::new();
+	let mut docs: HashMap<&str, &mut Vec<&Entry>> = HashMap::new();
 
 	for (_, entry) in env.get_doc().get_entries() {
 		let module = entry.module.as_str();
 
 		if docs.contains_key(module) {
-			//docs.get(module).unwrap().borrow_mut().push(entry);
+			let entry_list = docs.get_mut(module).unwrap();
+			entry_list.push(entry);
 		} else {
 			/*let mut new_entries = vec![entry];
-			docs.insert(module, new_entries.as_mut());*/
-			docs.insert(module, vec![entry]);
+			docs.insert(module, new_entries.borrow_mut());*/
 		}
 		//docs.insert(entry.module.clone(), entry);
 	}
