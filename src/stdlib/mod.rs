@@ -29,6 +29,7 @@ fn add_native_library(env: &mut Environment) {
 }
 
 fn add_pure_library(env: &mut Environment) {
+	boolean::add_pure(env);
 	control::add_pure(env);
 	list::add_pure(env);
 }

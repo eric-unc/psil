@@ -85,9 +85,9 @@ fn help(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 fn load(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("load", 1, rands);
 
-	let file = get_string!("load", rands, 0);
+	let path = get_string!("load", rands, 0);
 
-	load_into(file, env)?;
+	load_into(path, env)?;
 	Ok(void())
 }
 
