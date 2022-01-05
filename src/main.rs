@@ -68,7 +68,15 @@ fn dump_docs() {
 
 		if !Path::new(doc_path.as_str()).exists() {
 			let mut file = File::create(doc_path.as_str()).unwrap();
-			file.write_all(format!("# {}\nThis is the documentation for the `{}` module.\n\n", module, module).as_bytes()).unwrap();
+			file.write_all(format!(
+				"<!--
+NOTE: This documentation is generated automatically!
+Rather than editing this file, please update the associated file in stdlib!
+Thanks, and have a good day!
+-->
+# {}
+This is the documentation for the `{}` module.\n\n", module, module).as_bytes()).unwrap();
+
 			file.write_all(format!("---\n{}", entry).as_bytes()).unwrap();
 			file.flush().unwrap();
 		} else {
