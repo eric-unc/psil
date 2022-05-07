@@ -1,4 +1,4 @@
-use crate::{check_arity_at_least, check_arity_is, fail_on_bad_type, get_natural_number, get_string};
+use crate::{check_arity_at_least, check_arity_is, fail_on_bad_type, get_natural_number, get_string, load_into};
 use crate::environment::Environment;
 use crate::val::{Val, ValList};
 use crate::val::Val::{Boolean, Number, StringV};
@@ -18,6 +18,10 @@ pub fn add_native(env: &mut Environment) {
 	env.add_proc("str-strip", str_strip);
 	env.add_proc("str-trunc", str_trunc);
 	env.add_proc("str-up", str_up);
+}
+
+pub fn add_pure(env: &mut Environment) {
+	load_into("src/stdlib/str.lisp", env).expect("Failure to load str.lisp!");
 }
 
 fn to_str(rands: ValList, _env: &mut Environment) -> Result<Val, String> {

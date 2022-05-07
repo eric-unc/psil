@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+
 use crate::{check_arity_between, check_arity_is, fail_on_bad_type, get_integer, get_list, get_string, get_table, load_into};
 use crate::doc::Entry;
 use crate::environment::Environment;

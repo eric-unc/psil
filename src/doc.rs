@@ -1,15 +1,16 @@
 use std::fmt::{Display, Formatter, Result as ResultFmt};
 
-use std::collections::{BTreeMap, HashMap};
+use std::collections::BTreeMap;
 
 #[derive(Clone)]
 pub struct Documentation {
-	entries: HashMap<String, Entry>
+	// XXX: We shouldn't care about order, but the documentation generating code is just kind of a mess right now so we have to, to get ABC order. Eventually, we'll probably have this all ported to Psil directly, and then it won't necessarily be an issue.
+	entries: BTreeMap<String, Entry>
 }
 
 impl Documentation {
 	pub fn new() -> Self {
-		Documentation { entries: HashMap::new() }
+		Documentation { entries: BTreeMap::new() }
 	}
 
 	pub fn add_entry(&mut self, proc: String, entry: Entry) {
@@ -20,7 +21,7 @@ impl Documentation {
 		self.entries.get(proc)
 	}
 
-	pub fn get_entries(&self) -> &HashMap<String, Entry> {
+	pub fn get_entries(&self) -> &BTreeMap<String, Entry> {
 		&self.entries
 	}
 }
@@ -43,7 +44,6 @@ impl Entry {
 impl Display for Entry {
 	fn fmt(&self, f: &mut Formatter) -> ResultFmt {
 		writeln!(f, "## {}", self.proc)?;
-		writeln!(f)?;
 
 		writeln!(f, "{}", self.description)?;
 		writeln!(f)?;

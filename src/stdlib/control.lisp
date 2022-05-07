@@ -1,3 +1,26 @@
+(doc "cond"
+	(list)
+	"`cond` returns the evaluated expression associated with the true condition, or `#void` if none are true. See `cond.lisp` or `fizzbuzz.lisp` in the `samples` folder for examples.\n\nNote `cond` is a special form."
+	(table
+		"cond1" "(boolean) the first conditional to be considered."
+		"t1" "(any) the expression to return/evaluate if the first conditional is true."
+		"cond2" "(OPTIONAL) (boolean) the second conditional to be considered."
+		"t2" "(OPTIONAL) (any) the expression to return/evaluate if the second conditional is true. There may be more pairs of conditionals and associated expressions."))
+
+(doc "define"
+	(list)
+	"`define` creates a binding with the name given in the current scope.\n\nNote `define` is a special form."
+	(table
+		"name" "(name) the name of the binding."
+		"value" "(any) the value to bind to that name."))
+
+(doc "do"
+	(list)
+	"`do` executes each invocation/expression given.\n\nNote `do` is a special form."
+	(table
+		"expr1" "(any) the first expression to be evaluated"
+		"expr2" "(OPTIONAL) (any) the second expression to be evaluated. There may be more rands."))
+
 (doc "doc"
 	(list)
 	"`doc` adds a new entry to the built-in documentation."
@@ -24,6 +47,14 @@
 	"`help` shares the documentation for a given procedure or constant."
 	(table
 		"binding" "(string) the binding."))
+
+(doc "if"
+	(list)
+	"`if` returns and evaluates one expression if the given condition is true, and the other if false. The other expression within will not be evaluated.\n\nNote `if` is a special form."
+	(table
+		"cond" "(boolean) the conditional."
+		"t" "(any) the expression to return/evaluate if true."
+		"f" "(any) the expression to return/evaluate if false."))
 
 (doc "load"
 	(list)

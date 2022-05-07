@@ -1,6 +1,6 @@
 use std::io;
 
-use crate::{check_arity_at_least, check_arity_is};
+use crate::{check_arity_at_least, check_arity_is, load_into};
 use crate::environment::Environment;
 use crate::val::{Val, ValList, void};
 use crate::val::Val::StringV;
@@ -10,6 +10,10 @@ pub fn add_native(env: &mut Environment) {
 	env.add_proc("put", put);
 	env.add_proc("put-each", put_each);
 	env.add_proc("input", input);
+}
+
+pub fn add_pure(env: &mut Environment) {
+	load_into("src/stdlib/io.lisp", env).expect("Failure to load io.lisp!");
 }
 
 fn print(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
