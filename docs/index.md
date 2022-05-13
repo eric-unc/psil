@@ -6,4 +6,8 @@ NOTE: most of this documentation is automatically generated! This is done using 
 ## Subpages
 * [A description of Psil's grammar](grammar.md)
 * modules
+  * [boolean](modules/boolean.md)
   * [control](modules/control.md)
+  * [io](modules/io.md)
+  * [list](modules/list.md)
+  * [str](modules/str.md)
