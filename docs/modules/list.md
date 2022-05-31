@@ -91,3 +91,43 @@ Parameters:
 * `list`: (list) the list with each value that will become a rand.
 * `proc`: (proc) the procedure to each value.
 
+---
+## list-range
+`list-range` creates a list of numbers from a given range, with an optional step-size.
+
+Parameters:
+* `end`: (integer) the end of the range. Obviously, must be larger than the start
+* `start`: (integer) the start of the range.
+* `step-size`: (OPTIONAL) (integer) an alternative step size to choose from (the default is 1)
+
+---
+## list-remove
+`list-remove` removes an element from the list at a specific index.
+
+Parameters:
+* `index`: (natural number) the index.
+* `list`: (list) the list.
+
+---
+## list-reverse
+`list-reverse` returns a reversed list.
+
+Parameters:
+* `list`: (list) the list.
+
+---
+## list-second
+`list-second` returns the second value of the given list.
+
+Parameters:
+* `list`: (list) the list.
+
+---
+## list-swap
+`list-swap` swaps two elements in the list.
+
+Parameters:
+* `index1`: (natural number) the first index.
+* `index2`: (natural number) the second index.
+* `list`: (list) the list.
+
