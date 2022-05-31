@@ -59,7 +59,7 @@
 	(table
 		"list1" "(list) the first list to be joined."
 		"list2" "(list) the second list to be joined."
-		"list3" "(OPTIONAL) (list) the third list to be joined. There may be more rands."
+		"list3" "(OPTIONAL) (list) the third list to be joined. There may be more rands."))
 
 (doc "list-len"
 	(list)
