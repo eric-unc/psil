@@ -8,7 +8,7 @@ This is the documentation for the `boolean` module.
 
 ---
 ## !=
-`!=` checks for inequality between all rands.
+`!=` (boolean) checks for inequality between all rands.
 
 Parameters:
 * `val1`: (any) the first value to be checked for inequality.
@@ -17,7 +17,7 @@ Parameters:
 
 ---
 ## <
-`<` checks that the first rand is less than all other rands.
+`<` (boolean) checks that the first rand is less than all other rands.
 
 Parameters:
 * `val1`: (number) the value to be checked that it is less than the others.
@@ -26,7 +26,7 @@ Parameters:
 
 ---
 ## <=
-`<=` checks that the first rand is less than or equal to all other rands.
+`<=` (boolean) checks that the first rand is less than or equal to all other rands.
 
 Parameters:
 * `val1`: (number) the value to be checked that it is less than or equal to the others.
@@ -35,7 +35,7 @@ Parameters:
 
 ---
 ## ==
-`==` checks for equality between all rands.
+`==` (boolean) checks for equality between all rands.
 
 Parameters:
 * `val1`: (any) the first value to be checked for equality.
@@ -44,7 +44,7 @@ Parameters:
 
 ---
 ## >
-`>` checks that the first rand is greater than all other rands.
+`>` (boolean) checks that the first rand is greater than all other rands.
 
 Parameters:
 * `val1`: (number) the value to be checked that it is greater than the others.
@@ -53,7 +53,7 @@ Parameters:
 
 ---
 ## >=
-`>=` checks that the first rand is greater than or equal to all other rands.
+`>=` (boolean) checks that the first rand is greater than or equal to all other rands.
 
 Parameters:
 * `val1`: (number) the value to be checked that it is greater than or equal to the others.
@@ -62,7 +62,7 @@ Parameters:
 
 ---
 ## and
-`and` ANDs each rand together. Always short-circuited.
+`and` (boolean) ANDs each rand together. Always short-circuited.
 
 Note `and` is a special form.
 
@@ -73,21 +73,21 @@ Parameters:
 
 ---
 ## is-bool?
-`is-bool?` checks if the given rand is a boolean.
+`is-bool?` (boolean) checks if the given rand is a boolean.
 
 Parameters:
 * `val`: (any) the value to be checked if it is a boolean.
 
 ---
 ## not
-`not` negates the given rand.
+`not` (boolean) negates the given rand.
 
 Parameters:
 * `bool`: (boolean) the boolean to be negated.
 
 ---
 ## or
-`or` ORs each rand together. Always short-circuited.
+`or` (boolean) ORs each rand together. Always short-circuited.
 
 Note `or` is a special form.
 
@@ -98,7 +98,7 @@ Parameters:
 
 ---
 ## xor
-`xor` XORs each rand together.
+`xor` (boolean) XORs each rand together.
 
 Parameters:
 * `bool1`: (boolean) the first boolean to be XORed.

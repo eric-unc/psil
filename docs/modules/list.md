@@ -8,21 +8,21 @@ This is the documentation for the `list` module.
 
 ---
 ## is-list?
-`is-list?` checks if the given rand is a list.
+`is-list?` (boolean) checks if the given rand is a list.
 
 Parameters:
 * `val`: (any) the value to be checked if it is a list.
 
 ---
 ## list
-`list` creates a list from the given rands.
+`list` (list) creates a list from the given rands.
 
 Parameters:
 * `val1`: (OPTIONAL) (any) the first value to be included in the list. There may be more rands.
 
 ---
 ## list-append
-`list-append` returns a list with given rands appended.
+`list-append` (list) returns a list with given rands appended.
 
 Parameters:
 * `list`: (list) the list to be appended to.
@@ -31,7 +31,7 @@ Parameters:
 
 ---
 ## list-each
-`list-each` applies the value to the given procedure. Effectively the same as `list-map`, but ignores return values.
+`list-each` (`#void`) applies the value to the given procedure. Effectively the same as `list-map`, but ignores return values.
 
 Parameters:
 * `list`: (list) the list with each value that will become a rand.
@@ -39,14 +39,14 @@ Parameters:
 
 ---
 ## list-empty?
-`list-empty?` returns true if the list is empty.
+`list-empty?` (boolean) returns true if the list is empty.
 
 Parameters:
 * `list`: (list) the list.
 
 ---
 ## list-filter
-`list-filter` filters the list down using the given procedure.
+`list-filter` (list) filters the list down using the given procedure.
 
 Parameters:
 * `list`: (list) the list.
@@ -54,14 +54,14 @@ Parameters:
 
 ---
 ## list-first
-`list-first` returns the first value of the given list.
+`list-first` (any) returns the first value of the given list.
 
 Parameters:
 * `list`: (list) the list.
 
 ---
 ## list-get
-`list-get` gets an element from the list at a specific index.
+`list-get` (any) gets an element from the list at a specific index.
 
 Parameters:
 * `index`: (natural number) the index.
@@ -69,7 +69,7 @@ Parameters:
 
 ---
 ## list-join
-`list-join` combines two (or more) lists into one.
+`list-join` (list) combines two (or more) lists into one.
 
 Parameters:
 * `list1`: (list) the first list to be joined.
@@ -78,14 +78,14 @@ Parameters:
 
 ---
 ## list-len
-`list-len` returns the length of a given list.
+`list-len` (natural number) returns the length of a given list.
 
 Parameters:
 * `list`: (list) the list.
 
 ---
 ## list-map
-`list-map` returns a new list with values transformed by the given procedure.
+`list-map` (list) returns a new list with values transformed by the given procedure.
 
 Parameters:
 * `list`: (list) the list with each value that will become a rand.
@@ -93,7 +93,7 @@ Parameters:
 
 ---
 ## list-range
-`list-range` creates a list of numbers from a given range, with an optional step-size.
+`list-range` (list) creates a list of numbers from a given range, with an optional step-size.
 
 Parameters:
 * `end`: (integer) the end of the range. Obviously, must be larger than the start
@@ -102,7 +102,7 @@ Parameters:
 
 ---
 ## list-remove
-`list-remove` removes an element from the list at a specific index.
+`list-remove` (list) removes an element from the list at a specific index.
 
 Parameters:
 * `index`: (natural number) the index.
@@ -110,21 +110,21 @@ Parameters:
 
 ---
 ## list-reverse
-`list-reverse` returns a reversed list.
+`list-reverse` (list) returns a reversed list.
 
 Parameters:
 * `list`: (list) the list.
 
 ---
 ## list-second
-`list-second` returns the second value of the given list.
+`list-second` (any) returns the second value of the given list.
 
 Parameters:
 * `list`: (list) the list.
 
 ---
 ## list-swap
-`list-swap` swaps two elements in the list.
+`list-swap` (list) swaps two elements in the list.
 
 Parameters:
 * `index1`: (natural number) the first index.

@@ -8,7 +8,7 @@ This is the documentation for the `control` module.
 
 ---
 ## cond
-`cond` returns the evaluated expression associated with the true condition, or `#void` if none are true. See `cond.lisp` or `fizzbuzz.lisp` in the `samples` folder for examples.
+`cond` (any) returns the evaluated expression associated with the true condition, or `#void` if none are true. See `cond.lisp` or `fizzbuzz.lisp` in the `samples` folder for examples.
 
 Note `cond` is a special form.
 
@@ -20,7 +20,7 @@ Parameters:
 
 ---
 ## define
-`define` creates a binding with the name given in the current scope.
+`define` (`#void`) creates a binding with the name given in the current scope.
 
 Note `define` is a special form.
 
@@ -30,7 +30,7 @@ Parameters:
 
 ---
 ## do
-`do` executes each invocation/expression given.
+`do` (`#void`) executes each invocation/expression given.
 
 Note `do` is a special form.
 
@@ -40,7 +40,7 @@ Parameters:
 
 ---
 ## doc
-`doc` adds a new entry to the built-in documentation.
+`doc` (`#void`) adds a new entry to the built-in documentation.
 
 Parameters:
 * `aliases`: (list of strings) all aliases for the procedure.
@@ -50,28 +50,28 @@ Parameters:
 
 ---
 ## exit
-`exit` exits the program with a status code.
+`exit` (N/A) exits the program with a status code.
 
 Parameters:
 * `code`: (OPTIONAL) (integer) the exit code. Defaults is 0.
 
 ---
 ## fail
-`fail` generates an error, with an optional error message. In REPL mode, Psil will just output the error message to standard error, and continue to accept input, while in load mode, Psil will terminate execution of the given script after the error message is printed.
+`fail` (`#void`) generates an error, with an optional error message. In REPL mode, Psil will just output the error message to standard error, and continue to accept input, while in load mode, Psil will terminate execution of the given script after the error message is printed.
 
 Parameters:
 * `message`: (OPTIONAL) (string) the error message.
 
 ---
 ## help
-`help` shares the documentation for a given procedure or constant.
+`help` (`#void`) shares the documentation for a given procedure or constant.
 
 Parameters:
 * `binding`: (string) the binding.
 
 ---
 ## if
-`if` returns and evaluates one expression if the given condition is true, and the other if false. The other expression within will not be evaluated.
+`if` (any) returns and evaluates one expression if the given condition is true, and the other if false. The other expression within will not be evaluated.
 
 Note `if` is a special form.
 
@@ -82,14 +82,14 @@ Parameters:
 
 ---
 ## load
-`load` loads and runs a given Psil script.
+`load` (`#void`) loads and runs a given Psil script.
 
 Parameters:
 * `path`: (string) the path of the Psil script.
 
 ---
 ## type
-`type` give the type of the given rand as a symbol.
+`type` (symbol) give the type of the given rand as a symbol.
 
 Parameters:
 * `rand`: (any) the given rand.
