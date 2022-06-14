@@ -34,6 +34,7 @@ fn add_pure_library(env: &mut Environment) {
 	io::add_pure(env);
 	list::add_pure(env);
 	math::add_pure(env);
+	proc::add_pure(env);
 	str::add_pure(env);
 }
 

@@ -10,4 +10,6 @@ NOTE: most of this documentation is automatically generated! This is done using 
   * [control](modules/control.md)
   * [io](modules/io.md)
   * [list](modules/list.md)
+  * [math](modules/math.md)
+  * [proc](modules/proc.md)
   * [str](modules/str.md)
