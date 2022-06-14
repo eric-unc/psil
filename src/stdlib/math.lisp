@@ -1,6 +1,6 @@
 (doc "+"
 	(list)
-	"`+` adds all rands given."
+	"`+` (number) adds all rands given."
 	(table
 		"val1" "(number) the first value to be added."
 		"val2" "(number) the second value to be added."
@@ -8,7 +8,7 @@
 
 (doc "-"
 	(list)
-	"`-` subtracts the first rand by the remaining rands."
+	"`-` (number) subtracts the first rand by the remaining rands."
 	(table
 		"val1" "(number) the value that is subtracted from (the \"minuend\")."
 		"val2" "(number) the first value to be subtracted by (or the first \"subtrahend\")."
@@ -16,7 +16,7 @@
 
 (doc "*"
 	(list)
-	"`*` multiplies all rands given."
+	"`*` (number) multiplies all rands given."
 	(table
 		"val1" "(number) the first value to be multiplied."
 		"val2" "(number) the second value to be multiplied."
@@ -24,7 +24,7 @@
 
 (doc "/"
 	(list)
-	"`/` divides the first rand by the remaining rands."
+	"`/` (number) divides the first rand by the remaining rands."
 	(table
 		"val1" "(number) the value that is divided from (the \"dividend\" or \"numerator\")."
 		"val2" "(number) the first value to divide by (or the first \"divisor\" or \"denominator\")."
@@ -32,7 +32,7 @@
 
 (doc "%"
 	(list)
-	"`%` divides the first rand by the remaining rands, and gives the remainder. It is the modulo operator."
+	"`%` (number) divides the first rand by the remaining rands, and gives the remainder. It is the modulo operator."
 	(table
 		"val1" "(number) the value that is modulo from (the \"dividend\" or \"numerator\")."
 		"val2" "(number) the first value to by modulo by (or the first \"divisor\" or \"denominator\")."
@@ -40,6 +40,6 @@
 
 (doc "is-num?"
 	(list)
-	"`is-num?` checks if the given rand is a number."
+	"`is-num?` (boolean) checks if the given rand is a number."
 	(table
     	"val" "(any) the value to be checked if it is a number."))
