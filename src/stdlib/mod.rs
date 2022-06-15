@@ -37,6 +37,7 @@ fn add_pure_library(env: &mut Environment) {
 	proc::add_pure(env);
 	str::add_pure(env);
 	symb::add_pure(env);
+	table::add_pure(env);
 }
 
 // Macros for module

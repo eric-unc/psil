@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use crate::{check_arity_even, check_arity_is};
+use crate::{check_arity_even, check_arity_is, load_into};
 use crate::environment::Environment;
 use crate::val::{Val, ValList};
 use crate::val::Val::{Boolean, Table};
@@ -7,6 +7,10 @@ use crate::val::Val::{Boolean, Table};
 pub fn add_native(env: &mut Environment) {
 	env.add_proc("is-table?", is_table);
 	env.add_proc("table", table);
+}
+
+pub fn add_pure(env: &mut Environment) {
+	load_into("src/stdlib/table.lisp", env).expect("Failure to load table.lisp!");
 }
 
 fn is_table(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
