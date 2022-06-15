@@ -44,3 +44,73 @@ Parameters:
 Parameters:
 * `str`: (string) the string to be checked.
 
+---
+## str-insert
+`str-insert` (string) inserts the second string into the first at the given index.
+
+Parameters:
+* `index`: (natural number) the index of the first string where the second is inserted.
+* `str1`: (string) the string to be insert into.
+* `str2`: (string) the string that is inserted.
+
+---
+## str-len
+`str-len` (natural number) returns the length of a given string.
+
+Parameters:
+* `str`: (string) the string.
+
+---
+## str-low
+`str-low` (string) returns the lowercase version of the given string.
+
+Parameters:
+* `str`: (string) the string.
+
+---
+## str-repeat
+`str-repeat` (string) returns the string repeated a certain number of times.
+
+Parameters:
+* `count`: (natural number) the number of times to repeat the string.
+* `str`: (string) the string to be repeated.
+
+---
+## str-replace
+`str-replace` (string) returns the first string with all instances of the second (the "old text") replaced by the third (the "new text").
+
+Parameters:
+* `new-text`: (string) the new text that the old text is replaced with
+* `old-text`: (string) the old text to be replaced.
+* `str`: (string) the string to be modified.
+
+---
+## str-starts-with?
+`str-starts-with?` (boolean) checks if the first rand starts with the second rand.
+
+Parameters:
+* `str1`: (string) the string.
+* `str2`: (string) the testing string.
+
+---
+## str-strip
+`str-strip` (string) removes leading/trailing whitespace from the given string.
+
+Parameters:
+* `str`: (string) the string.
+
+---
+## str-trunc
+`str-trunc` (string) shortens the given string to a given length.
+
+Parameters:
+* `new-length`: (natural number) the new length. Cannot be larger than the current length.
+* `str`: (string) the string.
+
+---
+## str-up
+`str-up` (string) returns the uppercase version of the given string.
+
+Parameters:
+* `str`: (string) the string.
+
