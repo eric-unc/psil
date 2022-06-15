@@ -1,4 +1,4 @@
-use crate::{check_arity_is, check_arity_at_least, fail_on_bad_type};
+use crate::{check_arity_is, check_arity_at_least, fail_on_bad_type, load_into};
 use crate::environment::Environment;
 use crate::val::{Val, ValList};
 use crate::val::Val::{Boolean, Number};
@@ -10,6 +10,10 @@ pub fn add_native(env: &mut Environment) {
 	env.add_proc("/", divide);
 	env.add_proc("%", remainder);
 	env.add_proc("is-num?", is_num);
+}
+
+pub fn add_pure(env: &mut Environment) {
+	load_into("src/stdlib/math.lisp", env).expect("Failure to load math.lisp!");
 }
 
 fn add(rands: ValList, _env: &mut Environment) -> Result<Val, String> {

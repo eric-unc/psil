@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+
 use crate::{check_arity_between, check_arity_is, fail_on_bad_type, get_integer, get_list, get_string, get_table, load_into};
 use crate::doc::Entry;
 use crate::environment::Environment;
@@ -85,9 +86,9 @@ fn help(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 fn load(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("load", 1, rands);
 
-	let file = get_string!("load", rands, 0);
+	let path = get_string!("load", rands, 0);
 
-	load_into(file, env)?;
+	load_into(path, env)?;
 	Ok(void())
 }
 
