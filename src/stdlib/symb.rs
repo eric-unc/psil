@@ -1,4 +1,4 @@
-use crate::{check_arity_is, fail_on_bad_type, get_string, get_symbol};
+use crate::{check_arity_is, fail_on_bad_type, get_string, get_symbol, load_into};
 use crate::environment::Environment;
 use crate::val::{Val, ValList};
 use crate::val::Val::{Boolean, StringV, Symbol};
@@ -8,6 +8,10 @@ pub fn add_native(env: &mut Environment) {
 	env.add_proc("symb2str", symb_to_str);
 	env.add_proc("is-symb?", is_symb);
 	env.add_proc("is-void?", is_void);
+}
+
+pub fn add_pure(env: &mut Environment) {
+	load_into("src/stdlib/symb.lisp", env).expect("Failure to load symb.lisp!");
 }
 
 fn str_to_symb(rands: ValList, _env: &mut Environment) -> Result<Val, String> {

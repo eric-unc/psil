@@ -13,3 +13,4 @@ NOTE: most of this documentation is automatically generated! This is done using 
   * [math](modules/math.md)
   * [proc](modules/proc.md)
   * [str](modules/str.md)
+  * [symb](modules/symb.md)
