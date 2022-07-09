@@ -110,3 +110,11 @@
 		"list" "(list) the list."
 		"index1" "(natural number) the first index."
 		"index2" "(natural number) the second index."))
+
+(define list-third {|list| (list-get list 2)})
+(define third list-third)
+(doc "list-third"
+	(list "third")
+	"`list-third` (any) returns the third value of the given list."
+	(table
+		"list" "(list) the list."))
