@@ -28,6 +28,15 @@ fn list_append() {
 }
 
 #[test]
+fn list_count() {
+	evals_and_eq!("(list-count (list) 1)", Number(0.0));
+	evals_and_eq!("(list-count (list 1 2 3 1) 1)", Number(2.0));
+	evals_and_eq!("(list-count (list 1 2 3 1) 1 3)", Number(3.0));
+	fails_eval!("(list-count 1 3)");
+	fails_eval!("(list-count (list))");
+}
+
+#[test]
 fn list_empty() {
 	evals_and_eq!("(list-empty? (list 5))", Boolean(false));
 	evals_and_eq!("(list-empty? (list))", Boolean(true));

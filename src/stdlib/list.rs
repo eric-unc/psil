@@ -8,6 +8,7 @@ pub fn add_native(env: &mut Environment) {
 	env.add_proc("is-list?", is_list);
 	env.add_proc("list", list);
 	env.add_proc("list-append", list_append);
+	env.add_proc("list-count", list_count);
 	env.add_proc("list-each", list_each);
 	env.add_proc("list-empty?", list_empty);
 	env.add_proc("list-filter", list_filter);
@@ -56,6 +57,24 @@ fn list_append(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 
 
 	Ok(List(new_list))
+}
+
+fn list_count(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
+	check_arity_at_least!("list-count", 2, rands);
+
+	let list = get_list!("list-count", rands, 0);
+
+	let mut ret = 0;
+
+	for item in list {
+		for i in 1..rands.len() {
+			if rands[i].eq(item) {
+				ret += 1;
+			}
+		}
+	}
+
+	Ok(Number(ret as f64))
 }
 
 fn list_each(rands: ValList, env: &mut Environment) -> Result<Val, String> {

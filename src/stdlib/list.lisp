@@ -18,6 +18,14 @@
 		"val1" "(any) the first value to be appended to the list."
 		"val2" "(OPTIONAL) (any) the second value to be appended to the list. There may be more rands."))
 
+(doc "list-count"
+	(list)
+	"`list-count` (natural number) returns the number of items in a list equal to the given rands."
+	(table
+		"list" "(list) the list to be counted."
+		"val1" "(any) the first value to be checked for."
+		"val2" "(OPTIONAL) (any) the second value to be checked for. There may be more rands."))
+
 (doc "list-each"
 	(list)
 	"`list-each` (`#void`) applies the value to the given procedure. Effectively the same as `list-map`, but ignores return values."
