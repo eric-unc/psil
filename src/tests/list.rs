@@ -87,6 +87,14 @@ fn list_fold() {
 }
 
 #[test]
+fn list_foldr() {
+	evals_and_eq!("(list-foldr (list 1 2 3 4 5) + 0)", Number(15.0));
+	fails_eval!("(list-foldr)");
+	fails_eval!("(list-foldr (list 1 2 3 4 5))");
+	fails_eval!("(list-foldr (list 1 2 3 4 5) +)");
+}
+
+#[test]
 fn list_get() {
 	evals_and_eq!("(list-get (list 1 false \"pee\") 0)", Number(1.0));
 	evals_and_eq!("(list-get (list 1 false \"pee\") 1)", Boolean(false));

@@ -15,6 +15,7 @@ pub fn add_native(env: &mut Environment) {
 	env.add_proc("list-find", list_find);
 	env.add_proc("list-flatten", list_flatten);
 	env.add_proc("list-fold", list_fold);
+	env.add_proc("list-foldr", list_foldr);
 	env.add_proc("list-get", list_get);
 	env.add_proc("list-join", list_join);
 	env.add_proc("list-len", list_len);
@@ -174,6 +175,20 @@ fn list_fold(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 
 	for item in list {
 		ret = eval_proc_with_rands(proc.clone(), vec![ret.clone(), item.clone()], "anonymous".to_string(), env)?;
+	}
+
+	Ok(ret)
+}
+
+fn list_foldr(rands: ValList, env: &mut Environment) -> Result<Val, String> {
+	check_arity_is!("list-foldr", 3, rands);
+
+	let list = get_list!("list-foldr", rands, 0);
+	let proc = get_proc!("list-foldr", rands, 1);
+	let mut ret = rands[2].clone();
+
+	for item in list {
+		ret = eval_proc_with_rands(proc.clone(), vec![item.clone(), ret.clone()], "anonymous".to_string(), env)?;
 	}
 
 	Ok(ret)

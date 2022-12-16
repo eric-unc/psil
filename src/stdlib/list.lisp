@@ -76,6 +76,14 @@
 		"proc" "(proc) the procedure used for accumulation. Must accept two arguments."
 		"base" "(any) the initial value."))
 
+(doc "list-foldr"
+	(list)
+	"`list-foldr` (any) is similar to `list-fold`, except the procedure is passed firstly a value from the list, and _then_ the accumulator."
+	(table
+		"list" "(list) the list."
+		"proc" "(proc) the procedure used for accumulation. Must accept two arguments."
+		"base" "(any) the initial value."))
+
 (doc "list-get"
 	(list)
 	"`list-get` (any) gets an element from the list at a specific index."
