@@ -68,6 +68,14 @@
 		"list" "(list) the list."
 		"level" "(OPTIONAL) (integer) the level of recursion. Default is 1."))
 
+(doc "list-fold"
+	(list)
+	"`list-fold` (any) combines all elements of a list into one cumulative value, given a procedure and a base value. With each iteration, the procedure is passed firstly the accumulator, then a value from the list."
+	(table
+		"list" "(list) the list."
+		"proc" "(proc) the procedure used for accumulation. Must accept two arguments."
+		"base" "(any) the initial value."))
+
 (doc "list-get"
 	(list)
 	"`list-get` (any) gets an element from the list at a specific index."

@@ -72,9 +72,18 @@ fn list_flatten() {
 	evals_and_eq!("(list-flatten (list 1 2 (list 3 4) 5))", List(vec![Number(1.0), Number(2.0), Number(3.0), Number(4.0), Number(5.0)]));
 	evals_and_eq!("(list-flatten (list 1 2 (list 3 (list 4 5)) 6))", List(vec![Number(1.0), Number(2.0), Number(3.0), List(vec![Number(4.0), Number(5.0)]), Number(6.0)]));
 	evals_and_eq!("(list-flatten (list 1 2 (list 3 (list 4 5)) 6) 2)", List(vec![Number(1.0), Number(2.0), Number(3.0), Number(4.0), Number(5.0), Number(6.0)]));
-	fails_eval!("(list-flatten");
+	fails_eval!("(list-flatten)");
 	fails_eval!("(list-flatten (list 1 2 (list 3 4) 5) 1 1)");
 	fails_eval!("(list-flatten 1 (list 1 2 (list 3 4) 5))");
+}
+
+#[test]
+fn list_fold() {
+	evals_and_eq!("(list-fold (list 1 2 3 4 5) + 0)", Number(15.0));
+	evals_and_eq!("(list-fold (list 1 2 3 4 5 6) list-append (list))", List(vec![Number(1.0), Number(2.0), Number(3.0), Number(4.0), Number(5.0), Number(6.0)]));
+	fails_eval!("(list-fold)");
+	fails_eval!("(list-fold (list 1 2 3 4 5))");
+	fails_eval!("(list-fold (list 1 2 3 4 5) +)");
 }
 
 #[test]
