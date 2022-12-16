@@ -68,6 +68,16 @@ fn list_find() {
 }
 
 #[test]
+fn list_flatten() {
+	evals_and_eq!("(list-flatten (list 1 2 (list 3 4) 5))", List(vec![Number(1.0), Number(2.0), Number(3.0), Number(4.0), Number(5.0)]));
+	evals_and_eq!("(list-flatten (list 1 2 (list 3 (list 4 5)) 6))", List(vec![Number(1.0), Number(2.0), Number(3.0), List(vec![Number(4.0), Number(5.0)]), Number(6.0)]));
+	evals_and_eq!("(list-flatten (list 1 2 (list 3 (list 4 5)) 6) 2)", List(vec![Number(1.0), Number(2.0), Number(3.0), Number(4.0), Number(5.0), Number(6.0)]));
+	fails_eval!("(list-flatten");
+	fails_eval!("(list-flatten (list 1 2 (list 3 4) 5) 1 1)");
+	fails_eval!("(list-flatten 1 (list 1 2 (list 3 4) 5))");
+}
+
+#[test]
 fn list_get() {
 	evals_and_eq!("(list-get (list 1 false \"pee\") 0)", Number(1.0));
 	evals_and_eq!("(list-get (list 1 false \"pee\") 1)", Boolean(false));

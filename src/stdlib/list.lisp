@@ -61,6 +61,13 @@
 	(table
 		"list" "(list) the list."))
 
+(doc "list-flatten"
+	(list)
+	"`list-flatten` (list) returns a flatten list. That is, each list inside the list is expanded in the new list produced, being replaced by its elements."
+	(table
+		"list" "(list) the list."
+		"level" "(OPTIONAL) (integer) the level of recursion. Default is 1."))
+
 (doc "list-get"
 	(list)
 	"`list-get` (any) gets an element from the list at a specific index."

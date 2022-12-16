@@ -13,6 +13,7 @@ pub fn add_native(env: &mut Environment) {
 	env.add_proc("list-empty?", list_empty);
 	env.add_proc("list-filter", list_filter);
 	env.add_proc("list-find", list_find);
+	env.add_proc("list-flatten", list_flatten);
 	env.add_proc("list-get", list_get);
 	env.add_proc("list-join", list_join);
 	env.add_proc("list-len", list_len);
@@ -132,7 +133,35 @@ fn list_find(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 		i += 1;
 	}
 
-	return Ok(Number(-1.0));
+	Ok(Number(-1.0))
+}
+
+fn list_flatten(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
+	check_arity_between!("list-flatten", 1, 2, rands);
+
+    let list = get_list!("list-flatten", rands, 0);
+    let level = if rands.len() == 2 { get_integer!("list-flatten", rands, 1) } else { 1 };
+
+    let mut new_list = list.clone();
+
+    for i in 0..level {
+    	let mut cons_list = vec![];
+
+    	for item in new_list {
+    		match item {
+    			List(l) => {
+    				for item2 in l {
+    					cons_list.push(item2.clone())
+    				}
+    			}
+    			_ => cons_list.push(item.clone())
+    		}
+    	}
+
+    	new_list = cons_list;
+    }
+
+    Ok(List(new_list))
 }
 
 fn list_get(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
