@@ -30,6 +30,15 @@ Parameters:
 * `val2`: (OPTIONAL) (any) the second value to be appended to the list. There may be more rands.
 
 ---
+## list-count
+`list-count` (natural number) returns the number of items in a list equal to the given rands.
+
+Parameters:
+* `list`: (list) the list to be counted.
+* `val1`: (any) the first value to be checked for.
+* `val2`: (OPTIONAL) (any) the second value to be checked for. There may be more rands.
+
+---
 ## list-each
 `list-each` (`#void`) applies the value to the given procedure. Effectively the same as `list-map`, but ignores return values.
 
@@ -53,11 +62,45 @@ Parameters:
 * `proc`: (proc) the procedure used for filtering. Must accept a singular value, and always return a boolean (true if the value should be included, false otherwise).
 
 ---
+## list-find
+`list-find` (integer) returns the first index where the given value was found, or -1 if the value was not found.
+
+Parameters:
+* `list`: (list) the list.
+* `val`: (any) the value to be found.
+
+---
 ## list-first
 `list-first` (any) returns the first value of the given list.
 
 Parameters:
 * `list`: (list) the list.
+
+---
+## list-flatten
+`list-flatten` (list) returns a flatten list. That is, each list inside the list is expanded in the new list produced, being replaced by its elements.
+
+Parameters:
+* `level`: (OPTIONAL) (integer) the level of recursion. Default is 1.
+* `list`: (list) the list.
+
+---
+## list-fold
+`list-fold` (any) combines all elements of a list into one cumulative value, given a procedure and a base value. With each iteration, the procedure is passed firstly the accumulator, then a value from the list.
+
+Parameters:
+* `base`: (any) the initial value.
+* `list`: (list) the list.
+* `proc`: (proc) the procedure used for accumulation. Must accept two arguments.
+
+---
+## list-foldr
+`list-foldr` (any) is similar to `list-fold`, except the procedure is passed firstly a value from the list, and _then_ the accumulator.
+
+Parameters:
+* `base`: (any) the initial value.
+* `list`: (list) the list.
+* `proc`: (proc) the procedure used for accumulation. Must accept two arguments.
 
 ---
 ## list-get
@@ -129,5 +172,12 @@ Parameters:
 Parameters:
 * `index1`: (natural number) the first index.
 * `index2`: (natural number) the second index.
+* `list`: (list) the list.
+
+---
+## list-third
+`list-third` (any) returns the third value of the given list.
+
+Parameters:
 * `list`: (list) the list.
 

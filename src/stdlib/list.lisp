@@ -18,6 +18,14 @@
 		"val1" "(any) the first value to be appended to the list."
 		"val2" "(OPTIONAL) (any) the second value to be appended to the list. There may be more rands."))
 
+(doc "list-count"
+	(list)
+	"`list-count` (natural number) returns the number of items in a list equal to the given rands."
+	(table
+		"list" "(list) the list to be counted."
+		"val1" "(any) the first value to be checked for."
+		"val2" "(OPTIONAL) (any) the second value to be checked for. There may be more rands."))
+
 (doc "list-each"
 	(list)
 	"`list-each` (`#void`) applies the value to the given procedure. Effectively the same as `list-map`, but ignores return values."
@@ -38,6 +46,13 @@
 		"list" "(list) the list."
 		"proc" "(proc) the procedure used for filtering. Must accept a singular value, and always return a boolean (true if the value should be included, false otherwise)."))
 
+(doc "list-find"
+	(list)
+	"`list-find` (integer) returns the first index where the given value was found, or -1 if the value was not found."
+	(table
+		"list" "(list) the list."
+		"val" "(any) the value to be found."))
+
 (define list-first {|list| (list-get list 0)})
 (define first list-first)
 (doc "list-first"
@@ -45,6 +60,29 @@
 	"`list-first` (any) returns the first value of the given list."
 	(table
 		"list" "(list) the list."))
+
+(doc "list-flatten"
+	(list)
+	"`list-flatten` (list) returns a flatten list. That is, each list inside the list is expanded in the new list produced, being replaced by its elements."
+	(table
+		"list" "(list) the list."
+		"level" "(OPTIONAL) (integer) the level of recursion. Default is 1."))
+
+(doc "list-fold"
+	(list)
+	"`list-fold` (any) combines all elements of a list into one cumulative value, given a procedure and a base value. With each iteration, the procedure is passed firstly the accumulator, then a value from the list."
+	(table
+		"list" "(list) the list."
+		"proc" "(proc) the procedure used for accumulation. Must accept two arguments."
+		"base" "(any) the initial value."))
+
+(doc "list-foldr"
+	(list)
+	"`list-foldr` (any) is similar to `list-fold`, except the procedure is passed firstly a value from the list, and _then_ the accumulator."
+	(table
+		"list" "(list) the list."
+		"proc" "(proc) the procedure used for accumulation. Must accept two arguments."
+		"base" "(any) the initial value."))
 
 (doc "list-get"
 	(list)
@@ -110,3 +148,11 @@
 		"list" "(list) the list."
 		"index1" "(natural number) the first index."
 		"index2" "(natural number) the second index."))
+
+(define list-third {|list| (list-get list 2)})
+(define third list-third)
+(doc "list-third"
+	(list "third")
+	"`list-third` (any) returns the third value of the given list."
+	(table
+		"list" "(list) the list."))

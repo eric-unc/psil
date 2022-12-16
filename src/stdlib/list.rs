@@ -8,9 +8,14 @@ pub fn add_native(env: &mut Environment) {
 	env.add_proc("is-list?", is_list);
 	env.add_proc("list", list);
 	env.add_proc("list-append", list_append);
+	env.add_proc("list-count", list_count);
 	env.add_proc("list-each", list_each);
 	env.add_proc("list-empty?", list_empty);
 	env.add_proc("list-filter", list_filter);
+	env.add_proc("list-find", list_find);
+	env.add_proc("list-flatten", list_flatten);
+	env.add_proc("list-fold", list_fold);
+	env.add_proc("list-foldr", list_foldr);
 	env.add_proc("list-get", list_get);
 	env.add_proc("list-join", list_join);
 	env.add_proc("list-len", list_len);
@@ -58,6 +63,24 @@ fn list_append(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 	Ok(List(new_list))
 }
 
+fn list_count(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
+	check_arity_at_least!("list-count", 2, rands);
+
+	let list = get_list!("list-count", rands, 0);
+
+	let mut ret = 0;
+
+	for item in list {
+		for i in 1..rands.len() {
+			if rands[i].eq(item) {
+				ret += 1;
+			}
+		}
+	}
+
+	Ok(Number(ret as f64))
+}
+
 fn list_each(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 	check_arity_is!("list-each", 2, rands);
 
@@ -97,6 +120,78 @@ fn list_filter(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 	}
 
 	Ok(List(new_list))
+}
+
+fn list_find(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
+	check_arity_is!("list-find", 2, rands);
+
+	let list = get_list!("list-find", rands, 0);
+
+	let mut i = 0;
+	for item in list {
+		if rands[1].eq(item) {
+			return Ok(Number(i as f64));
+		}
+		i += 1;
+	}
+
+	Ok(Number(-1.0))
+}
+
+fn list_flatten(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
+	check_arity_between!("list-flatten", 1, 2, rands);
+
+    let list = get_list!("list-flatten", rands, 0);
+    let level = if rands.len() == 2 { get_integer!("list-flatten", rands, 1) } else { 1 };
+
+    let mut new_list = list.clone();
+
+    for _i in 0..level {
+    	let mut cons_list = vec![];
+
+    	for item in new_list {
+    		match item {
+    			List(l) => {
+    				for item2 in l {
+    					cons_list.push(item2.clone())
+    				}
+    			}
+    			_ => cons_list.push(item.clone())
+    		}
+    	}
+
+    	new_list = cons_list;
+    }
+
+    Ok(List(new_list))
+}
+
+fn list_fold(rands: ValList, env: &mut Environment) -> Result<Val, String> {
+	check_arity_is!("list-fold", 3, rands);
+
+	let list = get_list!("list-fold", rands, 0);
+	let proc = get_proc!("list-fold", rands, 1);
+	let mut ret = rands[2].clone();
+
+	for item in list {
+		ret = eval_proc_with_rands(proc.clone(), vec![ret.clone(), item.clone()], "anonymous".to_string(), env)?;
+	}
+
+	Ok(ret)
+}
+
+fn list_foldr(rands: ValList, env: &mut Environment) -> Result<Val, String> {
+	check_arity_is!("list-foldr", 3, rands);
+
+	let list = get_list!("list-foldr", rands, 0);
+	let proc = get_proc!("list-foldr", rands, 1);
+	let mut ret = rands[2].clone();
+
+	for item in list {
+		ret = eval_proc_with_rands(proc.clone(), vec![item.clone(), ret.clone()], "anonymous".to_string(), env)?;
+	}
+
+	Ok(ret)
 }
 
 fn list_get(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
