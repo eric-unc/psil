@@ -57,6 +57,17 @@ fn list_filter() {
 }
 
 #[test]
+fn list_find() {
+	evals_and_eq!("(list-find (list 1 2 3) 2)", Number(1.0));
+	evals_and_eq!("(list-find (list 1 2 3 2) 2)", Number(1.0));
+	evals_and_eq!("(list-find (list 0 0 3 2) 3)", Number(2.0));
+	evals_and_eq!("(list-find (list 0 0 3 2) 5)", Number(-1.0));
+	evals_and_eq!("(list-find (list 0 0 3 2) \"0\")", Number(-1.0));
+	fails_eval!("(list-find (list 0 0 3 2) 3 5)");
+	fails_eval!("(list-find 3 (list 0 0 3 2))");
+}
+
+#[test]
 fn list_get() {
 	evals_and_eq!("(list-get (list 1 false \"pee\") 0)", Number(1.0));
 	evals_and_eq!("(list-get (list 1 false \"pee\") 1)", Boolean(false));

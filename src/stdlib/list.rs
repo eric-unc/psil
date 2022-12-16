@@ -12,6 +12,7 @@ pub fn add_native(env: &mut Environment) {
 	env.add_proc("list-each", list_each);
 	env.add_proc("list-empty?", list_empty);
 	env.add_proc("list-filter", list_filter);
+	env.add_proc("list-find", list_find);
 	env.add_proc("list-get", list_get);
 	env.add_proc("list-join", list_join);
 	env.add_proc("list-len", list_len);
@@ -116,6 +117,22 @@ fn list_filter(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 	}
 
 	Ok(List(new_list))
+}
+
+fn list_find(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
+	check_arity_is!("list-find", 2, rands);
+
+	let list = get_list!("list-find", rands, 0);
+
+	let mut i = 0;
+	for item in list {
+		if rands[1].eq(item) {
+			return Ok(Number(i as f64));
+		}
+		i += 1;
+	}
+
+	return Ok(Number(-1.0));
 }
 
 fn list_get(rands: ValList, _env: &mut Environment) -> Result<Val, String> {

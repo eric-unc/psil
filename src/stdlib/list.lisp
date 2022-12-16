@@ -46,6 +46,13 @@
 		"list" "(list) the list."
 		"proc" "(proc) the procedure used for filtering. Must accept a singular value, and always return a boolean (true if the value should be included, false otherwise)."))
 
+(doc "list-find"
+	(list)
+	"`list-find` (integer) returns the first index where the given value was found, or -1 if the value was not found."
+	(table
+		"list" "(list) the list."
+		"val" "(any) the value to be found."))
+
 (define list-first {|list| (list-get list 0)})
 (define first list-first)
 (doc "list-first"
