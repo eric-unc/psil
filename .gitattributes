@@ -1,0 +1,2 @@
+# This isn't strictly true but we want it to be consistent
+*.lisp linguist-language=Common Lisp
