@@ -24,6 +24,7 @@ pub fn add_native(env: &mut Environment) {
 	env.add_proc("list-range", list_range);
 	env.add_proc("list-remove", list_remove);
 	env.add_proc("list-reverse", list_reverse);
+	env.add_proc("list-set", list_set);
 	env.add_proc("list-swap", list_swap);
 }
 
@@ -316,6 +317,20 @@ fn list_reverse(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 
 	let mut new_list = list.clone();
 	new_list.reverse();
+	Ok(List(new_list))
+}
+
+fn list_set(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
+	check_arity_is!("list-set", 3, rands);
+
+	let list = get_list!("list-set", rands, 0);
+	let index = get_natural_number!("list-set", rands, 1) as usize;
+	let new_val = &rands[2];
+
+	check_bounds!(index, list);
+
+	let mut new_list = list.clone();
+	new_list[index] = new_val.clone();
 	Ok(List(new_list))
 }
 

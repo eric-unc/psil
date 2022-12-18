@@ -178,6 +178,15 @@ fn list_remove() {
 }
 
 #[test]
+fn list_set() {
+	evals_and_eq!("(list-set (list 1 2 3) 0 3)", List(vec![Number(3.0), Number(2.0), Number(3.0)]));
+	evals_and_eq!("(list-set (list 1 true 3) 1 5)", List(vec![Number(1.0), Number(5.0), Number(3.0)]));
+	fails_eval!("(list-set)");
+	fails_eval!("(list-set (list 1 2 3) -1 3)");
+	fails_eval!("(list-set (list 1 2 3) 3 3)");
+}
+
+#[test]
 fn list_swap() {
 	evals_and_eq!("(list-swap (list 1 2 3) 0 1)", List(vec![Number(2.0), Number(1.0), Number(3.0)]));
 	evals_and_eq!("(list-swap (list 1 2 3 4) 1 2)", List(vec![Number(1.0), Number(3.0), Number(2.0), Number(4.0)]));

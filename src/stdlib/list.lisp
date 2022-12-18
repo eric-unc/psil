@@ -181,6 +181,14 @@
 	(table
 		"list" "(list) the list."))
 
+(doc "list-set"
+	(list)
+	"`list-set` (list) sets an index in the given list to new value."
+	(table
+		"list" "(list) the list."
+		"index" "(natural number) the index."
+		"val" "(any) the new value."))
+
 (define list-seventh {|list| (list-get list 6)})
 (define seventh list-seventh)
 (doc "list-seventh"
