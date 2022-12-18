@@ -115,6 +115,14 @@
 		"list" "(list) the list."
 		"index" "(natural number) the index."))
 
+(define list-has? {|list val| (!= (list-find list val) -1)})
+(doc "list-has?"
+	(list)
+	"`list-has?` (boolean) returns true if the given list has a specific value, and false otherwise."
+	(table
+    	"list" "(list) the list."
+    	"val" "(any) the value to be checked for."))
+
 (doc "list-join"
 	(list)
 	"`list-join` (list) combines two (or more) lists into one."

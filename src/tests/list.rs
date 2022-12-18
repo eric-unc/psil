@@ -113,6 +113,16 @@ fn list_get() {
 }
 
 #[test]
+fn list_has() {
+	evals_and_eq!("(list-has? (list 1 false \"pee\") 0)", Boolean(false));
+	evals_and_eq!("(list-has? (list 1 false \"pee\") 1)", Boolean(true));
+	evals_and_eq!("(list-has? (list 4 false \"pee\" true 0 1 1) 1)", Boolean(true));
+	fails_eval!("(list-has?)");
+	fails_eval!("(list-has? (list 1 false \"pee\"))");
+	fails_eval!("(list-has? 0 (list 1 false \"pee\"))");
+}
+
+#[test]
 fn list_join() {
 	evals_and_eq!("(list-join (list) (list 1))", List(vec![Number(1.0)]));
 	evals_and_eq!("(list-join (list false) (list 1 2))", List(vec![Boolean(false), Number(1.0), Number(2.0)]));
