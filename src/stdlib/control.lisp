@@ -7,6 +7,16 @@
 		"cond2" "(OPTIONAL) (boolean) the second conditional to be considered."
 		"t2" "(OPTIONAL) (any) the expression to return/evaluate if the second conditional is true. There may be more pairs of conditionals and associated expressions."))
 
+(doc "count-bindings"
+	(list)
+	"`count-bindings` (integer) returns the number of bindings in the current environment."
+	(table))
+
+(doc "count-scopes"
+	(list)
+	"`count-scopes` (integer) returns the number of scopes in the current environment."
+	(table))
+
 (doc "define"
 	(list)
 	"`define` (`#void`) creates a binding with the name given in the current scope.\n\nNote `define` is a special form."

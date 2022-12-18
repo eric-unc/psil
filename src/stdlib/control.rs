@@ -7,6 +7,8 @@ use crate::val::{Val, ValList, void};
 use crate::val::Val::{Number, StringV, Symbol, List, Table};
 
 pub fn add_native(env: &mut Environment) {
+	env.add_proc("count-bindings", count_bindings);
+	env.add_proc("count-scopes", count_scopes);
 	env.add_proc("doc", doc);
 	env.add_proc("exit", exit);
 	env.add_proc("fail", fail);
@@ -17,6 +19,15 @@ pub fn add_native(env: &mut Environment) {
 
 pub fn add_pure(env: &mut Environment) {
 	load_into("src/stdlib/control.lisp", env).expect("Failure to load control.lisp!");
+}
+
+fn count_bindings(rands: ValList, env: &mut Environment) -> Result<Val, String> {
+	check_arity_is!("count-bindings", 0, rands);
+	Ok(Number(env.count_bindings() as f64))
+}
+fn count_scopes(rands: ValList, env: &mut Environment) -> Result<Val, String> {
+	check_arity_is!("count-scopes", 0, rands);
+	Ok(Number(env.count_scopes() as f64))
 }
 
 fn doc(rands: ValList, env: &mut Environment) -> Result<Val, String> {
