@@ -57,6 +57,14 @@ fn list_filter() {
 }
 
 #[test]
+fn list_filter_not() {
+	evals_and_eq!("(list-filter-not (list 1 false \"pee\") is-num?)", List(vec![Boolean(false), StringV("pee".to_string())]));
+	fails_eval!("(list-filter-not (list 1 false \"pee\"))");
+	fails_eval!("(list-filter-not (list 1 false \"pee\") is-num? is-num?)");
+	fails_eval!("(list-filter-not (list 1 5 6) put)");
+}
+
+#[test]
 fn list_find() {
 	evals_and_eq!("(list-find (list 1 2 3) 2)", Number(1.0));
 	evals_and_eq!("(list-find (list 1 2 3 2) 2)", Number(1.0));

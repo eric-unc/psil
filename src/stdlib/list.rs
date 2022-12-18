@@ -12,6 +12,7 @@ pub fn add_native(env: &mut Environment) {
 	env.add_proc("list-each", list_each);
 	env.add_proc("list-empty?", list_empty);
 	env.add_proc("list-filter", list_filter);
+	env.add_proc("list-filter-not", list_filter_not);
 	env.add_proc("list-find", list_find);
 	env.add_proc("list-flatten", list_flatten);
 	env.add_proc("list-fold", list_fold);
@@ -116,6 +117,26 @@ fn list_filter(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 		match bool {
 			Boolean(b) => if b { new_list.push(item.clone()); }
 			_ => return Err("Procedure in list_filter returned non-boolean!".to_string())
+		}
+	}
+
+	Ok(List(new_list))
+}
+
+fn list_filter_not(rands: ValList, env: &mut Environment) -> Result<Val, String> {
+	check_arity_is!("list-filter-not", 2, rands);
+
+	let list = get_list!("list-filter-not", rands, 0);
+	let proc = get_proc!("list-filter-not", rands, 1);
+
+	let mut new_list = vec![];
+
+	for item in list {
+		let bool = eval_proc_with_rands(proc.clone(), vec![item.clone()], "anonymous".to_string(), env)?;
+
+		match bool {
+			Boolean(b) => if !b { new_list.push(item.clone()); }
+			_ => return Err("Procedure in list_filter-not returned non-boolean!".to_string())
 		}
 	}
 
