@@ -33,9 +33,25 @@
 		"list" "(list) the list with each value that will become a rand."
 		"proc" "(proc) the procedure to each value."))
 
+(define list-eighth {|list| (list-get list 7)})
+(define eighth list-eighth)
+(doc "list-eighth"
+	(list "eighth")
+	"`list-eighth` (any) returns the eighth value of the given list."
+	(table
+		"list" "(list) the list."))
+
 (doc "list-empty?"
 	(list)
 	"`list-empty?` (boolean) returns true if the list is empty."
+	(table
+		"list" "(list) the list."))
+
+(define list-fifth {|list| (list-get list 4)})
+(define fifth list-fifth)
+(doc "list-fifth"
+	(list "fifth")
+	"`list-fifth` (any) returns the fifth value of the given list."
 	(table
 		"list" "(list) the list."))
 
@@ -84,12 +100,28 @@
 		"proc" "(proc) the procedure used for accumulation. Must accept two arguments."
 		"base" "(any) the initial value."))
 
+(define list-fourth {|list| (list-get list 3)})
+(define fourth list-fourth)
+(doc "list-fourth"
+	(list "fourth")
+	"`list-fourth` (any) returns the fourth value of the given list."
+	(table
+		"list" "(list) the list."))
+
 (doc "list-get"
 	(list)
 	"`list-get` (any) gets an element from the list at a specific index."
 	(table
 		"list" "(list) the list."
 		"index" "(natural number) the index."))
+
+(define list-has? {|list val| (!= (list-find list val) -1)})
+(doc "list-has?"
+	(list)
+	"`list-has?` (boolean) returns true if the given list has a specific value, and false otherwise."
+	(table
+    	"list" "(list) the list."
+    	"val" "(any) the value to be checked for."))
 
 (doc "list-join"
 	(list)
@@ -111,6 +143,14 @@
 	(table
 		"list" "(list) the list with each value that will become a rand."
 		"proc" "(proc) the procedure to each value."))
+
+(define list-ninth {|list| (list-get list 8)})
+(define ninth list-ninth)
+(doc "list-ninth"
+	(list "ninth")
+	"`list-ninth` (any) returns the ninth value of the given list."
+	(table
+		"list" "(list) the list."))
 
 (doc "list-range"
 	(list)
@@ -141,6 +181,30 @@
 	(table
 		"list" "(list) the list."))
 
+(doc "list-set"
+	(list)
+	"`list-set` (list) sets an index in the given list to new value."
+	(table
+		"list" "(list) the list."
+		"index" "(natural number) the index."
+		"val" "(any) the new value."))
+
+(define list-seventh {|list| (list-get list 6)})
+(define seventh list-seventh)
+(doc "list-seventh"
+	(list "seventh")
+	"`list-seventh` (any) returns the seventh value of the given list."
+	(table
+		"list" "(list) the list."))
+
+(define list-sixth {|list| (list-get list 5)})
+(define sixth list-sixth)
+(doc "list-sixth"
+	(list "sixth")
+	"`list-sixth` (any) returns the sixth value of the given list."
+	(table
+		"list" "(list) the list."))
+
 (doc "list-swap"
 	(list)
 	"`list-swap` (list) swaps two elements in the list."
@@ -154,5 +218,13 @@
 (doc "list-third"
 	(list "third")
 	"`list-third` (any) returns the third value of the given list."
+	(table
+		"list" "(list) the list."))
+
+(define list-tenth {|list| (list-get list 9)})
+(define tenth list-tenth)
+(doc "list-tenth"
+	(list "tenth")
+	"`list-tenth` (any) returns the tenth value of the given list."
 	(table
 		"list" "(list) the list."))

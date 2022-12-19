@@ -57,6 +57,14 @@ fn list_filter() {
 }
 
 #[test]
+fn list_filter_not() {
+	evals_and_eq!("(list-filter-not (list 1 false \"pee\") is-num?)", List(vec![Boolean(false), StringV("pee".to_string())]));
+	fails_eval!("(list-filter-not (list 1 false \"pee\"))");
+	fails_eval!("(list-filter-not (list 1 false \"pee\") is-num? is-num?)");
+	fails_eval!("(list-filter-not (list 1 5 6) put)");
+}
+
+#[test]
 fn list_find() {
 	evals_and_eq!("(list-find (list 1 2 3) 2)", Number(1.0));
 	evals_and_eq!("(list-find (list 1 2 3 2) 2)", Number(1.0));
@@ -102,6 +110,16 @@ fn list_get() {
 	fails_eval!("(list-get (list 1 false \"pee\") 3)");
 	fails_eval!("(list-get 1 3)");
 	fails_eval!("(list-get (list 1 false \"pee\") 2 2)");
+}
+
+#[test]
+fn list_has() {
+	evals_and_eq!("(list-has? (list 1 false \"pee\") 0)", Boolean(false));
+	evals_and_eq!("(list-has? (list 1 false \"pee\") 1)", Boolean(true));
+	evals_and_eq!("(list-has? (list 4 false \"pee\" true 0 1 1) 1)", Boolean(true));
+	fails_eval!("(list-has?)");
+	fails_eval!("(list-has? (list 1 false \"pee\"))");
+	fails_eval!("(list-has? 0 (list 1 false \"pee\"))");
 }
 
 #[test]
@@ -157,6 +175,15 @@ fn list_remove() {
 	fails_eval!("(list-remove (list 1 2 3) 3)");
 	fails_eval!("(list-remove (list 1 2 3))");
 	fails_eval!("(list-remove 1)");
+}
+
+#[test]
+fn list_set() {
+	evals_and_eq!("(list-set (list 1 2 3) 0 3)", List(vec![Number(3.0), Number(2.0), Number(3.0)]));
+	evals_and_eq!("(list-set (list 1 true 3) 1 5)", List(vec![Number(1.0), Number(5.0), Number(3.0)]));
+	fails_eval!("(list-set)");
+	fails_eval!("(list-set (list 1 2 3) -1 3)");
+	fails_eval!("(list-set (list 1 2 3) 3 3)");
 }
 
 #[test]

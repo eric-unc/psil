@@ -31,6 +31,10 @@ impl Environment {
 		ret
 	}
 
+	pub fn new_empty() -> Self {
+		Self { bindings: vec![Scope::new()], doc: Documentation::new(), curr_module: String::from("<None>") }
+	}
+
 	pub fn add_scope(&mut self) {
 		self.bindings.push(Scope::new());
 	}
@@ -49,6 +53,20 @@ impl Environment {
 		let len = self.bindings.len();
 
 		self.bindings[len - 1].insert(name.to_string(), ProcedureV(Procedure::Native(val)));
+	}
+
+	pub fn count_bindings(&self) -> usize {
+		let mut ret = 0;
+
+		for scope in &self.bindings {
+			ret += scope.len();
+		}
+
+		ret
+	}
+
+	pub fn count_scopes(&self) -> usize {
+		self.bindings.len()
 	}
 
 	pub fn get_binding(&self, name: Name) -> Result<Val, String> {

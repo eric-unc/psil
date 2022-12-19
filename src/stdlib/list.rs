@@ -12,6 +12,7 @@ pub fn add_native(env: &mut Environment) {
 	env.add_proc("list-each", list_each);
 	env.add_proc("list-empty?", list_empty);
 	env.add_proc("list-filter", list_filter);
+	env.add_proc("list-filter-not", list_filter_not);
 	env.add_proc("list-find", list_find);
 	env.add_proc("list-flatten", list_flatten);
 	env.add_proc("list-fold", list_fold);
@@ -23,6 +24,7 @@ pub fn add_native(env: &mut Environment) {
 	env.add_proc("list-range", list_range);
 	env.add_proc("list-remove", list_remove);
 	env.add_proc("list-reverse", list_reverse);
+	env.add_proc("list-set", list_set);
 	env.add_proc("list-swap", list_swap);
 }
 
@@ -116,6 +118,26 @@ fn list_filter(rands: ValList, env: &mut Environment) -> Result<Val, String> {
 		match bool {
 			Boolean(b) => if b { new_list.push(item.clone()); }
 			_ => return Err("Procedure in list_filter returned non-boolean!".to_string())
+		}
+	}
+
+	Ok(List(new_list))
+}
+
+fn list_filter_not(rands: ValList, env: &mut Environment) -> Result<Val, String> {
+	check_arity_is!("list-filter-not", 2, rands);
+
+	let list = get_list!("list-filter-not", rands, 0);
+	let proc = get_proc!("list-filter-not", rands, 1);
+
+	let mut new_list = vec![];
+
+	for item in list {
+		let bool = eval_proc_with_rands(proc.clone(), vec![item.clone()], "anonymous".to_string(), env)?;
+
+		match bool {
+			Boolean(b) => if !b { new_list.push(item.clone()); }
+			_ => return Err("Procedure in list_filter-not returned non-boolean!".to_string())
 		}
 	}
 
@@ -295,6 +317,20 @@ fn list_reverse(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
 
 	let mut new_list = list.clone();
 	new_list.reverse();
+	Ok(List(new_list))
+}
+
+fn list_set(rands: ValList, _env: &mut Environment) -> Result<Val, String> {
+	check_arity_is!("list-set", 3, rands);
+
+	let list = get_list!("list-set", rands, 0);
+	let index = get_natural_number!("list-set", rands, 1) as usize;
+	let new_val = &rands[2];
+
+	check_bounds!(index, list);
+
+	let mut new_list = list.clone();
+	new_list[index] = new_val.clone();
 	Ok(List(new_list))
 }
 

@@ -51,6 +51,21 @@ fn do_test() {
 }
 
 #[test]
+fn count_bindings() {
+	// TODO: testing this is a PITA
+	//let mut env = Environment::new_empty();
+	//env.add_proc("count-bindings", count_bindings);
+
+	//evals_and_eq_with_env!("(count-bindings)", Number(0.0), env);
+	//evals_and_eq_with_env!("(define x 5)", void(), env);
+	//evals_and_eq_with_env!("(count-bindings)", Number(1.0), env);
+	//evals_and_eq_with_env!("(define x 5)", void(), env);
+	//evals_and_eq_with_env!("(define x 5)", void(), env);
+	//evals_and_eq_with_env!("(define y 6)", void(), env);
+	//evals_and_eq_with_env!("(count-bindings)", Number(2.0), env);
+}
+
+#[test]
 fn fail() {
 	fails_eval!("(fail)");
 	fails_eval!("(fail \"Fail message\")");
